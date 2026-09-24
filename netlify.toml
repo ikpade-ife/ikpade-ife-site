@@ -1,0 +1,11 @@
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+
+# La page 404.html personnalisée est servie automatiquement par Netlify
+# pour toute route introuvable — aucune redirection supplémentaire n'est
+# nécessaire pour l'instant (le site n'a pas encore de routage par URL).

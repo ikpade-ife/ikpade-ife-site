@@ -1,0 +1,2957 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ikpadé Ifê — Le rendez-vous béni de l'amour, entre familles</title>
+<meta name="description" content="Ikpadé Ifê met en relation, dans le respect du cadre islamique, les musulmans béninois du monde entier — pour un seul objectif : le mariage. Tuteur associé, profils vérifiés, photo voilée jusqu'à l'accord mutuel.">
+<link rel="canonical" href="https://www.ikpade-ife.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ikpadé Ifê">
+<meta property="og:title" content="Ikpadé Ifê — Le rendez-vous béni de l'amour, entre familles">
+<meta property="og:description" content="Rencontre matrimoniale halal pour les musulmans béninois du monde entier — tuteur associé, profils vérifiés, photo voilée jusqu'à l'accord mutuel.">
+<meta property="og:url" content="https://www.ikpade-ife.com/">
+<meta property="og:image" content="https://www.ikpade-ife.com/logo.png">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ikpadé Ifê — Le rendez-vous béni de l'amour, entre familles">
+<meta name="twitter:description" content="Rencontre matrimoniale halal pour les musulmans béninois du monde entier.">
+<meta name="twitter:image" content="https://www.ikpade-ife.com/logo.png">
+<link rel="icon" type="image/png" href="/logo.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Ikpadé Ifê",
+  "url": "https://www.ikpade-ife.com/",
+  "logo": "https://www.ikpade-ife.com/logo.png",
+  "description": "Plateforme de mise en relation matrimoniale halal pour les musulmans béninois du monde entier.",
+  "sameAs": []
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  // ── Connexion au backend réel (voir ikpade-ife-backend/README.md) ──────────
+  // Remplacez ces deux valeurs par celles de VOTRE projet Supabase
+  // (Project Settings → API → Project URL / anon public key).
+  const SUPABASE_URL = "https://rxnjsskjioniclfplsur.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4bmpzc2tqaW9uaWNsZnBsc3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzNzk2ODcsImV4cCI6MjEwMzk1NTY4N30.X-ELAOXCKYI6a0mT3blnsBTPFKNeYx-B9IOcb0AxrKw";
+  const SUPABASE_FUNCTIONS_URL = `${SUPABASE_URL}/functions/v1`;
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ── Système de traduction complet FR/EN ──────────────────────────────────
+  const I18N = {
+    fr: {"nav_parcours": "Le parcours", "nav_valeurs": "Nos principes", "nav_apercu": "L'application", "nav_abonnement": "Abonnement", "nav_tuteur": "Espace tuteur", "footer_role_tuteur": "Rôle du tuteur", "nav_contact": "Nous contacter", "nav_blog": "Blog", "tuteur_h2_v2": "Comment fonctionne l'espace tuteur", "tuteur_intro_v2": "Le tuteur (wali) est associé au compte de la personne dont il a la charge, et reste informé à chaque étape clé du parcours — sans jamais avoir accès aux échanges privés avant qu'ils ne soient formellement acceptés.", "tuteur_pt1_h3": "Renseigné dès l'inscription", "tuteur_pt1_p": "Lors de la création d'un profil féminin, le nom, le lien de parenté et les coordonnées du tuteur sont demandés et enregistrés de façon sécurisée.", "tuteur_pt2_h3": "Notifié à l'introduction formelle", "tuteur_pt2_p": "Après un premier échange libre entre les deux personnes, dès qu'elles confirment toutes les deux vouloir passer à l'introduction formelle, notre équipe transmet une notification au tuteur concerné.", "tuteur_pt3_h3": "Jamais d'accès aux échanges avant accord", "tuteur_pt3_p": "Aucune coordonnée personnelle ne circule avant la rencontre familiale, et les échanges restent strictement encadrés par la modération.", "tuteur_soon_label": "Bon à savoir :", "tuteur_soon_text": "le compte tuteur est distinct du compte membre — un tuteur n'a pas besoin d'avoir son propre profil sur Ikpadé Ifê pour suivre les personnes dont il a la charge.", "tuteur_connexion_h3": "Connexion tuteur", "tuteur_pas_de_compte": "Pas encore de compte tuteur ?", "tuteur_en_creer_un": "En créer un", "tuteur_creation_h3": "Créer mon compte tuteur", "tuteur_email_note": "Utilisez exactement l'email que le membre a renseigné comme email de tuteur dans son inscription.", "btn_creer_compte_tuteur": "Créer mon compte", "tuteur_deja_compte": "J'ai déjà un compte, me connecter", "tuteur_mes_filleuls": "Personnes dont vous avez la charge", "btn_connexion_deconnexion": "Se déconnecter", "tuteur_aucun_filleul": "Aucun profil ne vous a encore désigné comme tuteur avec cet email, ou ce profil n'a pas encore été publié.", "btn_passer_intro_formelle": "Passer à l'introduction formelle", "intro_formelle_explication": "Vous pouvez d'abord faire connaissance librement. Quand vous êtes prêt(e) à passer à une démarche sérieuse, confirmez ci-dessous — le tuteur ne sera notifié et la photo ne sera révélée qu'une fois les deux personnes d'accord.", "intro_formelle_autre_a_confirme": "L'autre personne a déjà confirmé vouloir passer à l'introduction formelle. Confirmez à votre tour pour informer le tuteur et révéler vos photos.", "intro_formelle_en_attente_autre": "Vous avez confirmé. En attente de la confirmation de l'autre personne — le tuteur sera notifié dès que ce sera fait.", "intro_formelle_confirmee": "✓ Introduction formelle confirmée par les deux parties — le tuteur a été notifié.", "nav_ma_photo": "Ma photo", "lbl_photo": "Photo de profil (facultatif — vous pourrez aussi l'ajouter plus tard)", "photo_note": "Elle reste floutée pour les autres membres jusqu'à l'introduction formelle. Seule l'équipe de modération voit la version claire, pour vérifier votre identité.", "photo_erreur_format": "Le fichier choisi n'est pas une image.", "photo_erreur_taille": "L'image est trop lourde (8 Mo maximum).", "photo_traitement": "Traitement de la photo...", "photo_erreur_envoi": "Erreur lors de l'envoi de la photo :", "photo_reessai_plus_tard": "Vous pourrez réessayer depuis 'Ma photo' dans le menu.", "photo_apres_confirmation": "Une fois votre email confirmé et connecté(e), pensez à ajouter votre photo depuis 'Ma photo' dans le menu.", "photo_eyebrow": "Ma photo", "photo_h2": "Gérer ma photo de profil", "photo_p": "Elle reste floutée pour les autres membres jusqu'à l'introduction formelle. Seule l'équipe de modération voit la version claire.", "lbl_photo_fichier": "Choisir une photo", "btn_envoyer_photo": "Envoyer cette photo", "connexion_requise_photo": "Connectez-vous d'abord pour gérer votre photo.", "photo_actuelle": "Photo actuelle (vue telle que l'équipe de modération la voit).", "photo_aucune": "Aucune photo envoyée pour le moment.", "photo_erreur_aucune_selection": "Merci de choisir une image d'abord.", "photo_envoyee_succes": "✓ Photo envoyée avec succès.", "alert_nom_manquant": "Merci de renseigner votre prénom et votre nom.", "alert_age_invalide": "Merci de renseigner un âge valide. Vous devez avoir au moins 18 ans pour vous inscrire.", "alert_email_invalide": "L'adresse email saisie n'est pas valide.", "alert_checkboxes": "Merci de cocher les trois cases ci-dessus, y compris l'acceptation des Conditions Générales d'Utilisation et de la Politique de Confidentialité, avant de créer votre profil.", "alert_tuteur_requis": "Le nom, le lien de parenté, le téléphone et l'email du tuteur (wali) sont obligatoires pour un profil féminin.", "alert_email_tuteur_invalide": "L'adresse email du tuteur n'est pas valide.", "lbl_email_tuteur": "Email du tuteur (pour son futur accès à l'espace tuteur)", "loading_profils": "Chargement des profils...", "loading_requests": "Chargement...", "loading_echange": "Chargement de l'échange...", "loading_queue": "Chargement des profils en attente...", "aucun_profil_publie": "Aucun profil publié pour le moment. Reviens un peu plus tard 🌱", "aucune_demande": "Aucune demande pour le moment.", "aucune_demande_recue": "Aucune demande reçue pour le moment.", "aucune_demande_envoyee": "Aucune demande envoyée pour le moment.", "aucun_profil_attente": "Aucun profil en attente pour le moment.", "aucun_message": "Aucun message pour le moment — lancez la conversation, avec courtoisie et pudeur.", "envoi_en_cours": "Envoi...", "deja_demande": "Déjà demandé", "demande_envoyee": "Demande envoyée ✓", "connexion_requise_profils": "Connectez-vous d'abord pour parcourir les profils.", "connexion_requise_demandes": "Connectez-vous d'abord pour voir vos demandes.", "acces_reserve_admin": "Accès réservé à l'équipe de modération.", "echange_indisponible": "Cet échange n'est pas (ou plus) accessible.", "erreur_prefixe": "Erreur : ", "delai_moins_6_mois": "Souhaite se marier < 6 mois", "delai_6_12_mois": "Souhaite se marier 6-12 mois", "delai_12_24_mois": "Souhaite se marier 12-24 mois", "delai_pas_de_delai": "Pas de délai fixe", "pratique_assidu": "Pratiquant(e) assidu(e)", "pratique_pratiquant": "Pratiquant(e)", "pratique_cheminement": "En cheminement", "contact_eyebrow": "Nous contacter", "contact_h2": "Une question ? Écrivez-nous", "contact_p": "Notre équipe vous répond sous 24 à 48h ouvrées.", "lbl_contact_nom": "Nom complet", "lbl_contact_email": "Email", "lbl_contact_sujet": "Sujet", "lbl_contact_message": "Message", "btn_envoyer_message": "Envoyer le message", "contact_success": "Merci, votre message a bien été envoyé. Nous vous répondrons rapidement.", "contact_error_required": "Merci de renseigner votre nom, votre email et votre message.", "contact_error_generic": "Une erreur est survenue. Merci de réessayer dans un instant.", "contact_sending": "Envoi en cours...", "nav_connexion": "Se connecter", "login_eyebrow": "Connexion", "login_h2": "Ravis de vous revoir", "login_p": "Connectez-vous pour accéder à votre espace.", "btn_connexion": "Se connecter", "login_pas_de_compte": "Pas encore de compte ?", "login_creer_compte": "Créer mon profil", "nav_parcourir": "Profils", "browse_eyebrow": "Profils publiés", "browse_h2": "Parcourir les profils", "browse_p": "Chaque profil a été vérifié par notre équipe. La photo reste voilée jusqu'à l'accord mutuel.", "nav_demandes": "Demandes", "requests_eyebrow": "Mes demandes", "requests_h2": "Introductions", "requests_p": "Retrouvez ici les demandes que vous avez reçues et envoyées.", "requests_recues_h3": "Demandes reçues", "requests_envoyees_h3": "Demandes envoyées", "nav_commencer": "Commencer", "hero_eyebrow": "Rencontre matrimoniale halal · diaspora béninoise", "hero_title": "Le rendez-vous <em>béni de l'amour</em>, entre familles.", "hero_lede": "Ikpadé Ifê met en relation, dans le respect du cadre islamique, les musulmans béninois d'Abomey-Calavi à Paris, Cotonou à Montréal, Porto-Novo à New-York — pour un seul objectif : le mariage.", "btn_creer_profil": "Créer mon profil", "hero_voir_parcours": "Voir le parcours", "trust_1": "tuteur / wali informé", "trust_2": "photo publique", "trust_3": "continents connectés", "parcours_eyebrow": "Le parcours", "parcours_h2": "Quatre étapes, un seul but", "parcours_p": "Chaque étape est pensée pour protéger la dignité des deux familles et avancer avec une intention claire.", "step1_h3": "Profil vérifié", "step1_p": "Pièce d'identité, ville, statut marital et niveau de pratique confirmés avant toute mise en ligne.", "step2_h3": "Tuteur associé", "step2_p": "Le wali ou un proche désigné est notifié dès que les deux personnes confirment vouloir passer à l'introduction formelle.", "step3_h3": "Mise en relation", "step3_p": "Affinités de valeurs, de région d'origine et de projet de vie — le visage reste voilé jusqu'à l'accord mutuel.", "step4_h3": "Rencontre encadrée", "step4_p": "Premier échange écrit modéré, puis rencontre familiale organisée, en présentiel ou à distance.", "valeurs_eyebrow": "Nos principes", "valeurs_h2": "Construit autour du halal, pas à côté", "valeurs_p": "Chaque fonctionnalité découle d'un principe, jamais l'inverse.", "val1_h3": "Pas de messagerie libre", "val1_p": "Les échanges commencent toujours par une demande d'introduction ; le tuteur est informé dès que les deux parties confirment vouloir passer à l'introduction formelle.", "val2_h3": "Photos voilées", "val2_p": "La photo reste voilée durant le premier échange libre, et n'est révélée que lorsque les deux personnes confirment ensemble vouloir passer à l'introduction formelle.", "val3_h3": "Intention affichée", "val3_p": "Chaque profil précise le délai de mariage souhaité, pour éviter les attentes floues des deux côtés.", "val4_h3": "Diaspora prioritaire", "val4_p": "Filtre par pays de résidence, ville d'origine au Bénin et intention de retour au pays.", "val5_h3": "Vérification humaine", "val5_p": "Une équipe de modération relit chaque profil avant publication ; aucun compte automatisé.", "val6_h3": "Signalement direct", "val6_p": "Tout comportement contraire à l'adab est signalé en un geste et traité sous 24h.", "veil_label": "Photo voilée<br/>jusqu'à l'accord mutuel", "btn_passer": "Passer", "btn_demander_intro": "Demander une introduction", "apercu_eyebrow": "Aperçu de l'application", "apercu_h2": "Ce que voit chaque membre", "apercu_p": "Une interface volontairement sobre : l'objectif n'est pas de faire défiler, mais de faire un choix réfléchi.", "note1_h4": "Fiche complète avant photo", "note1_p": "Valeurs, projet de vie et attentes familiales apparaissent avant tout visuel.", "note2_h4": "Tuteur en copie", "note2_p": "Le wali est notifié une fois que les deux personnes confirment vouloir passer à l'introduction formelle, après un premier échange libre.", "note3_h4": "Statut d'intention clair", "note3_p": "Chaque compte indique un horizon de mariage réaliste, mis à jour chaque trimestre.", "note4_h4": "Messagerie modérée", "note4_p": "Une fois l'introduction acceptée, l'échange se fait dans un espace surveillé, sans partage de coordonnées.", "note4_cta": "Créer mon profil pour en profiter →", "abon_eyebrow": "Abonnement", "abon_h2": "Un abonnement sérieux, pour une démarche sérieuse", "abon_p": "La cotisation finance la vérification humaine des profils et la modération des échanges.", "toggle_mensuel": "Mensuel", "toggle_annuel": "Annuel — 2 mois offerts", "plan1_sub": "— paix, bienvenue", "plan1_price": "Gratuit", "plan1_li1": "Profil vérifié de base", "plan1_li2": "3 demandes d'introduction / mois", "plan1_li3": "Recherche par ville d'origine", "plan1_cta": "Créer mon compte", "plan2_sub": "— le plus choisi", "plan2_li1": "Introductions illimitées", "plan2_li2": "Tuteur associé avec notifications", "plan2_li3": "Filtre région, ethnie, niveau de pratique", "plan2_li4": "Accompagnement d'un médiateur au 2e échange", "plan2_cta": "Choisir Khadijath", "plan3_sub": "— la famille", "plan3_li1": "Tout Khadijath, plus :", "plan3_li2": "Compte tuteur avec droit de présélection", "plan3_li3": "Mise en relation directe entre familles", "plan3_li4": "Ligne d'assistance dédiée", "plan3_cta": "Choisir Hawa", "faq_eyebrow": "Questions fréquentes", "faq_h2": "Avant de vous inscrire", "faq1_q": "Le tuteur (wali) est-il obligatoire ?", "faq1_a": "Oui pour les profils féminins, conformément au cadre islamique. Un tuteur (père, frère ou proche désigné) est associé au compte et informé dès que les deux personnes confirment vouloir passer à l'introduction formelle, après un premier échange libre.", "faq2_q": "Puis-je m'inscrire depuis l'étranger ?", "faq2_a": "Oui, Ikpadé Ifê s'adresse en priorité à la diaspora béninoise. Vous indiquez votre pays de résidence et votre ville d'origine au Bénin dès l'inscription.", "faq3_q": "Comment sont vérifiés les profils ?", "faq3_a": "Une pièce d'identité et un court entretien téléphonique sont demandés avant toute publication du profil.", "faq4_q": "Que se passe-t-il après une introduction acceptée ?", "faq4_a": "Un espace d'échange modéré s'ouvre d'abord entre les deux personnes, sans le tuteur. Une fois qu'elles confirment ensemble vouloir passer à l'introduction formelle, le tuteur est notifié et une rencontre familiale peut être organisée.", "footer_tagline": "Le rendez-vous béni pour les musulmans béninois du monde entier, au service du mariage.", "footer_plateforme": "Plateforme", "footer_confiance": "Confiance", "footer_charte": "Charte de modération", "footer_signaler": "Signaler un profil", "footer_equipe": "Équipe", "footer_console": "Console de modération", "footer_prototype": "Prototype de démonstration", "footer_copyright": "© 2026 Ikpadé Ifê — Tous droits réservés", "nav_retour": "← Retour au site", "signup_eyebrow": "Inscription", "signup_h2": "Créer votre profil", "signup_p": "Cinq étapes courtes. Rien n'est publié avant vérification humaine de votre dossier.", "signup_step1": "01 · Identité", "signup_step2": "02 · Origines", "signup_step3": "03 · Profil &amp; intention", "signup_step4": "04 · Tuteur / Wali", "signup_step5": "05 · Confirmation", "lbl_prenom": "Prénom", "lbl_nom": "Nom", "lbl_genre": "Genre", "opt_femme": "Femme", "opt_homme": "Homme", "lbl_age": "Âge", "lbl_tel": "Numéro de téléphone (WhatsApp de préférence)", "lbl_email": "Email", "lbl_password": "Mot de passe", "lbl_pays_residence": "Pays de résidence actuel", "lbl_ville_residence": "Ville de résidence", "lbl_ville_origine": "Ville / région d'origine au Bénin", "lbl_langues": "Langue(s) parlée(s)", "lbl_retour_benin": "Envisagez-vous un retour au Bénin après le mariage ?", "opt_retour1": "Oui, à moyen terme", "opt_retour2": "Oui, à long terme", "opt_retour3": "Non, je m'installe à l'étranger", "opt_retour4": "Indécis(e)", "lbl_statut_marital": "Statut marital", "opt_celibataire": "Célibataire", "opt_divorce": "Divorcé(e)", "opt_veuf": "Veuf/Veuve", "lbl_pratique": "Niveau de pratique religieuse", "opt_pratique1": "Pratiquant(e) assidu(e)", "opt_pratique2": "Pratiquant(e)", "opt_pratique3": "En cheminement", "lbl_delai": "Délai souhaité pour le mariage", "opt_delai1": "Moins de 6 mois", "opt_delai2": "6 à 12 mois", "opt_delai3": "12 à 24 mois", "opt_delai4": "Pas de délai fixe", "lbl_presentation": "Courte présentation (visible après introduction acceptée)", "tuteur_note_femme": "Un tuteur (wali) est requis pour les profils féminins. Il sera notifié de chaque demande d'introduction acceptée.", "lbl_nom_tuteur": "Nom complet du tuteur", "lbl_lien_parente": "Lien de parenté", "lbl_contact_tuteur": "Téléphone du tuteur", "avant_valider": "Avant de valider", "check1": "Je certifie que les informations fournies sont exactes.", "check2": "J'accepte que mon tuteur soit notifié des introductions acceptées.", "check3": "J'accepte les <a href=\"#\" onclick=\"showLegal(&#39;cgu&#39;);event.stopPropagation();return false;\" style=\"color:var(--clay); text-decoration:underline;\">Conditions Générales d'Utilisation</a> et la <a href=\"#\" onclick=\"showLegal(&#39;confidentialite&#39;);event.stopPropagation();return false;\" style=\"color:var(--clay); text-decoration:underline;\">Politique de Confidentialité</a> d'Ikpadé Ifê.", "btn_precedent": "Précédent", "btn_suivant": "Suivant", "tuteur_eyebrow": "Espace tuteur · wali", "tuteur_welcome": "Bienvenue, M. Alowakinnou", "tuteur_intro": "Vous suivez le parcours matrimonial de 2 personnes. Toute introduction acceptée vous est notifiée avant qu'une rencontre soit organisée.", "stat_personnes": "Personnes suivies", "stat_demandes": "Demandes en attente", "stat_intro_active": "Introduction active", "rel_fille": "Fille", "rel_niece": "Nièce", "tuteur_demandes_h3": "Demandes en attente de votre approbation", "btn_decliner": "Décliner", "btn_approuver": "Approuver", "intro_en_cours": "Introduction en cours", "voir_echange": "Voir l'échange modéré", "pstep_intro": "Introduction acceptée", "pstep_echange": "Échange modéré", "pstep_rencontre": "Rencontre familiale", "pstep_decision": "Décision", "journal_activite": "Journal d'activité", "admin_eyebrow": "Console de modération", "admin_h2": "File d'attente", "admin_p": "Aucun profil n'est visible tant qu'il n'a pas été vérifié par un membre de l'équipe. Tout signalement est traité sous 24h.", "astat_attente": "Profils en attente", "astat_signalements": "Signalements ouverts", "astat_publies": "Profils publiés ce mois", "astat_delai": "Délai moyen de traitement", "tab_verifications": "Vérifications", "tab_signalements": "Signalements", "voir_dossier": "Voir le dossier", "fld_piece_identite": "Pièce d'identité", "fld_tuteur_renseigne": "Tuteur renseigné", "fld_intention": "Intention de mariage", "fld_presentation": "Présentation", "btn_rejeter": "Rejeter", "btn_publier": "Publier le profil", "examiner_signalement": "Examiner le signalement", "fld_extrait": "Extrait signalé", "fld_historique": "Historique du membre", "btn_clore": "Clore sans suite", "btn_avertir": "Avertir le membre", "btn_suspendre": "Suspendre le compte", "msg_eyebrow": "Échange modéré", "msg_meta": "Introduction acceptée le 28 juillet 2026 · tuteurs des deux parties en copie", "rappel_label": "Rappel :", "adab_text": "le partage de coordonnées personnelles (téléphone, réseaux sociaux) est bloqué à tout moment. Votre tuteur sera informé dès que vous confirmerez ensemble vouloir passer à l'introduction formelle. Restez courtois et pudique.", "btn_envoyer": "Envoyer", "chat_note": "Vos messages sont relus automatiquement et visibles par vos tuteurs. Vous écrivez en tant que N. Chabi.", "tuteur_note_homme": "Votre demande sera transmise au tuteur (wali) de la personne concernée pour validation.", "alert_email_password": "Merci de renseigner un email valide et un mot de passe d'au moins 8 caractères.", "creating_account": "Création du compte...", "alert_signup_failed": "Impossible de créer le compte :", "alert_account_created": "Compte créé ! Vérifiez votre boîte mail pour confirmer votre inscription avant de continuer.", "blocked_message": "Message bloqué : les coordonnées personnelles ne sont pas autorisées avant validation du tuteur.", "a_linstant": "à l'instant", "signale_moderateur": "signalé à la modération"},
+    en: {"nav_parcours": "The journey", "nav_valeurs": "Our principles", "nav_apercu": "The app", "nav_abonnement": "Membership", "nav_tuteur": "Guardian space", "footer_role_tuteur": "Guardian's role", "nav_contact": "Contact us", "nav_blog": "Blog", "tuteur_h2_v2": "How the guardian space works", "tuteur_intro_v2": "The guardian (wali) is linked to the account of the person in their care, and stays informed at every key step of the journey — without ever accessing private exchanges before they are formally accepted.", "tuteur_pt1_h3": "Provided at sign-up", "tuteur_pt1_p": "When a female profile is created, the guardian's name, family relationship and contact details are requested and stored securely.", "tuteur_pt2_h3": "Notified at the formal introduction stage", "tuteur_pt2_p": "After a first free exchange between the two people, as soon as they both confirm they want to move to a formal introduction, our team sends a notification to the relevant guardian.", "tuteur_pt3_h3": "Never access to exchanges before agreement", "tuteur_pt3_p": "No personal contact details circulate before the family meeting, and exchanges remain strictly supervised by moderation.", "tuteur_soon_label": "Good to know:", "tuteur_soon_text": "a guardian account is separate from a member account — a guardian does not need their own Ikpadé Ifê profile to follow the people in their care.", "tuteur_connexion_h3": "Guardian login", "tuteur_pas_de_compte": "No guardian account yet?", "tuteur_en_creer_un": "Create one", "tuteur_creation_h3": "Create my guardian account", "tuteur_email_note": "Use exactly the email the member entered as their guardian's email at sign-up.", "btn_creer_compte_tuteur": "Create my account", "tuteur_deja_compte": "I already have an account, log in", "tuteur_mes_filleuls": "People in your care", "btn_connexion_deconnexion": "Log out", "tuteur_aucun_filleul": "No profile has designated you as guardian with this email yet, or that profile is not published yet.", "btn_passer_intro_formelle": "Move to formal introduction", "intro_formelle_explication": "You can first get to know each other freely. When you are ready for a serious step, confirm below — the guardian will only be notified and photos revealed once both people agree.", "intro_formelle_autre_a_confirme": "The other person has already confirmed they want to move to a formal introduction. Confirm as well to notify the guardian and reveal your photos.", "intro_formelle_en_attente_autre": "You have confirmed. Waiting for the other person's confirmation — the guardian will be notified once that happens.", "intro_formelle_confirmee": "✓ Formal introduction confirmed by both parties — the guardian has been notified.", "nav_ma_photo": "My photo", "lbl_photo": "Profile photo (optional — you can also add it later)", "photo_note": "It stays blurred for other members until the formal introduction. Only the moderation team sees the clear version, to verify your identity.", "photo_erreur_format": "The chosen file is not an image.", "photo_erreur_taille": "The image is too large (8 MB maximum).", "photo_traitement": "Processing photo...", "photo_erreur_envoi": "Error uploading the photo:", "photo_reessai_plus_tard": "You can try again from 'My photo' in the menu.", "photo_apres_confirmation": "Once your email is confirmed and you are logged in, remember to add your photo from 'My photo' in the menu.", "photo_eyebrow": "My photo", "photo_h2": "Manage my profile photo", "photo_p": "It stays blurred for other members until the formal introduction. Only the moderation team sees the clear version.", "lbl_photo_fichier": "Choose a photo", "btn_envoyer_photo": "Upload this photo", "connexion_requise_photo": "Please log in first to manage your photo.", "photo_actuelle": "Current photo (as seen by the moderation team).", "photo_aucune": "No photo uploaded yet.", "photo_erreur_aucune_selection": "Please choose an image first.", "photo_envoyee_succes": "✓ Photo uploaded successfully.", "alert_nom_manquant": "Please enter your first and last name.", "alert_age_invalide": "Please enter a valid age. You must be at least 18 years old to sign up.", "alert_email_invalide": "The email address entered is not valid.", "alert_checkboxes": "Please check the three boxes above, including acceptance of the Terms of Use and Privacy Policy, before creating your profile.", "alert_tuteur_requis": "The guardian's (wali's) name, family relationship, phone and email are required for a female profile.", "alert_email_tuteur_invalide": "The guardian's email address is not valid.", "lbl_email_tuteur": "Guardian's email (for their future access to the guardian space)", "loading_profils": "Loading profiles...", "loading_requests": "Loading...", "loading_echange": "Loading exchange...", "loading_queue": "Loading pending profiles...", "aucun_profil_publie": "No profiles published yet. Check back soon 🌱", "aucune_demande": "No requests yet.", "aucune_demande_recue": "No requests received yet.", "aucune_demande_envoyee": "No requests sent yet.", "aucun_profil_attente": "No profiles pending for now.", "aucun_message": "No messages yet — start the conversation, with courtesy and modesty.", "envoi_en_cours": "Sending...", "deja_demande": "Already requested", "demande_envoyee": "Request sent ✓", "connexion_requise_profils": "Please log in first to browse profiles.", "connexion_requise_demandes": "Please log in first to see your requests.", "acces_reserve_admin": "Access reserved for the moderation team.", "echange_indisponible": "This exchange is not (or no longer) accessible.", "erreur_prefixe": "Error: ", "delai_moins_6_mois": "Wants to marry within < 6 months", "delai_6_12_mois": "Wants to marry within 6-12 months", "delai_12_24_mois": "Wants to marry within 12-24 months", "delai_pas_de_delai": "No fixed timeframe", "pratique_assidu": "Devoutly practising", "pratique_pratiquant": "Practising", "pratique_cheminement": "On a journey", "contact_eyebrow": "Contact us", "contact_h2": "A question? Write to us", "contact_p": "Our team replies within 24 to 48 business hours.", "lbl_contact_nom": "Full name", "lbl_contact_email": "Email", "lbl_contact_sujet": "Subject", "lbl_contact_message": "Message", "btn_envoyer_message": "Send message", "contact_success": "Thank you, your message has been sent. We will reply shortly.", "contact_error_required": "Please fill in your name, email and message.", "contact_error_generic": "Something went wrong. Please try again in a moment.", "contact_sending": "Sending...", "nav_connexion": "Log in", "login_eyebrow": "Log in", "login_h2": "Welcome back", "login_p": "Log in to access your space.", "btn_connexion": "Log in", "login_pas_de_compte": "No account yet?", "login_creer_compte": "Create my profile", "nav_parcourir": "Profiles", "browse_eyebrow": "Published profiles", "browse_h2": "Browse profiles", "browse_p": "Every profile has been verified by our team. The photo stays veiled until mutual agreement.", "nav_demandes": "Requests", "requests_eyebrow": "My requests", "requests_h2": "Introductions", "requests_p": "Find the introduction requests you have received and sent here.", "requests_recues_h3": "Received requests", "requests_envoyees_h3": "Sent requests", "nav_commencer": "Get started", "hero_eyebrow": "Halal matchmaking · Beninese diaspora", "hero_title": "The <em>blessed encounter of love</em>, between families.", "hero_lede": "Ikpadé Ifê connects, within an Islamic framework, Beninese Muslims from Abomey-Calavi to Paris, Cotonou to Montreal, Porto-Novo to New York — with a single goal: marriage.", "btn_creer_profil": "Create my profile", "hero_voir_parcours": "See the journey", "trust_1": " guardian / wali informed", "trust_2": " public photo", "trust_3": " continents connected", "parcours_eyebrow": "The journey", "parcours_h2": "Four steps, one purpose", "parcours_p": "Every step is designed to protect the dignity of both families and to move forward with clear intentions.", "step1_h3": "Verified profile", "step1_p": "ID document, city, marital status and level of religious practice confirmed before any publication.", "step2_h3": "Guardian linked", "step2_p": "The wali or a designated relative is notified as soon as both people confirm they want to move to a formal introduction.", "step3_h3": "Matching", "step3_p": "Compatibility of values, home region and life project — the face stays hidden until mutual acceptance.", "step4_h3": "Supervised meeting", "step4_p": "A first moderated written exchange, then a family meeting is organised, in person or online.", "valeurs_eyebrow": "Our principles", "valeurs_h2": "Built around what is halal, not alongside it", "valeurs_p": "Every feature flows from a principle, never the other way round.", "val1_h3": "No open messaging", "val1_p": "Exchanges always start with an introduction request; the guardian is informed once both parties confirm they want to move to a formal introduction.", "val2_h3": "Veiled photos", "val2_p": "The photo stays veiled during the first free exchange, and is only revealed once both people confirm together that they want to move to a formal introduction.", "val3_h3": "Stated intentions", "val3_p": "Every profile states the desired timeframe for marriage, to avoid vague expectations.", "val4_h3": "Diaspora first", "val4_p": "Filter by country of residence, home city in Benin, and intention to return.", "val5_h3": "Human verification", "val5_p": "A moderation team reviews every profile before publication; no account is automatic.", "val6_h3": "Direct reporting", "val6_p": "Any behaviour contrary to adab is reported in one tap and handled within 24 hours.", "veil_label": "Veiled photo<br/>until mutual agreement", "btn_passer": "Skip", "btn_demander_intro": "Request an introduction", "apercu_eyebrow": "App preview", "apercu_h2": "What every member sees", "apercu_p": "A deliberately sober interface: the goal is not to scroll, but to meet.", "note1_h4": "Full profile before photo", "note1_p": "Values, life project and family expectations appear before any visual.", "note2_h4": "Guardian in copy", "note2_p": "The wali is notified once both people confirm they want to move to a formal introduction, after a first free exchange.", "note3_h4": "Clear intention status", "note3_p": "Every account states a realistic marriage timeframe, updated every quarter.", "note4_h4": "Moderated messaging", "note4_p": "Once the introduction is accepted, the exchange happens in a supervised space, without sharing contact details.", "note4_cta": "Create my profile to access it →", "abon_eyebrow": "Membership", "abon_h2": "A serious membership, for a serious approach", "abon_p": "The fee funds human verification of profiles and moderation of exchanges.", "toggle_mensuel": "Monthly", "toggle_annuel": "Yearly — 2 months free", "plan1_sub": "— peace, welcome", "plan1_price": "Free", "plan1_li1": "Basic verified profile", "plan1_li2": "3 introduction requests / month", "plan1_li3": "Search by home city", "plan1_cta": "Create my account", "plan2_sub": "— most chosen", "plan2_li1": "Unlimited introductions", "plan2_li2": "Guardian linked with notifications", "plan2_li3": "Filter by region, ethnicity, level of practice", "plan2_li4": "Mediator support at the 2nd exchange", "plan2_cta": "Choose Khadijath", "plan3_sub": "— the family", "plan3_li1": "Everything in Khadijath, plus:", "plan3_li2": "Guardian account with pre-selection rights", "plan3_li3": "Direct family-to-family matching", "plan3_li4": "Dedicated support line", "plan3_cta": "Choose Hawa", "faq_eyebrow": "Frequently asked questions", "faq_h2": "Before you sign up", "faq1_q": "Is a guardian (wali) mandatory?", "faq1_a": "Yes for female profiles, in accordance with the Islamic framework. A guardian (father, brother, or designated relative) is linked to the account and informed once both people confirm they want to move to a formal introduction, after a first free exchange.", "faq2_q": "Can I sign up from abroad?", "faq2_a": "Yes, Ikpadé Ifê is aimed primarily at the Beninese diaspora. You indicate your country of residence and your city of origin in Benin at sign-up.", "faq3_q": "How are profiles verified?", "faq3_a": "An ID document and a short phone interview are requested before any profile is published.", "faq4_q": "What happens after an introduction is accepted?", "faq4_a": "A moderated exchange space first opens between the two people, without the guardian. Once they both confirm they want to move to a formal introduction, the guardian is notified and a family meeting can be organised.", "footer_tagline": "The blessed encounter for Beninese Muslims worldwide, in service of marriage.", "footer_plateforme": "Platform", "footer_confiance": "Trust", "footer_charte": "Moderation charter", "footer_signaler": "Report a profile", "footer_equipe": "Team", "footer_console": "Moderation console", "footer_prototype": "Demonstration prototype", "footer_copyright": "© 2026 Ikpadé Ifê — All rights reserved", "nav_retour": "← Back to site", "signup_eyebrow": "Sign up", "signup_h2": "Create your profile", "signup_p": "Five short steps. Nothing is published before human verification of your file.", "signup_step1": "01 · Identity", "signup_step2": "02 · Origins", "signup_step3": "03 · Profile & intention", "signup_step4": "04 · Guardian / Wali", "signup_step5": "05 · Confirmation", "lbl_prenom": "First name", "lbl_nom": "Last name", "lbl_genre": "Gender", "opt_femme": "Woman", "opt_homme": "Man", "lbl_age": "Age", "lbl_tel": "Phone number (WhatsApp preferred)", "lbl_email": "Email", "lbl_password": "Password", "lbl_pays_residence": "Current country of residence", "lbl_ville_residence": "City of residence", "lbl_ville_origine": "Home city / region in Benin", "lbl_langues": "Language(s) spoken", "lbl_retour_benin": "Are you considering returning to Benin after marriage?", "opt_retour1": "Yes, in the medium term", "opt_retour2": "Yes, in the long term", "opt_retour3": "No, I am settling abroad", "opt_retour4": "Undecided", "lbl_statut_marital": "Marital status", "opt_celibataire": "Single", "opt_divorce": "Divorced", "opt_veuf": "Widowed", "lbl_pratique": "Level of religious practice", "opt_pratique1": "Devoutly practising", "opt_pratique2": "Practising", "opt_pratique3": "On a journey", "lbl_delai": "Desired timeframe for marriage", "opt_delai1": "Less than 6 months", "opt_delai2": "6 to 12 months", "opt_delai3": "12 to 24 months", "opt_delai4": "No fixed timeframe", "lbl_presentation": "Short introduction (visible after an accepted introduction)", "tuteur_note_femme": "A guardian (wali) is required for female profiles. They will be notified of every introduction request concerning you.", "lbl_nom_tuteur": "Guardian's full name", "lbl_lien_parente": "Family relationship", "lbl_contact_tuteur": "Guardian's phone", "avant_valider": "Before you confirm", "check1": "I certify that the information provided is accurate.", "check2": "I agree that my guardian will be notified of accepted introductions.", "check3": "I accept Ikpadé Ifê's <a href=\"#\" onclick=\"showLegal(&#39;cgu&#39;);event.stopPropagation();return false;\" style=\"color:var(--clay); text-decoration:underline;\">Terms of Use</a> and <a href=\"#\" onclick=\"showLegal(&#39;confidentialite&#39;);event.stopPropagation();return false;\" style=\"color:var(--clay); text-decoration:underline;\">Privacy Policy</a>.", "btn_precedent": "Previous", "btn_suivant": "Next", "tuteur_eyebrow": "Guardian space · wali", "tuteur_welcome": "Welcome, Mr. Alowakinnou", "tuteur_intro": "You are following the marriage journey of 2 people. Every accepted introduction is shown here.", "stat_personnes": "People followed", "stat_demandes": "Pending requests", "stat_intro_active": "Active introduction", "rel_fille": "Daughter", "rel_niece": "Niece", "tuteur_demandes_h3": "Requests awaiting your approval", "btn_decliner": "Decline", "btn_approuver": "Approve", "intro_en_cours": "Introduction in progress", "voir_echange": "View the moderated exchange", "pstep_intro": "Introduction accepted", "pstep_echange": "Moderated exchange", "pstep_rencontre": "Family meeting", "pstep_decision": "Decision", "journal_activite": "Activity log", "admin_eyebrow": "Moderation console", "admin_h2": "Queue", "admin_p": "No profile is visible until it has been verified by a member of the team.", "astat_attente": "Pending profiles", "astat_signalements": "Open reports", "astat_publies": "Profiles published this month", "astat_delai": "Average processing time", "tab_verifications": "Verifications", "tab_signalements": "Reports", "voir_dossier": "View the file", "fld_piece_identite": "ID document", "fld_tuteur_renseigne": "Guardian provided", "fld_intention": "Marriage intention", "fld_presentation": "Introduction", "btn_rejeter": "Reject", "btn_publier": "Publish the profile", "examiner_signalement": "Review the report", "fld_extrait": "Reported excerpt", "fld_historique": "Member history", "btn_clore": "Close without action", "btn_avertir": "Warn the member", "btn_suspendre": "Suspend the account", "msg_eyebrow": "Moderated exchange", "msg_meta": "Introduction accepted on 28 July 2026 · both guardians in copy", "rappel_label": "Reminder:", "adab_text": "sharing personal contact details (phone, social media) is blocked at all times. Your guardian will be informed once you both confirm you want to move to a formal introduction. Stay courteous and modest.", "btn_envoyer": "Send", "chat_note": "Your messages are automatically reviewed and visible to your guardians. Personal contact details are blocked before the family meeting.", "tuteur_note_homme": "Your request will be forwarded to the guardian (wali) of the person concerned for approval.", "alert_email_password": "Please enter a valid email and a password of at least 8 characters.", "creating_account": "Creating account...", "alert_signup_failed": "Could not create the account:", "alert_account_created": "Account created! Check your inbox to confirm your registration before continuing.", "blocked_message": "Message blocked: personal contact details are not allowed before guardian validation.", "a_linstant": "just now", "signale_moderateur": "reported to moderation"}
+  };
+  let currentLang = localStorage.getItem('ikpadeLang') || 'fr';
+
+  function t(key){
+    const dict = I18N[currentLang] || I18N.fr;
+    return dict[key] || I18N.fr[key] || key;
+  }
+
+  // Échappe tout contenu fourni par un membre avant de l'insérer dans le HTML
+  // (prénom, nom, ville, présentation, téléphone, etc.) — à utiliser systématiquement
+  // partout où une donnée saisie par un utilisateur est injectée via innerHTML.
+  function escapeHtml(str){
+    if(str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function applyI18n(){
+    document.documentElement.lang = currentLang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const value = t(key);
+      if (value !== undefined) el.innerHTML = value;
+    });
+    document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === currentLang);
+    });
+    // Le libellé du bouton "Suivant"/"Créer mon profil" dépend de l'étape courante
+    if (typeof renderStep === 'function') {
+      try { renderStep(); } catch(e) {}
+    }
+    updateAuthUI();
+  }
+
+  function setLang(lang){
+    if (!I18N[lang]) return;
+    currentLang = lang;
+    localStorage.setItem('ikpadeLang', lang);
+    applyI18n();
+  }
+
+  document.addEventListener('DOMContentLoaded', applyI18n);
+
+  // Affiche "Bonjour, {prénom}" + lien de déconnexion à la place de "Se connecter"
+  // sur tous les menus du site quand un membre est connecté.
+  async function updateAuthUI(){
+    const links = document.querySelectorAll('[data-i18n="nav_connexion"]');
+    if(links.length === 0) return;
+    const { data: { session } } = await sb.auth.getSession();
+
+    if(session){
+      let displayName = session.user.email.split('@')[0];
+      try {
+        const { data: profil } = await sb.from('profils').select('prenom').eq('id', session.user.id).single();
+        if(profil && profil.prenom) displayName = profil.prenom;
+      } catch(e) {}
+      links.forEach(a => {
+        a.textContent = '👤 ' + displayName + ' — ' + (currentLang === 'en' ? 'Log out' : 'Se déconnecter');
+        a.onclick = async (e) => {
+          e.preventDefault();
+          await sb.auth.signOut();
+          showSite();
+          updateAuthUI();
+        };
+      });
+    } else {
+      links.forEach(a => {
+        a.textContent = t('nav_connexion');
+        a.onclick = (e) => { e.preventDefault(); showLogin(); };
+      });
+    }
+  }
+
+  function toggleMobileMenu(btn){
+    btn.closest('nav')?.querySelector('.nav-links')?.classList.toggle('open');
+  }
+  // Ferme le menu mobile automatiquement dès qu'on clique un lien
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.addEventListener('click', () => a.closest('.nav-links')?.classList.remove('open'));
+    });
+  });
+</script>
+<style>
+  :root{
+    --indigo:#0E3A5F;
+    --indigo-deep:#071F35;
+    --gold:#2E9CFF;
+    --gold-soft:#8FC9FF;
+    --ivory:#F5F9FC;
+    --clay:#159A6D;
+    --emerald:#0B6E4F;
+    --ink:#17242F;
+    --line:rgba(46,156,255,0.28);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ivory);
+    color:var(--ink);
+    font-family:'Work Sans',sans-serif;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--clay);
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+
+  /* ---------- geometric motif (used as signature element) ---------- */
+  .motif-strip{
+    height:14px;
+    width:100%;
+    background-image:
+      linear-gradient(45deg, var(--gold) 25%, transparent 25%),
+      linear-gradient(-45deg, var(--gold) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, var(--gold) 75%),
+      linear-gradient(-45deg, transparent 75%, var(--gold) 75%);
+    background-size:14px 14px;
+    background-position:0 0, 0 7px, 7px -7px, -7px 0px;
+    opacity:0.85;
+  }
+
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 5vw;
+    background:#0B4A34;
+    border-bottom:1px solid rgba(46,156,255,0.25);
+  }
+  .logo{display:flex;align-items:center;gap:10px;cursor:pointer;transition:opacity .2s;}
+  .logo:hover{opacity:0.85;}
+.logo-mark{
+    width:100px;height:100px;flex:0 0 auto;
+    background-image:url('/logo.png');
+    background-size:contain; background-repeat:no-repeat; background-position:center;
+  }
+  .logo-text{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:600;color:var(--indigo);}
+  .logo-text span{color:var(--clay);font-style:italic;font-weight:500;}
+  .nav-links{display:flex;gap:22px;font-size:0.88rem;}
+  .nav-links a{color:var(--ivory); opacity:0.85; transition:opacity .2s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-right{display:flex; align-items:center; gap:14px;}
+  .footer-logo{height:180px; width:auto; margin-bottom:14px; display:block;}
+  .nav-cta{
+    background:var(--gold); color:var(--ivory);
+    padding:10px 22px; border-radius:2px; font-size:0.88rem;
+    border:1px solid var(--gold);
+    transition:background .2s;
+  }
+  .nav-cta:hover{background:var(--gold-soft); color:var(--indigo-deep);}
+  .lang-switch{display:flex; border:1px solid rgba(245,249,252,0.4); border-radius:20px; padding:3px; gap:2px;}
+  .lang-switch button{
+    border:none; background:transparent; padding:5px 12px; border-radius:16px; font-size:0.76rem;
+    font-family:'IBM Plex Mono',monospace; letter-spacing:0.04em; color:var(--ivory); cursor:pointer;
+  }
+  .lang-switch button.active{background:var(--ivory); color:var(--indigo-deep);}
+
+  /* ---------- bande défilante ---------- */
+  .marquee-bar{background:transparent; overflow:hidden; white-space:nowrap; border-bottom:1px solid var(--line);}
+  .marquee-track{display:flex; width:max-content; animation:marquee-scroll 28s linear infinite;}
+  .marquee-track span{
+    padding:9px 40px; color:var(--indigo);
+    font-family:'Fraunces',serif; font-style:italic; font-size:0.92rem;
+    letter-spacing:0.01em; font-weight:500; flex:0 0 auto;
+  }
+  @keyframes marquee-scroll{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
+  @media (max-width:860px){ .lang-switch{order:2;} }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    display:grid; grid-template-columns:1.1fr 0.9fr;
+    align-items:center; gap:40px;
+    padding:80px 5vw 60px;
+    background:
+      radial-gradient(circle at 82% 20%, rgba(201,162,39,0.14), transparent 55%),
+      var(--ivory);
+    overflow:hidden;
+  }
+  .hero-eyebrow{margin-bottom:22px;}
+  .hero h1{
+    font-size:clamp(2.2rem,4vw,3.4rem);
+    line-height:1.14;
+    letter-spacing:-0.01em;
+    font-weight:500;
+    color:var(--indigo);
+    max-width:16ch;
+  }
+  .hero h1 em{
+    color:var(--clay); font-style:italic; font-weight:600;
+    font-family:'Cormorant Garamond', serif;
+    font-size:1.18em;
+    letter-spacing:0.01em;
+  }
+  .hero p.lede{
+    margin-top:22px; font-size:1.08rem; line-height:1.6;
+    max-width:46ch; color:#2E3A44;
+  }
+  .hero-actions{display:flex; gap:16px; margin-top:34px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--clay); color:var(--ivory);
+    padding:14px 28px; font-size:0.95rem; border-radius:2px;
+    border:1px solid var(--clay);
+    transition:transform .15s, box-shadow .15s;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(168,85,38,0.28);}
+  .btn-ghost{
+    padding:14px 24px; font-size:0.95rem; border-radius:2px;
+    border:1px solid var(--indigo); color:var(--indigo);
+  }
+  .hero-trust{
+    margin-top:38px; display:flex; gap:26px; font-size:0.8rem;
+    font-family:'IBM Plex Mono',monospace; color:#57687A;
+  }
+  .hero-trust b{color:var(--indigo); display:block; font-family:'Fraunces',serif; font-size:1.3rem; font-weight:600;}
+
+  .hero-art{
+    position:relative;
+    aspect-ratio:400/450;
+    background:var(--indigo);
+    border-radius:4px;
+    overflow:hidden;
+    box-shadow:0 30px 60px -20px rgba(16,26,44,0.45);
+  }
+  .hero-art svg{width:100%;height:100%;}
+
+  /* ---------- sections ---------- */
+  section{padding:90px 5vw;}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head h2{font-size:clamp(1.8rem,3vw,2.5rem); color:var(--indigo); margin-top:14px;}
+  .section-head p{margin-top:16px; color:#3E4C58; font-size:1.02rem; line-height:1.6;}
+
+  /* process (real sequence -> numbered) */
+  .process{background:var(--indigo); color:var(--ivory);}
+  .process .section-head h2{color:var(--ivory);}
+  .process .section-head p{color:#C7D3DA;}
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:rgba(245,249,252,0.14); border-radius:4px; overflow:hidden;}
+  .step{background:var(--indigo-deep); padding:32px 26px; min-height:220px; display:flex; flex-direction:column; justify-content:space-between;}
+  .step-num{font-family:'IBM Plex Mono',monospace; color:var(--gold-soft); font-size:0.85rem;}
+  .step h3{font-size:1.1rem; margin:18px 0 10px; font-weight:600;}
+  .step p{font-size:0.88rem; line-height:1.55; color:#B4C2CB;}
+
+  /* values grid */
+  .values{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .value{background:var(--ivory); padding:34px 30px;}
+  .value .mark{width:30px; height:30px; margin-bottom:20px;}
+  .value h3{font-size:1.05rem; color:var(--indigo); margin-bottom:10px;}
+  .value p{font-size:0.9rem; line-height:1.55; color:#3E4C58;}
+
+  /* app preview / demo */
+  .preview{
+    background:var(--emerald); color:var(--ivory);
+    display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px; align-items:center;
+  }
+  .preview .section-head p{color:#cfe0d5;}
+  .preview .section-head h2{color:var(--ivory);}
+  .phone{
+    background:var(--ivory); color:var(--ink); border-radius:22px;
+    padding:18px; max-width:340px; margin:0 auto;
+    box-shadow:0 40px 70px -25px rgba(0,0,0,0.5);
+  }
+  .phone-top{display:flex; justify-content:space-between; align-items:center; padding:4px 6px 16px; font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:#7A8B9A;}
+  .card-match{
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-bottom:14px;
+  }
+  .card-photo{
+    height:150px;
+    background:linear-gradient(135deg, var(--indigo) 0%, var(--emerald) 100%);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .card-photo .veil{
+    position:absolute; inset:0;
+    backdrop-filter:blur(14px);
+    background:rgba(27,42,68,0.55);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size:0.66rem; color:var(--gold-soft);
+    letter-spacing:0.08em; text-align:center; padding:0 20px; text-transform:uppercase;
+  }
+  .card-body{padding:14px 16px;}
+  .card-body h4{font-family:'Fraunces',serif; font-size:1.05rem; color:var(--indigo);}
+  .card-body .meta{font-size:0.78rem; color:#7A8B9A; margin-top:2px;}
+  .tags{display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;}
+  .tag{font-size:0.68rem; font-family:'IBM Plex Mono',monospace; border:1px solid var(--line); padding:3px 8px; border-radius:20px; color:var(--indigo);}
+  .card-actions{display:flex; gap:10px; padding:0 16px 16px;}
+  .card-actions button{
+    flex:1; padding:10px; border-radius:8px; font-size:0.82rem; border:1px solid var(--indigo);
+    background:transparent; color:var(--indigo); font-family:'Work Sans',sans-serif; cursor:pointer;
+  }
+  .card-actions button.yes{background:var(--indigo); color:var(--ivory);}
+
+  .preview-notes{display:flex; flex-direction:column; gap:26px;}
+  .note{display:flex; gap:16px;}
+  .note .n{font-family:'IBM Plex Mono',monospace; color:var(--gold-soft); font-size:0.8rem; flex:0 0 26px;}
+  .note h4{font-size:1rem; margin-bottom:6px;}
+  .note p{font-size:0.88rem; color:#cfe0d5; line-height:1.55;}
+
+  /* pricing */
+  .pricing-toggle{
+    display:inline-flex; border:1px solid var(--indigo); border-radius:30px; padding:4px; margin-bottom:44px;
+  }
+  .pricing-toggle button{
+    padding:9px 20px; border-radius:24px; font-size:0.85rem; border:none; background:transparent; cursor:pointer;
+    font-family:'Work Sans',sans-serif; color:var(--indigo);
+  }
+  .pricing-toggle button.active{background:var(--indigo); color:var(--ivory);}
+  .plans{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .plan{
+    border:1px solid var(--line); border-radius:6px; padding:32px 26px;
+    display:flex; flex-direction:column; background:#F6FAFC;
+  }
+  .plans .plan:nth-child(1){background:#CFEEDD;}
+  .plans .plan:nth-child(3){background:#CFE4FA;}
+  .plan.featured{border-color:var(--clay); background:var(--indigo); color:var(--ivory);}
+  .plan.featured .plan-price small{color:#C7D3DA;}
+  .plan.featured ul li{border-color:rgba(245,249,252,0.18);}
+  .plan-name{font-family:'IBM Plex Mono',monospace; font-size:1.15rem; font-weight:700; letter-spacing:0.01em; color:var(--clay);}
+  .plan.featured .plan-name{color:var(--gold-soft);}
+  .plan-price{font-family:'Fraunces',serif; font-size:2.1rem; margin:14px 0 4px;}
+  .plan-price small{font-family:'Work Sans',sans-serif; font-size:0.85rem; font-weight:400; color:#7A8B9A;}
+  .plan ul{list-style:none; margin:22px 0 28px; flex:1;}
+  .plan ul li{padding:10px 0; border-top:1px solid var(--line); font-size:0.88rem;}
+  .plan-cta{text-align:center; padding:12px; border-radius:2px; border:1px solid var(--indigo); font-size:0.9rem;}
+  .plan.featured .plan-cta{background:var(--gold); border-color:var(--gold); color:var(--indigo-deep);}
+  .plan:not(.featured) .plan-cta{color:var(--indigo);}
+
+  /* faq */
+  .faq{max-width:760px;}
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-q{
+    padding:22px 0; display:flex; justify-content:space-between; align-items:center;
+    cursor:pointer; font-family:'Fraunces',serif; font-size:1.05rem; color:var(--indigo);
+  }
+  .faq-q .plus{font-family:'IBM Plex Mono',monospace; color:var(--clay); font-size:1.1rem; transition:transform .25s;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .faq-item.open .faq-a{max-height:220px;}
+  .faq-a p{padding-bottom:22px; font-size:0.92rem; line-height:1.6; color:#3E4C58; max-width:60ch;}
+
+  footer{
+    background:var(--indigo-deep); color:#a79f8e; padding:60px 5vw 30px;
+  }
+  .footer-top{display:flex; justify-content:space-between; flex-wrap:wrap; gap:40px; padding-bottom:40px; border-bottom:1px solid rgba(245,249,252,0.12);}
+  footer h3{color:var(--ivory); font-size:1.4rem; margin-bottom:10px;}
+  footer p{font-size:1.1rem; max-width:40ch; line-height:1.6;}
+  .footer-cols{display:grid; grid-template-columns:repeat(2,auto); grid-template-rows:repeat(2,auto); grid-auto-flow:column; column-gap:60px; row-gap:24px;}
+  .footer-col h5{font-family:'IBM Plex Mono',monospace; font-size:0.95rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-soft); margin-bottom:16px;}
+  .footer-col a{display:block; font-size:1.05rem; padding:6px 0; color:#C7D3DA;}
+  .footer-bottom{padding-top:24px; font-size:0.78rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+
+  .nav-toggle{display:none;}
+  @media (max-width:860px){
+    nav{padding:12px 4vw; flex-wrap:wrap; position:relative; transition:none; gap:8px 0;}
+    .logo-mark{width:50px; height:50px; transition:none;}
+    .nav-right{gap:8px;}
+    .footer-logo{height:160px;}
+    .lang-switch{padding:2px; gap:0;}
+    .lang-switch button{padding:4px 8px; font-size:0.7rem;}
+    .nav-cta{padding:8px 12px; font-size:0.78rem;}
+    .nav-toggle{
+      display:flex; flex-direction:column; justify-content:center; gap:5px;
+      width:32px; height:32px; flex-shrink:0; background:none; border:none; cursor:pointer; padding:4px;
+    }
+    .nav-toggle span{display:block; width:100%; height:2px; background:var(--ivory); border-radius:2px;}
+    .nav-links{
+      display:none; width:100%; flex-direction:column; gap:2px;
+      position:absolute; top:100%; left:0; right:0;
+      background:#0B4A34; padding:10px 6vw 18px;
+      border-bottom:1px solid rgba(46,156,255,0.25);
+    }
+    .nav-links.open{display:flex;}
+    .nav-links a{padding:12px 0; border-bottom:1px solid rgba(245,249,252,0.08);}
+    .hero{grid-template-columns:1fr; padding:56px 6vw 40px;}
+    .hero-art{order:-1; max-width:280px; margin:0 auto;}
+    section{padding:64px 6vw;}
+    .steps{grid-template-columns:1fr 1fr;}
+    .values{grid-template-columns:1fr;}
+    .preview{grid-template-columns:1fr;}
+    .plans{grid-template-columns:1fr;}
+    .footer-top{flex-direction:column;}
+    .footer-cols{gap:32px; grid-template-columns:1fr; grid-auto-flow:row;}
+  }
+</style>
+</head>
+<body>
+
+<div id="site-view">
+
+<nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+  </div>
+</div>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow hero-eyebrow" data-i18n="hero_eyebrow">Rencontre matrimoniale halal · diaspora béninoise</div>
+    <h1 data-i18n="hero_title">Le rendez-vous <em>béni de l'amour</em>, entre familles.</h1>
+    <p class="lede" data-i18n="hero_lede">Ikpadé Ifê met en relation, dans le respect du cadre islamique, les musulmans béninois d'Abomey-Calavi à Paris, Cotonou à Montréal, Porto-Novo à New-York — pour un seul objectif : le mariage.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-primary" onclick="showSignup();return false;" data-i18n="btn_creer_profil">Créer mon profil</a>
+      <a href="#parcours" class="btn-ghost" data-i18n="hero_voir_parcours">Voir le parcours</a>
+    </div>
+    <div class="hero-trust">
+      <div><b>100%</b><span data-i18n="trust_1"> tuteur / wali informé</span></div>
+      <div><b>0</b><span data-i18n="trust_2"> photo publique</span></div>
+      <div><b>3</b><span data-i18n="trust_3"> continents connectés</span></div>
+    </div>
+  </div>
+  <div class="hero-art">
+    <svg viewBox="0 0 400 450" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="star" width="60" height="60" patternUnits="userSpaceOnUse">
+          <path d="M30 6 L36 24 L54 24 L39 35 L45 54 L30 42 L15 54 L21 35 L6 24 L24 24 Z"
+                fill="none" stroke="#2E9CFF" stroke-width="0.8" opacity="0.35"/>
+        </pattern>
+      </defs>
+      <rect width="400" height="450" fill="#0E3A5F"/>
+      <rect width="400" height="450" fill="url(#star)"/>
+
+      <!-- Cœur arrière (vert), en contour -->
+      <g transform="translate(215,135) scale(2)">
+        <path d="M0,-6 C-9,-19 -29,-17 -29,1 C-29,17 -14,28 0,40 C14,28 29,17 29,1 C29,-17 9,-19 0,-6 Z"
+              fill="none" stroke="#159A6D" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      </g>
+      <!-- Cœur avant (bleu) : rempli de la couleur de fond pour créer l'effet d'entrelacement -->
+      <g transform="translate(180,108) scale(2)">
+        <path d="M0,-6 C-9,-19 -29,-17 -29,1 C-29,17 -14,28 0,40 C14,28 29,17 29,1 C29,-17 9,-19 0,-6 Z"
+              fill="#0E3A5F" stroke="#2E9CFF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+      </g>
+
+      <text x="200" y="270" text-anchor="middle" fill="#F5F9FC" font-family="Fraunces, serif" font-size="19" font-style="italic">« ...et Il a mis entre vous</text>
+      <text x="200" y="296" text-anchor="middle" fill="#F5F9FC" font-family="Fraunces, serif" font-size="19" font-style="italic">affection et bonté. »</text>
+      <text x="200" y="326" text-anchor="middle" fill="#2E9CFF" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="1">SOURATE AR-RÛM, 30:21</text>
+
+      <text x="200" y="361" text-anchor="middle" fill="#F5F9FC" font-family="Fraunces, serif" font-size="13.5" font-style="italic">« Le mariage fait partie de ma</text>
+      <text x="200" y="382" text-anchor="middle" fill="#F5F9FC" font-family="Fraunces, serif" font-size="13.5" font-style="italic">tradition (Sunnah). Quiconque se détourne</text>
+      <text x="200" y="403" text-anchor="middle" fill="#F5F9FC" font-family="Fraunces, serif" font-size="13.5" font-style="italic">de ma tradition n'est pas des miens. »</text>
+      <text x="200" y="429" text-anchor="middle" fill="#159A6D" font-family="IBM Plex Mono, monospace" font-size="10" letter-spacing="1">HADITH PROPHÉTIQUE</text>
+    </svg>
+  </div>
+</section>
+
+<div class="motif-strip"></div>
+
+<section class="process" id="parcours">
+  <div class="section-head">
+    <div class="eyebrow" style="color:var(--gold-soft)" data-i18n="parcours_eyebrow">Le parcours</div>
+    <h2 data-i18n="parcours_h2">Quatre étapes, un seul but</h2>
+    <p data-i18n="parcours_p">Chaque étape est pensée pour protéger la dignité des deux familles et avancer avec une intention claire.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div>
+        <div class="step-num">01</div>
+        <h3 data-i18n="step1_h3">Profil vérifié</h3>
+        <p data-i18n="step1_p">Pièce d'identité, ville, statut marital et niveau de pratique confirmés avant toute mise en ligne.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-num">02</div>
+        <h3 data-i18n="step2_h3">Tuteur associé</h3>
+        <p data-i18n="step2_p">Le wali ou un proche désigné reçoit un accès de suivi et valide les échanges qui avancent.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-num">03</div>
+        <h3 data-i18n="step3_h3">Mise en relation</h3>
+        <p data-i18n="step3_p">Affinités de valeurs, de région d'origine et de projet de vie — le visage reste voilé jusqu'à l'accord mutuel.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div>
+        <div class="step-num">04</div>
+        <h3 data-i18n="step4_h3">Rencontre encadrée</h3>
+        <p data-i18n="step4_p">Premier échange écrit modéré, puis rencontre familiale organisée, en présentiel ou à distance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="valeurs">
+  <div class="section-head">
+    <div class="eyebrow" data-i18n="valeurs_eyebrow">Nos principes</div>
+    <h2 data-i18n="valeurs_h2">Construit autour du halal, pas à côté</h2>
+    <p data-i18n="valeurs_p">Chaque fonctionnalité découle d'un principe, jamais l'inverse.</p>
+  </div>
+  <div class="values">
+    <div class="value">
+      <svg class="mark" viewBox="0 0 30 30"><path d="M15 2 L18 12 L28 12 L20 18 L23 28 L15 22 L7 28 L10 18 L2 12 L12 12 Z" fill="none" stroke="#159A6D" stroke-width="1.4"/></svg>
+      <h3 data-i18n="val1_h3">Pas de messagerie libre</h3>
+      <p data-i18n="val1_p">Les échanges commencent toujours par une demande d'introduction, visible par le tuteur désigné.</p>
+    </div>
+    <div class="value">
+      <svg class="mark" viewBox="0 0 30 30"><rect x="4" y="4" width="22" height="22" rx="2" fill="none" stroke="#159A6D" stroke-width="1.4"/><circle cx="15" cy="15" r="5" fill="none" stroke="#159A6D" stroke-width="1.4"/></svg>
+      <h3 data-i18n="val2_h3">Photos voilées</h3>
+      <p data-i18n="val2_p">La photo n'est révélée qu'après acceptation mutuelle et accord du tuteur — jamais avant.</p>
+    </div>
+    <div class="value">
+      <svg class="mark" viewBox="0 0 30 30"><path d="M6 15 A9 9 0 1 1 24 15" fill="none" stroke="#159A6D" stroke-width="1.4"/><path d="M15 6 L15 15 L21 21" stroke="#159A6D" stroke-width="1.4" fill="none"/></svg>
+      <h3 data-i18n="val3_h3">Intention affichée</h3>
+      <p data-i18n="val3_p">Chaque profil précise le délai de mariage souhaité, pour éviter les attentes floues des deux côtés.</p>
+    </div>
+    <div class="value">
+      <svg class="mark" viewBox="0 0 30 30"><path d="M15 3 C 22 3 27 9 27 15 C27 22 15 28 15 28 C15 28 3 22 3 15 C3 9 8 3 15 3 Z" fill="none" stroke="#159A6D" stroke-width="1.4"/></svg>
+      <h3 data-i18n="val4_h3">Diaspora prioritaire</h3>
+      <p data-i18n="val4_p">Filtre par pays de résidence, ville d'origine au Bénin et intention de retour au pays.</p>
+    </div>
+    <div class="value">
+      <svg class="mark" viewBox="0 0 30 30"><path d="M4 24 L26 24 M8 24 V14 L15 6 L22 14 V24" fill="none" stroke="#159A6D" stroke-width="1.4"/></svg>
+      <h3 data-i18n="val5_h3">Vérification humaine</h3>
+      <p data-i18n="val5_p">Une équipe de modération relit chaque profil avant publication ; aucun compte automatisé.</p>
+    </div>
+    <div class="value">
+      <svg class="mark" viewBox="0 0 30 30"><rect x="6" y="10" width="18" height="14" rx="2" fill="none" stroke="#159A6D" stroke-width="1.4"/><path d="M6 12 L15 18 L24 12" stroke="#159A6D" stroke-width="1.4" fill="none"/></svg>
+      <h3 data-i18n="val6_h3">Signalement direct</h3>
+      <p data-i18n="val6_p">Tout comportement contraire à l'adab est signalé en un geste et traité sous 24h.</p>
+    </div>
+  </div>
+</section>
+
+<section class="preview" id="apercu">
+  <div class="phone">
+    <div class="phone-top"><span>IKPADÉ IFÊ</span><span>09:41</span></div>
+    <div class="card-match">
+      <div class="card-photo">
+        <div class="veil" data-i18n="veil_label">Photo voilée<br>jusqu'à l'accord mutuel</div>
+      </div>
+      <div class="card-body">
+        <h4>A. Alowakinnou, 29 ans</h4>
+        <div class="meta">Cotonou · réside à Paris, France</div>
+        <div class="tags">
+          <span class="tag">Souhaite se marier &lt; 12 mois</span>
+          <span class="tag">Hafiza</span>
+          <span class="tag">Fon · Français</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button data-i18n="btn_passer">Passer</button>
+        <button class="yes" data-i18n="btn_demander_intro">Demander une introduction</button>
+      </div>
+    </div>
+    <div class="card-match">
+      <div class="card-photo">
+        <div class="veil" data-i18n="veil_label">Photo voilée<br>jusqu'à l'accord mutuel</div>
+      </div>
+      <div class="card-body">
+        <h4>R. Sacca, 31 ans</h4>
+        <div class="meta">Parakou · réside à Toronto, Canada</div>
+        <div class="tags">
+          <span class="tag">Divorcé, sans enfant</span>
+          <span class="tag">Commerçant</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="section-head" style="margin-bottom:36px;">
+      <div class="eyebrow" style="color:var(--gold-soft)" data-i18n="apercu_eyebrow">Aperçu de l'application</div>
+      <h2 data-i18n="apercu_h2">Ce que voit chaque membre</h2>
+      <p data-i18n="apercu_p">Une interface volontairement sobre : l'objectif n'est pas de faire défiler, mais de faire un choix réfléchi.</p>
+    </div>
+    <div class="preview-notes">
+      <div class="note">
+        <div class="n">01</div>
+        <div><h4 data-i18n="note1_h4">Fiche complète avant photo</h4><p data-i18n="note1_p">Valeurs, projet de vie et attentes familiales apparaissent avant tout visuel.</p></div>
+      </div>
+      <div class="note">
+        <div class="n">02</div>
+        <div><h4 data-i18n="note2_h4">Tuteur en copie</h4><p data-i18n="note2_p">Le wali reçoit une notification dès qu'une introduction est acceptée par les deux parties.</p></div>
+      </div>
+      <div class="note">
+        <div class="n">03</div>
+        <div><h4 data-i18n="note3_h4">Statut d'intention clair</h4><p data-i18n="note3_p">Chaque compte indique un horizon de mariage réaliste, mis à jour chaque trimestre.</p></div>
+      </div>
+      <div class="note">
+        <div class="n">04</div>
+        <div>
+          <h4 data-i18n="note4_h4">Messagerie modérée</h4>
+          <p data-i18n="note4_p">Une fois l'introduction acceptée, l'échange se fait dans un espace surveillé, sans partage de coordonnées.</p>
+          <a href="#" class="btn-ghost" style="display:inline-block; margin-top:12px; padding:9px 18px; font-size:0.82rem;" onclick="showSignup();return false;" data-i18n="note4_cta">Créer mon profil pour en profiter →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abonnement">
+  <div class="section-head">
+    <div class="eyebrow" data-i18n="abon_eyebrow">Abonnement</div>
+    <h2 data-i18n="abon_h2">Un abonnement sérieux, pour une démarche sérieuse</h2>
+    <p data-i18n="abon_p">La cotisation finance la vérification humaine des profils et la modération des échanges.</p>
+  </div>
+
+  <div class="pricing-toggle">
+    <button class="active" id="btn-mensuel" data-i18n="toggle_mensuel">Mensuel</button>
+    <button id="btn-annuel" data-i18n="toggle_annuel">Annuel — 2 mois offerts</button>
+  </div>
+
+  <div class="plans">
+    <div class="plan">
+      <div class="plan-name">Alaafia <span style="opacity:.6;font-weight:400;" data-i18n="plan1_sub">— paix, bienvenue</span></div>
+      <div class="plan-price"><span class="amount" data-i18n="plan1_price">Gratuit</span></div>
+      <ul>
+        <li data-i18n="plan1_li1">Profil vérifié de base</li>
+        <li data-i18n="plan1_li2">3 demandes d'introduction / mois</li>
+        <li data-i18n="plan1_li3">Recherche par ville d'origine</li>
+      </ul>
+      <div class="plan-cta" style="cursor:pointer;" onclick="showSignup()" data-i18n="plan1_cta">Créer mon compte</div>
+    </div>
+    <div class="plan featured">
+      <div class="plan-name">Khadijath <span style="opacity:.75;font-weight:400;" data-i18n="plan2_sub">— le plus choisi</span></div>
+      <div class="plan-price"><span class="amount mensuel-price" id="price-ajumose">5 000 FCFA</span><small class="mensuel-sub">/ mois</small></div>
+      <ul>
+        <li data-i18n="plan2_li1">Introductions illimitées</li>
+        <li data-i18n="plan2_li2">Tuteur associé avec notifications</li>
+        <li data-i18n="plan2_li3">Filtre région, ethnie, niveau de pratique</li>
+        <li data-i18n="plan2_li4">Accompagnement d'un médiateur au 2e échange</li>
+      </ul>
+      <div class="plan-cta" style="cursor:pointer;" onclick="showPayment('Khadijath','ajumose')" data-i18n="plan2_cta">Choisir Khadijath</div>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Hawa <span style="opacity:.6;font-weight:400;" data-i18n="plan3_sub">— la famille</span></div>
+      <div class="plan-price"><span class="amount mensuel-price" id="price-idile">9 000 FCFA</span><small class="mensuel-sub">/ mois</small></div>
+      <ul>
+        <li data-i18n="plan3_li1">Tout Khadijath, plus :</li>
+        <li data-i18n="plan3_li2">Compte tuteur avec droit de présélection</li>
+        <li data-i18n="plan3_li3">Mise en relation directe entre familles</li>
+        <li data-i18n="plan3_li4">Ligne d'assistance dédiée</li>
+      </ul>
+      <div class="plan-cta" style="cursor:pointer;" onclick="showPayment('Hawa','idile')" data-i18n="plan3_cta">Choisir Hawa</div>
+    </div>
+  </div>
+</section>
+
+<section class="faq">
+  <div class="section-head">
+    <div class="eyebrow" data-i18n="faq_eyebrow">Questions fréquentes</div>
+    <h2 data-i18n="faq_h2">Avant de vous inscrire</h2>
+  </div>
+  <div class="faq-item open">
+    <div class="faq-q"><span data-i18n="faq1_q">Le tuteur (wali) est-il obligatoire ?</span><span class="plus">+</span></div>
+    <div class="faq-a"><p data-i18n="faq1_a">Oui pour les profils féminins, conformément au cadre islamique. Un tuteur (père, frère ou proche désigné) est associé au compte et informé de toute introduction acceptée.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span data-i18n="faq2_q">Puis-je m'inscrire depuis l'étranger ?</span><span class="plus">+</span></div>
+    <div class="faq-a"><p data-i18n="faq2_a">Oui, Ikpadé Ifê s'adresse en priorité à la diaspora béninoise. Vous indiquez votre pays de résidence et votre ville d'origine au Bénin dès l'inscription.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span data-i18n="faq3_q">Comment sont vérifiés les profils ?</span><span class="plus">+</span></div>
+    <div class="faq-a"><p data-i18n="faq3_a">Une pièce d'identité et un court entretien téléphonique sont demandés avant toute publication du profil.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q"><span data-i18n="faq4_q">Que se passe-t-il après une introduction acceptée ?</span><span class="plus">+</span></div>
+    <div class="faq-a"><p data-i18n="faq4_a">Un espace d'échange modéré s'ouvre, en copie au(x) tuteur(s). Après un délai raisonnable, une rencontre familiale peut être organisée.</p></div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="section-head">
+    <div class="eyebrow" data-i18n="contact_eyebrow">Nous contacter</div>
+    <h2 data-i18n="contact_h2">Une question ? Écrivez-nous</h2>
+    <p data-i18n="contact_p">Notre équipe vous répond sous 24 à 48h ouvrées.</p>
+  </div>
+  <form id="contact-form" onsubmit="return false;" style="max-width:640px;">
+    <div style="position:absolute; left:-9999px; opacity:0; height:0; overflow:hidden;" aria-hidden="true">
+      <label>Ne pas remplir ce champ<input type="text" id="contact-piege" tabindex="-1" autocomplete="off"></label>
+    </div>
+    <label class="pay-label"><span data-i18n="lbl_contact_nom">Nom complet</span>
+      <input type="text" id="contact-nom" required>
+    </label>
+    <label class="pay-label"><span data-i18n="lbl_contact_email">Email</span>
+      <input type="email" id="contact-email" required>
+    </label>
+    <label class="pay-label"><span data-i18n="lbl_contact_sujet">Sujet</span>
+      <input type="text" id="contact-sujet">
+    </label>
+    <label class="pay-label"><span data-i18n="lbl_contact_message">Message</span>
+      <textarea id="contact-message" rows="5" required
+        style="width:100%;margin-top:8px;padding:12px 14px;border:1px solid var(--line);border-radius:3px;background:#F6FAFC;font-family:'Work Sans',sans-serif;font-size:0.92rem;color:var(--ink);resize:vertical;"></textarea>
+    </label>
+    <div id="contact-error" style="display:none;color:#8a2f2f;font-size:0.85rem;margin-bottom:14px;"></div>
+    <div id="contact-success" style="display:none;color:#159A6D;font-size:0.9rem;margin-bottom:14px;" data-i18n="contact_success">Merci, votre message a bien été envoyé. Nous vous répondrons rapidement.</div>
+    <button type="button" class="btn-primary" id="contact-submit-btn" onclick="submitContact()" data-i18n="btn_envoyer_message">Envoyer le message</button>
+  </form>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div>
+      <img src="/logo.png" alt="Ikpadé Ifê" loading="lazy" class="footer-logo">
+      <p data-i18n="footer_tagline">Le rendez-vous béni pour les musulmans béninois du monde entier, au service du mariage.</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <h5 data-i18n="footer_plateforme">Plateforme</h5>
+        <a href="#parcours" data-i18n="nav_parcours">Le parcours</a>
+        <a href="#valeurs" data-i18n="nav_valeurs">Nos principes</a>
+        <a href="#abonnement" data-i18n="nav_abonnement">Abonnement</a>
+        <a href="blog.html" data-i18n="nav_blog">Blog</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_confiance">Confiance</h5>
+        <a href="#" onclick="showAdmin();return false;" data-i18n="footer_charte">Charte de modération</a>
+        <a href="#" onclick="showTuteur();return false;" data-i18n="footer_role_tuteur">Rôle du tuteur</a>
+        <a href="#" onclick="showAdmin();return false;" data-i18n="footer_signaler">Signaler un profil</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_equipe">Équipe</h5>
+        <a href="#" onclick="showAdmin();return false;" data-i18n="footer_console">Console de modération</a>
+      </div>
+      <div class="footer-col">
+        <h5>Légal</h5>
+        <a href="#" onclick="showLegal('cgu');return false;">Conditions générales</a>
+        <a href="#" onclick="showLegal('confidentialite');return false;">Confidentialité</a>
+        <a href="#" onclick="showLegal('remboursement');return false;">Remboursement</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span style="font-size:1rem;" data-i18n="footer_copyright">© 2026 Ikpadé Ifê — Tous droits réservés</span>
+  </div>
+</footer>
+
+</div><!-- /site-view -->
+
+<div id="signup-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+  </div>
+</div>
+
+  <section style="padding-top:56px;">
+    <div class="section-head" style="margin-bottom:40px;">
+      <div class="eyebrow" data-i18n="signup_eyebrow">Inscription</div>
+      <h2 data-i18n="signup_h2">Créer votre profil</h2>
+      <p data-i18n="signup_p">Cinq étapes courtes. Rien n'est publié avant vérification humaine de votre dossier.</p>
+    </div>
+
+    <div class="signup-steps">
+      <div class="signup-step-labels">
+        <span data-step="1" class="active" data-i18n="signup_step1">01 · Identité</span>
+        <span data-step="2" data-i18n="signup_step2">02 · Origines</span>
+        <span data-step="3" data-i18n="signup_step3">03 · Profil &amp; intention</span>
+        <span data-step="4" data-i18n="signup_step4">04 · Tuteur / Wali</span>
+        <span data-step="5" data-i18n="signup_step5">05 · Confirmation</span>
+      </div>
+      <div class="signup-progress"><div class="signup-progress-bar" id="progress-bar"></div></div>
+
+      <form id="signup-form" onsubmit="return false;">
+
+        <div class="signup-panel active" data-panel="1">
+          <div class="grid-2">
+            <label><span data-i18n="lbl_prenom">Prénom</span><input type="text" id="signup-prenom" placeholder="ex. Aïcha" required></label>
+            <label><span data-i18n="lbl_nom">Nom</span><input type="text" id="signup-nom" placeholder="ex. Alowakinnou" required></label>
+          </div>
+          <div class="grid-2">
+            <label><span data-i18n="lbl_genre">Genre</span>
+              <select id="genre-select">
+                <option value="femme" data-i18n="opt_femme">Femme</option>
+                <option value="homme" data-i18n="opt_homme">Homme</option>
+              </select>
+            </label>
+            <label><span data-i18n="lbl_age">Âge</span><input type="number" id="signup-age" min="18" max="70" placeholder="ex. 27" required></label>
+          </div>
+          <label><span data-i18n="lbl_tel">Numéro de téléphone (WhatsApp de préférence)</span><input type="tel" id="signup-phone" placeholder="+229 ..." required></label>
+          <div class="grid-2">
+            <label><span data-i18n="lbl_email">Email</span><input type="email" id="signup-email" placeholder="vous@exemple.com" required></label>
+            <label><span data-i18n="lbl_password">Mot de passe</span><input type="password" id="signup-password" placeholder="8 caractères minimum" required minlength="8"></label>
+          </div>
+        </div>
+
+        <div class="signup-panel" data-panel="2">
+          <div class="grid-2">
+            <label><span data-i18n="lbl_pays_residence">Pays de résidence actuel</span><input type="text" id="signup-pays-residence" placeholder="ex. France" required></label>
+            <label><span data-i18n="lbl_ville_residence">Ville de résidence</span><input type="text" id="signup-ville-residence" placeholder="ex. Paris" required></label>
+          </div>
+          <div class="grid-2">
+            <label><span data-i18n="lbl_ville_origine">Ville / région d'origine au Bénin</span><input type="text" id="signup-ville-origine" placeholder="ex. Parakou" required></label>
+            <label><span data-i18n="lbl_langues">Langue(s) parlée(s)</span><input type="text" id="signup-langues" placeholder="ex. Fon, Français"></label>
+          </div>
+          <label><span data-i18n="lbl_retour_benin">Envisagez-vous un retour au Bénin après le mariage ?</span>
+            <select id="signup-retour-benin">
+              <option value="moyen_terme" data-i18n="opt_retour1">Oui, à moyen terme</option>
+              <option value="long_terme" data-i18n="opt_retour2">Oui, à long terme</option>
+              <option value="non" data-i18n="opt_retour3">Non, je m'installe à l'étranger</option>
+              <option value="indecis" data-i18n="opt_retour4">Indécis(e)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="signup-panel" data-panel="3">
+          <div class="grid-2">
+            <label><span data-i18n="lbl_statut_marital">Statut marital</span><input list="statuts" id="signup-statut-marital" placeholder="ex. Célibataire">
+              <datalist id="statuts"><option data-i18n="opt_celibataire">Célibataire</option><option data-i18n="opt_divorce">Divorcé(e)</option><option data-i18n="opt_veuf">Veuf/Veuve</option></datalist>
+            </label>
+            <label><span data-i18n="lbl_pratique">Niveau de pratique religieuse</span>
+              <select id="signup-pratique">
+                <option value="assidu" data-i18n="opt_pratique1">Pratiquant(e) assidu(e)</option>
+                <option value="pratiquant" data-i18n="opt_pratique2">Pratiquant(e)</option>
+                <option value="cheminement" data-i18n="opt_pratique3">En cheminement</option>
+              </select>
+            </label>
+          </div>
+          <label><span data-i18n="lbl_delai">Délai souhaité pour le mariage</span>
+            <select id="signup-delai">
+              <option value="moins_6_mois" data-i18n="opt_delai1">Moins de 6 mois</option>
+              <option value="6_12_mois" data-i18n="opt_delai2">6 à 12 mois</option>
+              <option value="12_24_mois" data-i18n="opt_delai3">12 à 24 mois</option>
+              <option value="pas_de_delai" data-i18n="opt_delai4">Pas de délai fixe</option>
+            </select>
+          </label>
+          <label><span data-i18n="lbl_presentation">Courte présentation (visible après introduction acceptée)</span>
+            <textarea rows="4" id="signup-presentation" placeholder="Parlez de vos valeurs, votre parcours, ce que vous recherchez chez un(e) époux(se)..." data-i18n-ph="ph_presentation"></textarea>
+          </label>
+        </div>
+
+        <div class="signup-panel" data-panel="4">
+          <p id="tuteur-note" style="font-size:0.88rem;color:#3E4C58;margin-bottom:22px;line-height:1.6;" data-i18n="tuteur_note_femme">Un tuteur (wali) est requis pour les profils féminins. Il sera notifié de chaque demande d'introduction acceptée.</p>
+          <div class="grid-2">
+            <label><span data-i18n="lbl_nom_tuteur">Nom complet du tuteur</span><input type="text" id="signup-nom-tuteur" placeholder="ex. M. Alowakinnou"></label>
+            <label><span data-i18n="lbl_lien_parente">Lien de parenté</span><input type="text" id="signup-lien-parente" placeholder="ex. Père, frère aîné"></label>
+          </div>
+          <label><span data-i18n="lbl_contact_tuteur">Téléphone du tuteur</span><input type="text" id="signup-contact-tuteur" placeholder="+229 ..."></label>
+          <label><span data-i18n="lbl_email_tuteur">Email du tuteur (pour son futur accès à l'espace tuteur)</span><input type="email" id="signup-email-tuteur" placeholder="ex. tuteur@email.com"></label>
+        </div>
+
+        <div class="signup-panel" data-panel="5">
+          <div class="recap-box">
+            <label style="display:block; margin-bottom:22px;">
+              <span data-i18n="lbl_photo">Photo de profil (facultatif — vous pourrez aussi l'ajouter plus tard)</span>
+              <input type="file" accept="image/*" id="signup-photo" style="display:block; margin-top:8px;">
+              <span id="signup-photo-note" style="display:block; font-size:0.8rem; color:#57687A; margin-top:6px;" data-i18n="photo_note">Elle reste floutée pour les autres membres jusqu'à l'introduction formelle. Seule l'équipe de modération voit la version claire, pour vérifier votre identité.</span>
+            </label>
+            <div class="eyebrow" style="margin-bottom:14px;" data-i18n="avant_valider">Avant de valider</div>
+            <label class="check-row"><input type="checkbox" id="signup-check1"> <span data-i18n="check1">Je certifie que les informations fournies sont exactes.</span></label>
+            <label class="check-row"><input type="checkbox" id="signup-check2"> <span data-i18n="check2">J'accepte que mon tuteur soit notifié des introductions acceptées.</span></label>
+            <label class="check-row"><input type="checkbox" id="signup-check3"> <span data-i18n="check3">J'accepte les <a href="#" onclick="showLegal('cgu');event.stopPropagation();return false;" style="color:var(--clay); text-decoration:underline;">Conditions Générales d'Utilisation</a> et la <a href="#" onclick="showLegal('confidentialite');event.stopPropagation();return false;" style="color:var(--clay); text-decoration:underline;">Politique de Confidentialité</a> d'Ikpadé Ifê.</span></label>
+          </div>
+        </div>
+
+        <div id="signup-form-error" style="display:none; background:#FDECEA; border:1px solid #8a2f2f; color:#8a2f2f; border-radius:4px; padding:12px 16px; margin-bottom:16px; font-size:0.9rem;"></div>
+
+        <div class="signup-nav">
+          <button type="button" class="btn-ghost" id="prev-btn" onclick="stepMove(-1)" style="visibility:hidden;" data-i18n="btn_precedent">Précédent</button>
+          <button type="button" class="btn-primary" id="next-btn" onclick="stepMove(1)" data-i18n="btn_suivant">Suivant</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div><!-- /signup-view -->
+
+<div id="login-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+  <section style="padding-top:56px; max-width:440px; margin:0 auto;">
+    <div class="section-head" style="margin-bottom:32px;">
+      <div class="eyebrow" data-i18n="login_eyebrow">Connexion</div>
+      <h2 data-i18n="login_h2">Ravis de vous revoir</h2>
+      <p data-i18n="login_p">Connectez-vous pour accéder à votre espace.</p>
+    </div>
+    <label class="pay-label"><span data-i18n="lbl_contact_email">Email</span>
+      <input type="email" id="login-email">
+    </label>
+    <label class="pay-label"><span data-i18n="lbl_password">Mot de passe</span>
+      <input type="password" id="login-password">
+    </label>
+    <div id="login-status" style="display:none; font-size:0.85rem; margin-bottom:16px;"></div>
+    <button type="button" class="btn-primary" style="width:100%;" onclick="submitLogin()" data-i18n="btn_connexion">Se connecter</button>
+    <p style="margin-top:20px; font-size:0.88rem; text-align:center;">
+      <span data-i18n="login_pas_de_compte">Pas encore de compte ?</span>
+      <a href="#" onclick="showSignup();return false;" style="color:var(--clay); font-weight:500;" data-i18n="login_creer_compte">Créer mon profil</a>
+    </p>
+  </section>
+</div><!-- /login-view -->
+
+<div id="browse-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+  <section style="padding-top:56px;">
+    <div class="section-head" style="margin-bottom:36px;">
+      <div class="eyebrow" data-i18n="browse_eyebrow">Profils publiés</div>
+      <h2 data-i18n="browse_h2">Parcourir les profils</h2>
+      <p data-i18n="browse_p">Chaque profil a été vérifié par notre équipe. La photo reste voilée jusqu'à l'accord mutuel.</p>
+    </div>
+    <div id="browse-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:24px;"></div>
+  </section>
+</div><!-- /browse-view -->
+
+<div id="requests-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+  <section style="padding-top:56px;">
+    <div class="section-head" style="margin-bottom:36px;">
+      <div class="eyebrow" data-i18n="requests_eyebrow">Mes demandes</div>
+      <h2 data-i18n="requests_h2">Introductions</h2>
+      <p data-i18n="requests_p">Retrouvez ici les demandes que vous avez reçues et envoyées.</p>
+    </div>
+    <h3 style="font-family:'Fraunces',serif; margin-bottom:16px;" data-i18n="requests_recues_h3">Demandes reçues</h3>
+    <div id="requests-recues" style="margin-bottom:44px;"><p style="color:#7A8B9A;" data-i18n="loading_requests">Chargement...</p></div>
+    <h3 style="font-family:'Fraunces',serif; margin-bottom:16px;" data-i18n="requests_envoyees_h3">Demandes envoyées</h3>
+    <div id="requests-envoyees"><p style="color:#7A8B9A;" data-i18n="loading_requests">Chargement...</p></div>
+  </section>
+</div><!-- /requests-view -->
+
+<div id="photo-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+  <section style="padding-top:56px; max-width:480px; margin:0 auto;">
+    <div class="section-head" style="margin-bottom:32px;">
+      <div class="eyebrow" data-i18n="photo_eyebrow">Ma photo</div>
+      <h2 data-i18n="photo_h2">Gérer ma photo de profil</h2>
+      <p data-i18n="photo_p">Elle reste floutée pour les autres membres jusqu'à l'introduction formelle. Seule l'équipe de modération voit la version claire.</p>
+    </div>
+
+    <div id="photo-apercu-zone" style="margin-bottom:20px;"></div>
+
+    <label class="pay-label"><span data-i18n="lbl_photo_fichier">Choisir une photo</span>
+      <input type="file" accept="image/*" id="photo-page-input">
+    </label>
+    <div id="photo-page-status" style="display:none; font-size:0.85rem; margin-bottom:16px;"></div>
+    <button type="button" class="btn-primary" style="width:100%;" onclick="submitPhotoPage()" data-i18n="btn_envoyer_photo">Envoyer cette photo</button>
+  </section>
+</div><!-- /photo-view -->
+
+<style>
+  .signup-step-labels{display:flex; gap:22px; flex-wrap:wrap; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; letter-spacing:0.04em; color:#9FB0BD; margin-bottom:14px;}
+  .signup-step-labels span.active{color:var(--indigo); font-weight:500;}
+  .signup-progress{height:3px; background:var(--line); border-radius:3px; margin-bottom:44px; overflow:hidden;}
+  .signup-progress-bar{height:100%; width:20%; background:var(--clay); transition:width .3s ease;}
+  .signup-panel{display:none; max-width:640px;}
+  .signup-panel.active{display:block; animation:fadeIn .3s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  .grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  #signup-form label{display:block; font-size:0.85rem; color:var(--indigo); margin-bottom:20px; font-weight:500;}
+  #signup-form input, #signup-form select, #signup-form textarea{
+    width:100%; margin-top:8px; padding:12px 14px; border:1px solid var(--line);
+    border-radius:3px; background:#F6FAFC; font-family:'Work Sans',sans-serif; font-size:0.92rem; color:var(--ink);
+  }
+  #signup-form input:focus, #signup-form select:focus, #signup-form textarea:focus{
+    outline:2px solid var(--clay); outline-offset:1px;
+  }
+  .recap-box{border:1px solid var(--line); border-radius:6px; padding:26px; background:#F6FAFC;}
+  .check-row{display:flex; align-items:flex-start; gap:10px; font-weight:400 !important; font-size:0.88rem !important; color:#2E3A44 !important;}
+  .check-row input{width:auto !important; margin-top:2px !important;}
+  .signup-nav{display:flex; justify-content:space-between; max-width:640px; margin-top:24px;}
+  @media (max-width:640px){ .grid-2{grid-template-columns:1fr;} }
+</style>
+
+<script>
+  function hideAllViews(){
+    ['site-view','signup-view','tuteur-view','admin-view','messaging-view','payment-view','login-view','browse-view','requests-view','legal-view','photo-view'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.style.display='none';
+    });
+  }
+  function showSignup(){
+    hideAllViews();
+    document.getElementById('signup-view').style.display='block';
+    window.scrollTo(0,0);
+  }
+  function showSite(){
+    hideAllViews();
+    document.getElementById('site-view').style.display='block';
+    window.scrollTo(0,0);
+  }
+  function showLogin(){
+    hideAllViews();
+    document.getElementById('login-view').style.display='block';
+    window.scrollTo(0,0);
+  }
+  function showLegal(page){
+    hideAllViews();
+    document.getElementById('legal-view').style.display='block';
+    document.querySelectorAll('.legal-doc').forEach(d => d.style.display = (d.id === 'legal-' + page) ? 'block' : 'none');
+    window.scrollTo(0,0);
+  }
+  async function showPhotoPage(){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){
+      alert(t('connexion_requise_photo'));
+      showLogin();
+      return;
+    }
+    hideAllViews();
+    document.getElementById('photo-view').style.display='block';
+    window.scrollTo(0,0);
+
+    const zone = document.getElementById('photo-apercu-zone');
+    zone.innerHTML = `<p style="color:#7A8B9A;">${t('loading_requests')}</p>`;
+    const { data: signedUrl } = await sb.storage.from('photos-profil').createSignedUrl(`${session.user.id}/original.jpg`, 60);
+    if(signedUrl && signedUrl.signedUrl){
+      zone.innerHTML = `<img src="${signedUrl.signedUrl}" alt="" style="width:140px; height:140px; object-fit:cover; border-radius:6px; display:block;"><p style="font-size:0.82rem; color:#57687A; margin-top:8px;">${t('photo_actuelle')}</p>`;
+    } else {
+      zone.innerHTML = `<p style="color:#7A8B9A;">${t('photo_aucune')}</p>`;
+    }
+  }
+
+  async function submitPhotoPage(){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){ showLogin(); return; }
+    const file = document.getElementById('photo-page-input').files[0];
+    const status = document.getElementById('photo-page-status');
+    if(!file){
+      status.style.display='block'; status.style.color='var(--clay)';
+      status.textContent = t('photo_erreur_aucune_selection');
+      return;
+    }
+    status.style.display='block'; status.style.color='#57687A';
+    const resultat = await envoyerPhotoProfil(file, session.user.id, status);
+    if(!resultat.ok){
+      status.style.color='var(--clay)';
+      status.textContent = t('photo_erreur_envoi') + ' ' + resultat.message;
+      return;
+    }
+    status.style.color='var(--clay-vert, #159A6D)';
+    status.textContent = t('photo_envoyee_succes');
+    showPhotoPage();
+  }
+
+  async function showBrowse(){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){
+      alert(t('connexion_requise_profils'));
+      showLogin();
+      return;
+    }
+    hideAllViews();
+    document.getElementById('browse-view').style.display='block';
+    window.scrollTo(0,0);
+    loadBrowseProfiles();
+  }
+  async function loadBrowseProfiles(){
+    const grid = document.getElementById('browse-grid');
+    grid.innerHTML = `<p style="color:#7A8B9A;">${t('loading_profils')}</p>`;
+    const { data, error } = await sb.rpc('get_profils_publics');
+    if(error){
+      grid.innerHTML = `<p style="color:#8a2f2f;">Erreur de chargement : ${error.message}</p>`;
+      return;
+    }
+    if(!data || data.length === 0){
+      grid.innerHTML = `<p style="color:#7A8B9A;">${t('aucun_profil_publie')}</p>`;
+      return;
+    }
+    const DELAI_LABELS = { moins_6_mois:t('delai_moins_6_mois'), '6_12_mois':t('delai_6_12_mois'), '12_24_mois':t('delai_12_24_mois'), pas_de_delai:t('delai_pas_de_delai') };
+    const PRATIQUE_LABELS = { assidu:t('pratique_assidu'), pratiquant:t('pratique_pratiquant'), cheminement:t('pratique_cheminement') };
+    grid.innerHTML = data.map(p => `
+      <div class="card-match" data-browse-id="${p.id}">
+        <div class="card-photo">
+          <div class="veil" data-i18n="veil_label">Photo voilée<br>jusqu'à l'accord mutuel</div>
+        </div>
+        <div class="card-body">
+          <h4>${escapeHtml(p.prenom)}, ${escapeHtml(p.age)} ans</h4>
+          <div class="meta">${escapeHtml(p.ville_origine) || '—'} · réside à ${escapeHtml(p.ville_residence) || '—'}, ${escapeHtml(p.pays_residence) || '—'}</div>
+          <div class="tags">
+            ${p.delai_mariage ? `<span class="tag">${escapeHtml(DELAI_LABELS[p.delai_mariage] || p.delai_mariage)}</span>` : ''}
+            ${p.pratique_religieuse ? `<span class="tag">${escapeHtml(PRATIQUE_LABELS[p.pratique_religieuse] || p.pratique_religieuse)}</span>` : ''}
+          </div>
+          ${p.presentation ? `<p style="font-size:0.85rem; margin-top:10px; color:#3E4C58;">${escapeHtml(p.presentation)}</p>` : ''}
+        </div>
+        <div class="card-actions">
+          <button onclick="document.querySelector('[data-browse-id=\\'${p.id}\\']').remove()" data-i18n="btn_passer">Passer</button>
+          <button class="yes" onclick="demanderIntroduction('${p.id}')" data-i18n="btn_demander_intro">Demander une introduction</button>
+        </div>
+      </div>`).join('');
+  }
+  async function demanderIntroduction(profilId){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){ showLogin(); return; }
+
+    const card = document.querySelector(`[data-browse-id="${profilId}"]`);
+    const btn = card?.querySelector('.yes');
+    if(btn){ btn.disabled = true; btn.textContent = t('envoi_en_cours'); }
+
+    const { error } = await sb.from('demandes_introduction').insert({
+      demandeur_id: session.user.id,
+      destinataire_id: profilId,
+    });
+
+    if(error){
+      if(error.code === '23505'){
+        if(btn){ btn.textContent = t('deja_demande'); }
+      } else {
+        alert(t('erreur_prefixe') + error.message);
+        if(btn){ btn.disabled = false; btn.textContent = t('btn_demander_intro'); }
+      }
+      return;
+    }
+    if(btn){ btn.textContent = t('demande_envoyee'); }
+  }
+  async function showRequests(){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){
+      alert(t('connexion_requise_demandes'));
+      showLogin();
+      return;
+    }
+    hideAllViews();
+    document.getElementById('requests-view').style.display='block';
+    window.scrollTo(0,0);
+    loadRequests();
+  }
+
+  async function loadRequests(){
+    const { data: { session } } = await sb.auth.getSession();
+    const myId = session.user.id;
+
+    const { data: demandes, error } = await sb
+      .from('demandes_introduction')
+      .select('*')
+      .or(`demandeur_id.eq.${myId},destinataire_id.eq.${myId}`)
+      .order('created_at', { ascending: false });
+
+    const recuesEl = document.getElementById('requests-recues');
+    const envoyeesEl = document.getElementById('requests-envoyees');
+
+    if(error){
+      recuesEl.innerHTML = `<p style="color:#8a2f2f;">Erreur : ${error.message}</p>`;
+      return;
+    }
+    if(!demandes || demandes.length === 0){
+      recuesEl.innerHTML = `<p style="color:#7A8B9A;">${t('aucune_demande')}</p>`;
+      envoyeesEl.innerHTML = '';
+      return;
+    }
+
+    const recues = demandes.filter(d => d.destinataire_id === myId);
+    const envoyees = demandes.filter(d => d.demandeur_id === myId);
+
+    async function profilDe(id){
+      const { data } = await sb.rpc('get_profil_pour_demande', { other_id: id });
+      return data && data[0] ? data[0] : { prenom: '—', age: '', ville_origine: '', pays_residence: '', ville_residence: '' };
+    }
+
+    const STATUT_LABEL = { en_attente:'En attente', acceptee:'Acceptée ✓', refusee:'Déclinée' };
+
+    if(recues.length === 0){
+      recuesEl.innerHTML = `<p style="color:#7A8B9A;">${t('aucune_demande_recue')}</p>`;
+    } else {
+      recuesEl.innerHTML = (await Promise.all(recues.map(async d => {
+        const p = await profilDe(d.demandeur_id);
+        const actions = d.statut === 'en_attente'
+          ? `<div class="request-actions" style="padding:0;">
+               <button class="req-btn decline" onclick="repondreDemande('${d.id}','refusee')">Décliner</button>
+               <button class="req-btn approve" onclick="repondreDemande('${d.id}','acceptee')">Accepter</button>
+             </div>`
+          : d.statut === 'acceptee'
+          ? `<button class="req-btn approve" onclick="showMessaging('${d.id}')" data-i18n="voir_echange">Voir l'échange modéré</button>`
+          : `<span class="tag">${STATUT_LABEL[d.statut]}</span>`;
+        return `<div class="request-row" data-demande-id="${d.id}">
+          <div class="request-avatar">${escapeHtml((p.prenom||'?')[0])}</div>
+          <div class="request-info">
+            <h4>${escapeHtml(p.prenom)}${p.age ? ', ' + escapeHtml(p.age) + ' ans' : ''}</h4>
+            <div class="meta">${escapeHtml(p.ville_origine) || '—'} · réside à ${escapeHtml(p.ville_residence) || '—'}, ${escapeHtml(p.pays_residence) || '—'}</div>
+          </div>
+          ${actions}
+        </div>`;
+      }))).join('');
+    }
+
+    if(envoyees.length === 0){
+      envoyeesEl.innerHTML = `<p style="color:#7A8B9A;">${t('aucune_demande_envoyee')}</p>`;
+    } else {
+      envoyeesEl.innerHTML = (await Promise.all(envoyees.map(async d => {
+        const p = await profilDe(d.destinataire_id);
+        return `<div class="request-row">
+          <div class="request-avatar">${escapeHtml((p.prenom||'?')[0])}</div>
+          <div class="request-info">
+            <h4>${escapeHtml(p.prenom)}${p.age ? ', ' + escapeHtml(p.age) + ' ans' : ''}</h4>
+            <div class="meta">${escapeHtml(p.ville_origine) || '—'} · réside à ${escapeHtml(p.ville_residence) || '—'}, ${escapeHtml(p.pays_residence) || '—'}</div>
+          </div>
+          ${d.statut === 'acceptee'
+            ? `<button class="req-btn approve" onclick="showMessaging('${d.id}')" data-i18n="voir_echange">Voir l'échange modéré</button>`
+            : `<span class="tag">${STATUT_LABEL[d.statut]}</span>`}
+        </div>`;
+      }))).join('');
+    }
+  }
+
+  async function repondreDemande(demandeId, nouveauStatut){
+    const { error } = await sb.from('demandes_introduction').update({ statut: nouveauStatut, updated_at: new Date().toISOString() }).eq('id', demandeId);
+    if(error){ alert(t('erreur_prefixe') + error.message); return; }
+    loadRequests();
+  }
+  async function submitLogin(){
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const status = document.getElementById('login-status');
+    if(!email || !password){
+      status.style.display='block'; status.style.color='var(--clay)';
+      status.textContent = 'Merci de renseigner votre email et votre mot de passe.';
+      return;
+    }
+    status.style.display='block'; status.style.color='#57687A';
+    status.textContent = 'Connexion…';
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if(error){
+      status.style.color='var(--clay)';
+      status.textContent = 'Connexion impossible : ' + error.message;
+      return;
+    }
+    status.style.display='none';
+    updateAuthUI();
+    showSite();
+  }
+  let currentStep = 1;
+  const totalSteps = 5;
+  function renderStep(){
+    document.querySelectorAll('.signup-panel').forEach(p=>{
+      p.classList.toggle('active', Number(p.dataset.panel)===currentStep);
+    });
+    document.querySelectorAll('.signup-step-labels span').forEach(s=>{
+      s.classList.toggle('active', Number(s.dataset.step)===currentStep);
+    });
+    document.getElementById('progress-bar').style.width = (currentStep/totalSteps*100)+'%';
+    document.getElementById('prev-btn').style.visibility = currentStep===1 ? 'hidden' : 'visible';
+    document.getElementById('next-btn').textContent = currentStep===totalSteps ? t('btn_creer_profil') : t('btn_suivant');
+
+    const genre = document.getElementById('genre-select').value;
+    const note = document.getElementById('tuteur-note');
+    if(currentStep===4){
+      note.textContent = genre==='femme' ? t('tuteur_note_femme') : t('tuteur_note_homme');
+    }
+  }
+  function stepMove(dir){
+    if(currentStep===totalSteps && dir===1){
+      submitSignup();
+      return;
+    }
+    currentStep = Math.min(totalSteps, Math.max(1, currentStep+dir));
+    renderStep();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  function showSignupError(msg){
+    const box = document.getElementById('signup-form-error');
+    box.textContent = msg;
+    box.style.display = 'block';
+    box.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  // Génère une version originale (redimensionnée) et une version fortement
+  // floutée d'une image choisie par l'utilisateur, puis envoie les deux dans
+  // le stockage sécurisé. Le floutage se fait ici, avant l'envoi, mais la
+  // vraie protection vient des règles de sécurité côté serveur : même la
+  // version "originale" n'est jamais transmise à quelqu'un qui n'a pas le droit
+  // de la voir, quel que soit ce qu'un navigateur pourrait tenter.
+  function redimensionnerImage(file, maxLargeur){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = e => { img.src = e.target.result; };
+      reader.onerror = reject;
+      img.onload = () => {
+        const ratio = Math.min(1, maxLargeur / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width * ratio;
+        canvas.height = img.height * ratio;
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve({ canvas, img });
+      };
+      img.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function envoyerPhotoProfil(file, userId, statusEl){
+    if(!file) return { ok: true };
+    if(!file.type.startsWith('image/')){
+      return { ok: false, message: t('photo_erreur_format') };
+    }
+    if(file.size > 8 * 1024 * 1024){
+      return { ok: false, message: t('photo_erreur_taille') };
+    }
+
+    if(statusEl){ statusEl.textContent = t('photo_traitement'); }
+
+    try {
+      // Version "originale" : redimensionnée pour rester raisonnable, sans flou
+      const { canvas: canvasOriginal } = await redimensionnerImage(file, 900);
+      const blobOriginal = await new Promise(res => canvasOriginal.toBlob(res, 'image/jpeg', 0.85));
+
+      // Version floutée : même image, flou fort appliqué au tracé
+      const { canvas: canvasFloute } = await redimensionnerImage(file, 900);
+      const ctx = canvasFloute.getContext('2d');
+      ctx.filter = 'blur(18px)';
+      ctx.drawImage(canvasFloute, 0, 0);
+      const blobFloute = await new Promise(res => canvasFloute.toBlob(res, 'image/jpeg', 0.7));
+
+      const { error: err1 } = await sb.storage.from('photos-profil').upload(`${userId}/original.jpg`, blobOriginal, { upsert: true, contentType: 'image/jpeg' });
+      if(err1) return { ok: false, message: err1.message };
+
+      const { error: err2 } = await sb.storage.from('photos-profil').upload(`${userId}/floute.jpg`, blobFloute, { upsert: true, contentType: 'image/jpeg' });
+      if(err2) return { ok: false, message: err2.message };
+
+      return { ok: true };
+    } catch(e){
+      return { ok: false, message: String(e) };
+    }
+  }
+
+  async function submitSignup(){
+    const errorBox = document.getElementById('signup-form-error');
+    errorBox.style.display = 'none';
+
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const btn = document.getElementById('next-btn');
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!email || password.length < 8){
+      showSignupError(t('alert_email_password'));
+      return;
+    }
+    if(!emailPattern.test(email)){
+      showSignupError(t('alert_email_invalide'));
+      return;
+    }
+
+    if(!document.getElementById('signup-check1').checked
+       || !document.getElementById('signup-check2').checked
+       || !document.getElementById('signup-check3').checked){
+      showSignupError(t('alert_checkboxes'));
+      return;
+    }
+
+    // Récupère toutes les informations saisies dans les 4 premiers panneaux
+    const profil = {
+      prenom: document.getElementById('signup-prenom').value.trim(),
+      nom: document.getElementById('signup-nom').value.trim(),
+      genre: document.getElementById('genre-select').value,
+      age: parseInt(document.getElementById('signup-age').value, 10),
+      telephone: document.getElementById('signup-phone').value.trim(),
+      pays_residence: document.getElementById('signup-pays-residence').value.trim(),
+      ville_residence: document.getElementById('signup-ville-residence').value.trim(),
+      ville_origine: document.getElementById('signup-ville-origine').value.trim(),
+      langues: document.getElementById('signup-langues').value.trim(),
+      retour_benin: document.getElementById('signup-retour-benin').value,
+      statut_marital: document.getElementById('signup-statut-marital').value.trim(),
+      pratique_religieuse: document.getElementById('signup-pratique').value,
+      delai_mariage: document.getElementById('signup-delai').value,
+      presentation: document.getElementById('signup-presentation').value.trim(),
+      nom_tuteur: document.getElementById('signup-nom-tuteur').value.trim(),
+      lien_parente_tuteur: document.getElementById('signup-lien-parente').value.trim(),
+      contact_tuteur: document.getElementById('signup-contact-tuteur').value.trim(),
+      tuteur_email: document.getElementById('signup-email-tuteur').value.trim(),
+    };
+
+    if(!profil.prenom || !profil.nom){
+      showSignupError(t('alert_nom_manquant'));
+      return;
+    }
+
+    if(!profil.age || isNaN(profil.age) || profil.age < 18 || profil.age > 100){
+      showSignupError(t('alert_age_invalide'));
+      return;
+    }
+
+    if(profil.genre === 'femme' && (!profil.nom_tuteur || !profil.lien_parente_tuteur || !profil.contact_tuteur || !profil.tuteur_email)){
+      showSignupError(t('alert_tuteur_requis'));
+      return;
+    }
+
+    if(profil.genre === 'femme' && !emailPattern.test(profil.tuteur_email)){
+      showSignupError(t('alert_email_tuteur_invalide'));
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = t('creating_account');
+
+    // Toutes les informations du profil sont transmises dès la création du compte :
+    // c'est un déclencheur en base (handle_new_user) qui se charge de créer la ligne
+    // dans "profils", plutôt qu'un insert séparé ici — ce qui fonctionne même si
+    // aucune session n'est encore active (ex. confirmation email activée un jour).
+    const { data, error } = await sb.auth.signUp({
+      email,
+      password,
+      options: { data: { ...profil } },
+    });
+
+    if(error){
+      btn.disabled = false;
+      btn.textContent = t('btn_creer_profil');
+      showSignupError(t('alert_signup_failed') + " " + error.message);
+      return;
+    }
+
+    btn.disabled = false;
+
+    const photoFile = document.getElementById('signup-photo').files[0];
+
+    // Selon vos réglages Supabase Auth (confirmation email activée ou non),
+    // une session peut être ouverte immédiatement ou nécessiter la validation du lien reçu par email.
+    if(data.session){
+      if(photoFile){
+        btn.textContent = t('photo_traitement');
+        const resultatPhoto = await envoyerPhotoProfil(photoFile, data.user.id, null);
+        if(!resultatPhoto.ok){
+          showSignupError(t('photo_erreur_envoi') + ' ' + resultatPhoto.message + ' ' + t('photo_reessai_plus_tard'));
+        }
+        btn.textContent = t('btn_creer_profil');
+      }
+      updateAuthUI();
+      showSite();
+      document.querySelector('#abonnement')?.scrollIntoView({behavior:'smooth'});
+    } else {
+      alert(photoFile ? t('alert_account_created') + ' ' + t('photo_apres_confirmation') : t('alert_account_created'));
+      showSite();
+    }
+  }
+
+  async function submitContact(){
+    const nom = document.getElementById('contact-nom').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+    const sujet = document.getElementById('contact-sujet').value.trim();
+    const message = document.getElementById('contact-message').value.trim();
+    const piege = document.getElementById('contact-piege').value.trim();
+    const errorBox = document.getElementById('contact-error');
+    const successBox = document.getElementById('contact-success');
+    const btn = document.getElementById('contact-submit-btn');
+
+    errorBox.style.display = 'none';
+    successBox.style.display = 'none';
+
+    // Piège à robots : un vrai visiteur ne voit ni ne remplit jamais ce champ.
+    // On affiche un faux succès pour ne pas indiquer au robot qu'il a été détecté.
+    if(piege){
+      successBox.style.display = 'block';
+      document.getElementById('contact-form').reset();
+      return;
+    }
+
+    if(!nom || !email || !message){
+      errorBox.textContent = t('contact_error_required');
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    const originalLabel = btn.textContent;
+    btn.textContent = t('contact_sending');
+
+    const { error } = await sb.from('messages_contact').insert({ nom, email, sujet, message });
+
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+
+    if(error){
+      errorBox.textContent = t('contact_error_generic');
+      errorBox.style.display = 'block';
+      return;
+    }
+
+    successBox.style.display = 'block';
+    document.getElementById('contact-form').reset();
+  }
+</script>
+
+<div id="tuteur-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+  </div>
+</div>
+
+  <section style="padding-top:56px; max-width:760px; margin:0 auto;">
+    <div class="section-head" style="margin-bottom:36px;">
+      <div class="eyebrow" data-i18n="tuteur_eyebrow">Espace tuteur · wali</div>
+      <h2 data-i18n="tuteur_h2_v2">Comment fonctionne l'espace tuteur</h2>
+      <p data-i18n="tuteur_intro_v2">Le tuteur (wali) est associé au compte de la personne dont il a la charge, et reste informé à chaque étape clé du parcours — sans jamais avoir accès aux échanges privés avant qu'ils ne soient formellement acceptés.</p>
+    </div>
+
+    <div style="display:grid; gap:24px; margin-bottom:40px;">
+      <div class="card" style="border:1px solid var(--line); border-radius:6px; padding:24px;">
+        <h3 style="font-family:'Fraunces',serif; font-size:1.1rem; margin:0 0 8px; color:var(--indigo);" data-i18n="tuteur_pt1_h3">Renseigné dès l'inscription</h3>
+        <p style="margin:0; color:#3E4C58;" data-i18n="tuteur_pt1_p">Lors de la création d'un profil féminin, le nom, le lien de parenté et les coordonnées du tuteur sont demandés et enregistrés de façon sécurisée.</p>
+      </div>
+      <div class="card" style="border:1px solid var(--line); border-radius:6px; padding:24px;">
+        <h3 style="font-family:'Fraunces',serif; font-size:1.1rem; margin:0 0 8px; color:var(--indigo);" data-i18n="tuteur_pt2_h3">Notifié à chaque introduction acceptée</h3>
+        <p style="margin:0; color:#3E4C58;" data-i18n="tuteur_pt2_p">Dès qu'une demande d'introduction est acceptée par les deux parties, notre équipe transmet une notification au tuteur concerné.</p>
+      </div>
+      <div class="card" style="border:1px solid var(--line); border-radius:6px; padding:24px;">
+        <h3 style="font-family:'Fraunces',serif; font-size:1.1rem; margin:0 0 8px; color:var(--indigo);" data-i18n="tuteur_pt3_h3">Jamais d'accès aux échanges avant accord</h3>
+        <p style="margin:0; color:#3E4C58;" data-i18n="tuteur_pt3_p">Aucune coordonnée personnelle ne circule avant la rencontre familiale, et les échanges restent strictement encadrés par la modération.</p>
+      </div>
+    </div>
+
+    <div class="adab-banner">
+      <b data-i18n="tuteur_soon_label">Bon à savoir :</b>
+      <span data-i18n="tuteur_soon_text">le compte tuteur est distinct du compte membre — un tuteur n'a pas besoin d'avoir son propre profil sur Ikpadé Ifê pour suivre les personnes dont il a la charge.</span>
+    </div>
+
+    <div id="tuteur-guest-zone" style="margin-top:40px; max-width:420px;">
+      <div id="tuteur-login-block">
+        <h3 style="font-family:'Fraunces',serif; font-size:1.15rem; margin-bottom:16px;" data-i18n="tuteur_connexion_h3">Connexion tuteur</h3>
+        <label class="pay-label"><span data-i18n="lbl_contact_email">Email</span>
+          <input type="email" id="tuteur-login-email">
+        </label>
+        <label class="pay-label"><span data-i18n="lbl_password">Mot de passe</span>
+          <input type="password" id="tuteur-login-password">
+        </label>
+        <div id="tuteur-login-status" style="display:none; font-size:0.85rem; margin-bottom:16px;"></div>
+        <button type="button" class="btn-primary" style="width:100%;" onclick="submitTuteurLogin()" data-i18n="btn_connexion">Se connecter</button>
+        <p style="margin-top:18px; font-size:0.88rem; text-align:center;">
+          <span data-i18n="tuteur_pas_de_compte">Pas encore de compte tuteur ?</span>
+          <a href="#" onclick="document.getElementById('tuteur-login-block').style.display='none'; document.getElementById('tuteur-signup-block').style.display='block'; return false;" style="color:var(--clay); font-weight:500;" data-i18n="tuteur_en_creer_un">En créer un</a>
+        </p>
+      </div>
+
+      <div id="tuteur-signup-block" style="display:none;">
+        <h3 style="font-family:'Fraunces',serif; font-size:1.15rem; margin-bottom:16px;" data-i18n="tuteur_creation_h3">Créer mon compte tuteur</h3>
+        <div class="grid-2">
+          <label class="pay-label"><span data-i18n="lbl_prenom">Prénom</span><input type="text" id="tuteur-signup-prenom"></label>
+          <label class="pay-label"><span data-i18n="lbl_nom">Nom</span><input type="text" id="tuteur-signup-nom"></label>
+        </div>
+        <label class="pay-label"><span data-i18n="lbl_contact_email">Email</span>
+          <input type="email" id="tuteur-signup-email">
+        </label>
+        <label class="pay-label"><span data-i18n="lbl_password">Mot de passe</span>
+          <input type="password" id="tuteur-signup-password">
+        </label>
+        <p style="font-size:0.82rem; color:#57687A; margin:-6px 0 16px;" data-i18n="tuteur_email_note">Utilisez exactement l'email que le membre a renseigné comme email de tuteur dans son inscription.</p>
+        <div id="tuteur-signup-status" style="display:none; font-size:0.85rem; margin-bottom:16px;"></div>
+        <button type="button" class="btn-primary" style="width:100%;" onclick="submitTuteurSignup()" data-i18n="btn_creer_compte_tuteur">Créer mon compte</button>
+        <p style="margin-top:18px; font-size:0.88rem; text-align:center;">
+          <a href="#" onclick="document.getElementById('tuteur-signup-block').style.display='none'; document.getElementById('tuteur-login-block').style.display='block'; return false;" style="color:var(--clay); font-weight:500;" data-i18n="tuteur_deja_compte">J'ai déjà un compte, me connecter</a>
+        </p>
+      </div>
+    </div>
+
+    <div id="tuteur-dashboard-zone" style="display:none; margin-top:40px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <h3 style="font-family:'Fraunces',serif; font-size:1.15rem; margin:0;" data-i18n="tuteur_mes_filleuls">Personnes dont vous avez la charge</h3>
+        <a href="#" onclick="sb.auth.signOut().then(()=>{updateAuthUI();showTuteur();}); return false;" style="font-size:0.85rem; color:var(--clay);" data-i18n="btn_connexion_deconnexion">Se déconnecter</a>
+      </div>
+      <div id="tuteur-wards-list"></div>
+    </div>
+  </section>
+</div><!-- /tuteur-view -->
+
+<style>
+  .tuteur-stats{display:flex; gap:1px; background:var(--line); border:1px solid var(--line); margin-bottom:36px;}
+  .t-stat{flex:1; background:#F6FAFC; padding:22px 26px;}
+  .t-stat b{display:block; font-family:'Fraunces',serif; font-size:2rem; color:var(--indigo);}
+  .t-stat span{font-size:0.82rem; color:#57687A;}
+
+  .ward-tabs{display:flex; gap:10px; margin-bottom:36px; flex-wrap:wrap;}
+  .ward-tab{
+    padding:10px 18px; border:1px solid var(--line); border-radius:24px; background:transparent;
+    font-family:'Work Sans',sans-serif; font-size:0.88rem; color:var(--indigo); cursor:pointer;
+  }
+  .ward-tab small{opacity:0.6; margin-left:6px; font-size:0.76rem;}
+  .ward-tab.active{background:var(--indigo); color:var(--ivory); border-color:var(--indigo);}
+
+  .tuteur-grid{display:grid; grid-template-columns:1.4fr 1fr; gap:56px; align-items:start;}
+  .t-subhead{font-family:'Fraunces',serif; font-size:1.1rem; color:var(--indigo); margin-bottom:18px; font-weight:600;}
+
+  .request-row{
+    display:flex; align-items:center; gap:16px; padding:18px 0; border-top:1px solid var(--line);
+  }
+  .request-row:last-of-type{border-bottom:1px solid var(--line);}
+  .request-avatar{
+    width:44px; height:44px; border-radius:50%; background:var(--indigo); color:var(--gold-soft);
+    display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace;
+    font-size:0.8rem; flex:0 0 auto;
+  }
+  .request-info{flex:1;}
+  .request-info h4{font-family:'Fraunces',serif; font-size:1rem; color:var(--indigo);}
+  .request-info .meta{font-size:0.82rem; color:#57687A; margin-top:2px;}
+  .request-info .meta-sub{font-size:0.74rem; color:#9FB0BD; margin-top:2px; font-family:'IBM Plex Mono',monospace;}
+  .request-actions{display:flex; gap:8px; flex:0 0 auto;}
+  .req-btn{
+    padding:9px 16px; border-radius:2px; font-size:0.8rem; border:1px solid var(--indigo);
+    background:transparent; color:var(--indigo); cursor:pointer; font-family:'Work Sans',sans-serif;
+  }
+  .req-btn.approve{background:var(--indigo); color:var(--ivory);}
+  .req-btn.decline{border-color:var(--line); color:#7A8B9A;}
+
+  .active-intro{border:1px solid var(--line); border-radius:6px; padding:24px; background:#F6FAFC;}
+  .active-intro-head{display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:22px;}
+  .active-intro-head h4{font-family:'Fraunces',serif; color:var(--indigo); font-size:1.05rem;}
+  .active-intro-head .meta{font-size:0.82rem; color:#57687A; margin-top:2px;}
+  .active-intro.empty-state{color:#7A8B9A; font-size:0.9rem; text-align:center; padding:34px;}
+
+  .progress-track{display:flex; gap:8px;}
+  .progress-step{
+    flex:1; font-size:0.72rem; font-family:'IBM Plex Mono',monospace; color:#9FB0BD;
+    padding-top:12px; border-top:3px solid var(--line); line-height:1.5;
+  }
+  .progress-step span{display:block; font-size:0.9rem; margin-bottom:4px; color:#9FB0BD;}
+  .progress-step.done{border-top-color:var(--emerald); color:var(--emerald);}
+  .progress-step.done span{color:var(--emerald);}
+  .progress-step.current{border-top-color:var(--clay); color:var(--clay);}
+  .progress-step.current span{color:var(--clay);}
+
+  .activity-log{border-top:1px solid var(--line);}
+  .log-item{display:flex; gap:14px; padding:18px 0; border-bottom:1px solid var(--line);}
+  .log-dot{width:8px; height:8px; border-radius:50%; background:var(--gold); margin-top:6px; flex:0 0 auto;}
+  .log-item b{font-family:'IBM Plex Mono',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--clay); display:block; margin-bottom:4px;}
+  .log-item p{font-size:0.88rem; color:#2E3A44; line-height:1.5;}
+
+  @media (max-width:860px){
+    .tuteur-stats{flex-direction:column;}
+    .tuteur-grid{grid-template-columns:1fr;}
+    .request-row{flex-wrap:wrap;}
+    .request-actions{width:100%; justify-content:flex-end;}
+  }
+</style>
+
+<script>
+  async function showTuteur(){
+    hideAllViews();
+    document.getElementById('tuteur-view').style.display='block';
+    window.scrollTo(0,0);
+    await refreshTuteurView();
+  }
+
+  async function refreshTuteurView(){
+    const { data: { session } } = await sb.auth.getSession();
+    const guestZone = document.getElementById('tuteur-guest-zone');
+    const dashZone = document.getElementById('tuteur-dashboard-zone');
+    if(!session){
+      guestZone.style.display = 'block';
+      dashZone.style.display = 'none';
+      return;
+    }
+    guestZone.style.display = 'none';
+    dashZone.style.display = 'block';
+    // Relie ce compte à tout profil publié dont il est déclaré comme tuteur
+    await sb.rpc('lier_compte_tuteur');
+    await loadTuteurWards();
+  }
+
+  async function submitTuteurLogin(){
+    const email = document.getElementById('tuteur-login-email').value.trim();
+    const password = document.getElementById('tuteur-login-password').value;
+    const status = document.getElementById('tuteur-login-status');
+    if(!email || !password){
+      status.style.display='block'; status.style.color='var(--clay)';
+      status.textContent = t('alert_email_password');
+      return;
+    }
+    status.style.display='block'; status.style.color='#57687A';
+    status.textContent = t('creating_account') === 'Création du compte...' ? 'Connexion…' : 'Signing in…';
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if(error){
+      status.style.color='var(--clay)';
+      status.textContent = t('alert_signup_failed') + ' ' + error.message;
+      return;
+    }
+    status.style.display='none';
+    updateAuthUI();
+    await refreshTuteurView();
+  }
+
+  async function submitTuteurSignup(){
+    const prenom = document.getElementById('tuteur-signup-prenom').value.trim();
+    const nom = document.getElementById('tuteur-signup-nom').value.trim();
+    const email = document.getElementById('tuteur-signup-email').value.trim();
+    const password = document.getElementById('tuteur-signup-password').value;
+    const status = document.getElementById('tuteur-signup-status');
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    status.style.display='none';
+    if(!prenom || !nom || !emailPattern.test(email) || password.length < 8){
+      status.style.display='block'; status.style.color='var(--clay)';
+      status.textContent = t('alert_email_password');
+      return;
+    }
+
+    // Pas de "genre"/"age" transmis ici : le déclencheur en base sait qu'il
+    // s'agit d'une inscription "tuteur seul" et ne crée donc pas de profil membre.
+    const { data, error } = await sb.auth.signUp({
+      email, password,
+      options: { data: { prenom, nom } },
+    });
+
+    if(error){
+      status.style.display='block'; status.style.color='var(--clay)';
+      status.textContent = t('alert_signup_failed') + ' ' + error.message;
+      return;
+    }
+
+    if(data.session){
+      updateAuthUI();
+      await refreshTuteurView();
+    } else {
+      status.style.display='block'; status.style.color='#57687A';
+      status.textContent = t('alert_account_created');
+    }
+  }
+
+  async function loadTuteurWards(){
+    const listEl = document.getElementById('tuteur-wards-list');
+    listEl.innerHTML = `<p style="color:#7A8B9A;">${t('loading_profils')}</p>`;
+
+    const { data: { session } } = await sb.auth.getSession();
+    const { data: wards, error } = await sb
+      .from('profils')
+      .select('*')
+      .eq('tuteur_user_id', session.user.id);
+
+    if(error){
+      listEl.innerHTML = `<p style="color:#8a2f2f;">${t('erreur_prefixe')}${error.message}</p>`;
+      return;
+    }
+    if(!wards || wards.length === 0){
+      listEl.innerHTML = `<p style="color:#7A8B9A;">${t('tuteur_aucun_filleul')}</p>`;
+      return;
+    }
+
+    const STATUT_LABEL = { en_attente:'—', acceptee:'✓', refusee:'✗' };
+
+    const cards = await Promise.all(wards.map(async w => {
+      const { data: demandes } = await sb
+        .from('demandes_introduction')
+        .select('*')
+        .or(`demandeur_id.eq.${w.id},destinataire_id.eq.${w.id}`)
+        .order('created_at', { ascending: false });
+
+      const lignesDemandes = (demandes || []).map(d =>
+        `<div class="dossier-row"><span>${new Date(d.created_at).toLocaleDateString('fr-FR')}</span><b>${d.statut} ${STATUT_LABEL[d.statut]||''}</b></div>`
+      ).join('') || `<p style="color:#7A8B9A; font-size:0.85rem;">${t('aucune_demande')}</p>`;
+
+      return `<div class="card" style="border:1px solid var(--line); border-radius:6px; padding:22px; margin-bottom:18px;">
+        <h4 style="font-family:'Fraunces',serif; margin:0 0 4px; color:var(--indigo);">${escapeHtml(w.prenom)} ${escapeHtml(w.nom)}</h4>
+        <div class="meta" style="margin-bottom:14px;">${escapeHtml(w.ville_origine)||'—'} · ${w.statut_verification === 'publie' ? 'Profil publié' : 'En attente de vérification'}</div>
+        ${lignesDemandes}
+      </div>`;
+    }));
+
+    listEl.innerHTML = cards.join('');
+  }
+</script>
+
+<div id="admin-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+  </div>
+</div>
+
+  <section style="padding-top:56px;">
+    <div class="section-head" style="margin-bottom:36px;">
+      <div class="eyebrow" data-i18n="admin_eyebrow">Console de modération</div>
+      <h2 data-i18n="admin_h2">File d'attente</h2>
+      <p data-i18n="admin_p">Aucun profil n'est visible tant qu'il n'a pas été vérifié par un membre de l'équipe. Tout signalement est traité sous 24h.</p>
+    </div>
+
+    <div class="tuteur-stats">
+      <div class="t-stat"><b id="admin-stat-attente">—</b><span data-i18n="astat_attente">Profils en attente</span></div>
+      <div class="t-stat"><b>—</b><span data-i18n="astat_signalements">Signalements ouverts</span></div>
+      <div class="t-stat"><b id="admin-stat-publies">—</b><span data-i18n="astat_publies">Profils publiés ce mois</span></div>
+      <div class="t-stat"><b>—</b><span data-i18n="astat_delai">Délai moyen de traitement</span></div>
+    </div>
+
+    <div class="ward-tabs">
+      <button class="ward-tab active" data-tab="verif" onclick="selectAdminTab('verif')"><span data-i18n="tab_verifications">Vérifications</span> <small id="admin-tab-count">—</small></button>
+      <button class="ward-tab" data-tab="signal" onclick="selectAdminTab('signal')"><span data-i18n="tab_signalements">Signalements</span> <small>—</small></button>
+    </div>
+
+    <div id="admin-panel-verif" class="admin-panel">
+      <div id="admin-queue-list"><p style="color:#7A8B9A;" data-i18n="loading_queue">Chargement des profils en attente...</p></div>
+    </div>
+
+    <div id="admin-panel-signal" class="admin-panel" style="display:none;">
+
+      <div class="request-row">
+        <div class="request-avatar" style="background:var(--clay);">⚑</div>
+        <div class="request-info">
+          <h4>Signalement — Membre #0562</h4>
+          <div class="meta">Motif : demande de contact hors plateforme · signalé par Membre #0871</div>
+          <div class="meta-sub">Reçu il y a 3 heures</div>
+          <details class="dossier">
+            <summary data-i18n="examiner_signalement">Examiner le signalement</summary>
+            <div class="dossier-body">
+              <div class="dossier-row"><span data-i18n="fld_extrait">Extrait signalé</span><b>Demande de numéro WhatsApp en dehors de l'introduction validée.</b></div>
+              <div class="dossier-row"><span data-i18n="fld_historique">Historique du membre</span><b>Aucun signalement précédent</b></div>
+            </div>
+          </details>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn decline" data-i18n="btn_clore">Clore sans suite</button>
+          <button class="req-btn approve" style="background:var(--clay); border-color:var(--clay);" data-i18n="btn_avertir">Avertir le membre</button>
+        </div>
+      </div>
+
+      <div class="request-row">
+        <div class="request-avatar" style="background:var(--clay);">⚑</div>
+        <div class="request-info">
+          <h4>Signalement — Membre #0219</h4>
+          <div class="meta">Motif : identité présumée fausse · signalé par Membre #0344</div>
+          <div class="meta-sub">Reçu il y a 1 jour</div>
+          <details class="dossier">
+            <summary data-i18n="examiner_signalement">Examiner le signalement</summary>
+            <div class="dossier-body">
+              <div class="dossier-row"><span data-i18n="fld_extrait">Extrait signalé</span><b>Photos et ville d'origine incohérentes avec le dossier de vérification.</b></div>
+              <div class="dossier-row"><span data-i18n="fld_historique">Historique du membre</span><b>1 avertissement précédent (il y a 2 mois)</b></div>
+            </div>
+          </details>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn decline" data-i18n="btn_clore">Clore sans suite</button>
+          <button class="req-btn approve" style="background:#8a2f2f; border-color:#8a2f2f;" data-i18n="btn_suspendre">Suspendre le compte</button>
+        </div>
+      </div>
+
+      <div class="request-row">
+        <div class="request-avatar" style="background:var(--clay);">⚑</div>
+        <div class="request-info">
+          <h4>Signalement — Membre #0918</h4>
+          <div class="meta">Motif : propos déplacés dans l'échange modéré · signalé par Membre #0655</div>
+          <div class="meta-sub">Reçu il y a 2 jours</div>
+          <details class="dossier">
+            <summary data-i18n="examiner_signalement">Examiner le signalement</summary>
+            <div class="dossier-body">
+              <div class="dossier-row"><span data-i18n="fld_extrait">Extrait signalé</span><b>Insistance après un refus clairement exprimé par l'autre membre.</b></div>
+              <div class="dossier-row"><span data-i18n="fld_historique">Historique du membre</span><b>Aucun signalement précédent</b></div>
+            </div>
+          </details>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn decline" data-i18n="btn_clore">Clore sans suite</button>
+          <button class="req-btn approve" style="background:var(--clay); border-color:var(--clay);" data-i18n="btn_avertir">Avertir le membre</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- /admin-view -->
+
+<style>
+  details.dossier{margin-top:10px;}
+  details.dossier summary{
+    cursor:pointer; font-family:'IBM Plex Mono',monospace; font-size:0.74rem;
+    color:var(--clay); list-style:none;
+  }
+  details.dossier summary::-webkit-details-marker{display:none;}
+  details.dossier summary::before{content:'+ ';}
+  details.dossier[open] summary::before{content:'− ';}
+  .dossier-body{margin-top:12px; padding:14px 16px; background:#F6FAFC; border:1px solid var(--line); border-radius:4px;}
+  .dossier-row{display:flex; justify-content:space-between; gap:16px; padding:8px 0; border-bottom:1px solid var(--line); font-size:0.84rem;}
+  .dossier-row:last-child{border-bottom:none;}
+  .dossier-row span{color:#7A8B9A; flex:0 0 auto;}
+  .dossier-row b{color:var(--indigo); font-weight:500; text-align:right;}
+  #admin-view .request-info{flex:1;}
+  @media (max-width:640px){
+    .dossier-row{flex-direction:column; gap:2px;}
+    .dossier-row b{text-align:left;}
+  }
+</style>
+
+<script>
+  function selectAdminTab(tab){
+    document.querySelectorAll('#admin-view .ward-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===tab));
+    document.getElementById('admin-panel-verif').style.display = tab==='verif' ? '' : 'none';
+    document.getElementById('admin-panel-signal').style.display = tab==='signal' ? '' : 'none';
+  }
+  const ADMIN_EMAIL = 'ikpadeife@gmail.com';
+
+  async function showAdmin(){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session || session.user.email !== ADMIN_EMAIL){
+      alert(t('acces_reserve_admin'));
+      showSite();
+      return;
+    }
+    hideAllViews();
+    document.getElementById('admin-view').style.display='block';
+    window.scrollTo(0,0);
+    loadAdminQueue();
+  }
+
+  function tempsEcoule(dateStr){
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const heures = Math.floor(diffMs / 3600000);
+    if(heures < 1) return t('a_linstant');
+    if(heures < 24) return `il y a ${heures}h`;
+    return `il y a ${Math.floor(heures/24)}j`;
+  }
+
+  async function loadAdminQueue(){
+    const listEl = document.getElementById('admin-queue-list');
+    const { data: enAttente, error } = await sb
+      .from('profils')
+      .select('*')
+      .eq('statut_verification', 'en_attente')
+      .order('created_at', { ascending: true });
+
+    if(error){
+      listEl.innerHTML = `<p style="color:#8a2f2f;">Erreur de chargement : ${error.message}</p>`;
+      return;
+    }
+
+    document.getElementById('admin-stat-attente').textContent = enAttente.length;
+    document.getElementById('admin-tab-count').textContent = enAttente.length;
+
+    const { count: publiesCount } = await sb
+      .from('profils')
+      .select('*', { count: 'exact', head: true })
+      .eq('statut_verification', 'publie');
+    document.getElementById('admin-stat-publies').textContent = publiesCount ?? 0;
+
+    if(enAttente.length === 0){
+      listEl.innerHTML = `<p style="color:#7A8B9A;">${t('aucun_profil_attente')}</p>`;
+      return;
+    }
+
+    listEl.innerHTML = enAttente.map(p => {
+      const initiales = escapeHtml(((p.prenom||'?')[0] + (p.nom||'?')[0]).toUpperCase());
+      const formule = ''; // la formule choisie vit dans abonnements, pas encore reliée ici
+      return `
+      <div class="request-row" data-profil-id="${p.id}">
+        <div class="request-avatar">${initiales}</div>
+        <div class="request-info">
+          <h4>${escapeHtml(p.prenom)} ${escapeHtml(p.nom)}, ${escapeHtml(p.age)} ans</h4>
+          <div class="meta">${escapeHtml(p.ville_origine) || '—'} · réside à ${escapeHtml(p.ville_residence) || '—'}, ${escapeHtml(p.pays_residence) || '—'}</div>
+          <div class="meta-sub">Soumis ${escapeHtml(tempsEcoule(p.created_at))}</div>
+          <details class="dossier">
+            <summary data-i18n="voir_dossier">Voir le dossier</summary>
+            <div class="dossier-body">
+              <div class="dossier-row"><span>Genre</span><b>${p.genre === 'femme' ? 'Femme' : 'Homme'}</b></div>
+              <div class="dossier-row"><span>Téléphone</span><b>${escapeHtml(p.telephone) || '—'}</b></div>
+              <div class="dossier-row"><span data-i18n="fld_tuteur_renseigne">Tuteur renseigné</span><b>${p.nom_tuteur ? `Oui — ${escapeHtml(p.nom_tuteur)} (${escapeHtml(p.lien_parente_tuteur||'')})` : 'Non renseigné'}</b></div>
+              <div class="dossier-row"><span>Email du tuteur</span><b>${escapeHtml(p.tuteur_email) || '—'}</b></div>
+              <div class="dossier-row"><span>Statut marital</span><b>${escapeHtml(p.statut_marital) || '—'}</b></div>
+              <div class="dossier-row"><span>Pratique religieuse</span><b>${escapeHtml(p.pratique_religieuse) || '—'}</b></div>
+              <div class="dossier-row"><span data-i18n="fld_intention">Intention de mariage</span><b>${escapeHtml(p.delai_mariage) || '—'}</b></div>
+              <div class="dossier-row"><span data-i18n="fld_presentation">Présentation</span><b>${escapeHtml(p.presentation) || '—'}</b></div>
+            </div>
+          </details>
+        </div>
+        <div class="request-actions">
+          <button class="req-btn decline" onclick="moderateProfil('${p.id}','rejete')">Rejeter</button>
+          <button class="req-btn approve" onclick="moderateProfil('${p.id}','publie')">Publier le profil</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function moderateProfil(profilId, nouveauStatut){
+    const { error } = await sb.from('profils').update({ statut_verification: nouveauStatut, updated_at: new Date().toISOString() }).eq('id', profilId);
+    if(error){
+      alert(t('erreur_prefixe') + error.message);
+      return;
+    }
+    document.querySelector(`[data-profil-id="${profilId}"]`)?.remove();
+    loadAdminQueue();
+  }
+</script>
+
+<div id="messaging-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+  </div>
+</div>
+
+  <section style="padding-top:56px; max-width:820px; margin:0 auto;">
+    <div class="msg-header">
+      <img id="msg-photo" alt="" style="display:none; width:72px; height:72px; border-radius:50%; object-fit:cover; margin-right:16px; float:left;">
+      <div>
+        <div class="eyebrow" data-i18n="msg_eyebrow">Échange modéré</div>
+        <h2 id="msg-title" style="font-size:1.6rem; margin-top:8px;">—</h2>
+        <div class="meta" style="margin-top:6px;" id="msg-meta">—</div>
+      </div>
+      <div style="clear:both;"></div>
+    </div>
+
+    <div id="intro-formelle-block" style="background:#F6FAFC; border:1px solid var(--line); border-radius:6px; padding:18px 20px; margin:20px 0;">
+      <p id="intro-formelle-status" style="margin:0 0 12px; font-size:0.9rem; color:#3E4C58;"></p>
+      <button type="button" class="req-btn approve" id="intro-formelle-btn" onclick="confirmerIntroFormelle()" data-i18n="btn_passer_intro_formelle">Passer à l'introduction formelle</button>
+    </div>
+
+    <div class="adab-banner">
+      <b data-i18n="rappel_label">Rappel :</b> <span data-i18n="adab_text">cet échange est visible par vos tuteurs respectifs. Le partage de coordonnées personnelles (téléphone, réseaux sociaux) est bloqué avant la rencontre familiale. Restez courtois et pudique.</span>
+    </div>
+
+    <div class="chat-window" id="chat-window">
+      <p style="color:#7A8B9A;" data-i18n="loading_echange">Chargement de l'échange...</p>
+    </div>
+
+    <div class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="Écrire un message (essayez d'y glisser un numéro pour voir le filtre)…" data-i18n-ph="chat_placeholder">
+      <button class="btn-primary" onclick="sendChatMessage()" data-i18n="btn_envoyer">Envoyer</button>
+    </div>
+    <p class="chat-note" data-i18n="chat_note">Vos messages sont relus automatiquement et visibles par vos tuteurs. Vous écrivez en tant que N. Chabi.</p>
+  </section>
+</div><!-- /messaging-view -->
+
+<div id="legal-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+  <section style="padding-top:56px; max-width:760px; margin:0 auto; line-height:1.7;">
+
+    <div id="legal-cgu" class="legal-doc" style="display:none;">
+      <div class="eyebrow">Document légal</div>
+      <h2 style="margin-top:8px;">Conditions Générales d'Utilisation</h2>
+      <p style="color:#57687A; font-size:0.85rem; margin-top:8px;">Dernière mise à jour : 17 septembre 2026</p>
+
+      <h3 style="margin-top:32px;">1. Objet</h3>
+      <p>Les présentes Conditions Générales d'Utilisation (« CGU ») régissent l'accès et l'utilisation du service Ikpadé Ifê (le « Service »), une plateforme de mise en relation matrimoniale s'adressant aux musulmans béninois, au Bénin et dans la diaspora, dans le respect du cadre islamique (implication d'un tuteur/wali, absence de messagerie libre, modération humaine).</p>
+
+      <h3 style="margin-top:28px;">2. Acceptation</h3>
+      <p>En créant un compte sur Ikpadé Ifê, vous acceptez sans réserve les présentes CGU. Si vous n'acceptez pas ces conditions, vous ne devez pas utiliser le Service.</p>
+
+      <h3 style="margin-top:28px;">3. Éligibilité</h3>
+      <p>Le Service est réservé aux personnes âgées d'au moins 18 ans, juridiquement capables de contracter mariage, et de confession musulmane ou partageant les valeurs du cadre proposé. Toute inscription frauduleuse ou usurpation d'identité entraîne la suspension immédiate du compte.</p>
+
+      <h3 style="margin-top:28px;">4. Description du Service</h3>
+      <p>Ikpadé Ifê met à disposition : un formulaire de profil vérifié manuellement, un système de demande d'introduction encadré, la possibilité d'associer un tuteur (wali) au compte, et un espace d'échange modéré après acceptation mutuelle. Le Service est un outil de mise en relation ; il ne garantit en aucun cas la conclusion d'un mariage.</p>
+
+      <h3 style="margin-top:28px;">5. Compte et abonnement</h3>
+      <p>Chaque profil est soumis à une vérification humaine avant publication. Ikpadé Ifê se réserve le droit de refuser, suspendre ou supprimer tout compte ne respectant pas ces CGU, sans préavis en cas de manquement grave.</p>
+      <p>Le Service propose trois formules : <b>Alaafia</b> (gratuite), <b>Khadijath</b> et <b>Hawa</b> (payantes, mensuelles ou annuelles). Les tarifs affichés sur le site sont ceux en vigueur au moment de la souscription. Le paiement est traité par notre prestataire FedaPay ; Ikpadé Ifê ne stocke aucune donnée de carte bancaire ou de compte Mobile Money.</p>
+
+      <h3 style="margin-top:28px;">6. Obligations de l'utilisateur</h3>
+      <ul style="padding-left:20px; margin-top:10px;">
+        <li>Fournir des informations exactes et à jour ;</li>
+        <li>Ne pas partager de coordonnées personnelles (téléphone, réseaux sociaux) avant la rencontre familiale — ce partage est bloqué automatiquement par le système ;</li>
+        <li>Adopter un comportement courtois et respectueux (adab) dans tous les échanges ;</li>
+        <li>Ne pas créer plusieurs comptes, ni usurper l'identité d'un tiers ;</li>
+        <li>Respecter le rôle du tuteur (wali) associé à son compte ou à celui d'un autre membre.</li>
+      </ul>
+
+      <h3 style="margin-top:28px;">7. Modération</h3>
+      <p>Une équipe de modération vérifie chaque profil avant publication et peut examiner tout signalement. Ikpadé Ifê se réserve le droit de rejeter, suspendre ou clôturer tout compte en cas de non-respect des présentes CGU ou de comportement contraire à l'adab.</p>
+
+      <h3 style="margin-top:28px;">8. Rôle du tuteur (wali)</h3>
+      <p>Pour les profils féminins, un tuteur est requis et associé au compte. Après un premier échange libre entre les deux membres, il est notifié dès qu'ils confirment ensemble vouloir passer à l'introduction formelle. Ikpadé Ifê agit comme intermédiaire technique de cette notification, sans se substituer à la responsabilité du tuteur ou de la famille dans la décision finale.</p>
+
+      <h3 style="margin-top:28px;">9. Limitation de responsabilité</h3>
+      <p>Ikpadé Ifê est un service de mise en relation. Nous ne pouvons garantir l'exactitude des informations fournies par les membres, ni le résultat d'une mise en relation. Ikpadé Ifê ne saurait être tenu responsable des conséquences d'une rencontre organisée entre deux membres, au-delà de la vérification raisonnable effectuée lors de l'inscription.</p>
+
+      <h3 style="margin-top:28px;">10. Résiliation</h3>
+      <p>Vous pouvez demander la clôture de votre compte à tout moment en nous contactant. Ikpadé Ifê peut résilier un compte en cas de violation des présentes CGU.</p>
+
+      <h3 style="margin-top:28px;">11. Droit applicable</h3>
+      <p>Les présentes CGU sont soumises au droit béninois et aux règles de l'espace OHADA. Tout litige sera soumis, à défaut de résolution amiable, aux juridictions compétentes du Bénin.</p>
+
+      <h3 style="margin-top:28px;">12. Contact</h3>
+      <p>Pour toute question relative aux présentes CGU, merci d'utiliser notre <a href="#contact" onclick="showSite();" style="color:var(--clay);">formulaire de contact</a> ou d'écrire à <a href="mailto:contact@ikpade-ife.com" style="color:var(--clay);">contact@ikpade-ife.com</a>.</p>
+    </div>
+
+    <div id="legal-confidentialite" class="legal-doc" style="display:none;">
+      <div class="eyebrow">Document légal</div>
+      <h2 style="margin-top:8px;">Politique de Confidentialité</h2>
+      <p style="color:#57687A; font-size:0.85rem; margin-top:8px;">Dernière mise à jour : 17 septembre 2026</p>
+
+      <h3 style="margin-top:32px;">1. Responsable du traitement</h3>
+      <p>Ikpadé Ifê est responsable du traitement des données personnelles collectées via le Service. Pour toute question, merci d'utiliser notre <a href="#contact" onclick="showSite();" style="color:var(--clay);">formulaire de contact</a> ou d'écrire à <a href="mailto:contact@ikpade-ife.com" style="color:var(--clay);">contact@ikpade-ife.com</a>.</p>
+
+      <h3 style="margin-top:28px;">2. Données collectées</h3>
+      <ul style="padding-left:20px; margin-top:10px;">
+        <li><b>Identité</b> : prénom, nom, genre, âge, email, téléphone ;</li>
+        <li><b>Origine et résidence</b> : pays et ville de résidence, ville d'origine au Bénin ;</li>
+        <li><b>Profil matrimonial</b> : statut marital, pratique religieuse, intention de mariage, présentation ;</li>
+        <li><b>Tuteur (wali)</b> : nom, lien de parenté, coordonnées de contact ;</li>
+        <li><b>Échanges</b> : messages envoyés dans le cadre d'une introduction acceptée ;</li>
+        <li><b>Paiement</b> : les données de paiement (carte, Mobile Money) sont traitées directement par notre prestataire FedaPay et ne transitent ni ne sont stockées par Ikpadé Ifê.</li>
+      </ul>
+
+      <h3 style="margin-top:28px;">3. Finalités</h3>
+      <p>Ces données sont utilisées pour : vérifier et publier votre profil, permettre la mise en relation, notifier le tuteur concerné, modérer les échanges, traiter les abonnements, et vous contacter au sujet de votre compte.</p>
+
+      <h3 style="margin-top:28px;">4. Qui a accès à vos données</h3>
+      <p>L'équipe de modération d'Ikpadé Ifê, dans le cadre strict de la vérification des profils et du traitement des signalements. Vos coordonnées personnelles et celles de votre tuteur ne sont jamais visibles par les autres membres avant l'acceptation mutuelle d'une introduction, et vos coordonnées de contact direct (téléphone, réseaux sociaux) ne sont jamais partagées via la messagerie du Service.</p>
+      <p>Nous faisons appel à des prestataires techniques spécialisés, qui traitent des données en notre nom dans le cadre strict de leur mission : un <b>hébergeur de base de données et d'authentification</b>, un <b>prestataire de traitement des paiements</b>, un <b>service d'envoi d'emails transactionnels</b>, et un <b>hébergeur du site web</b>. Ces prestataires n'utilisent les données que pour exécuter les services demandés par Ikpadé Ifê et n'ont pas le droit de les exploiter à d'autres fins.</p>
+
+      <h3 style="margin-top:28px;">5. Conservation des données</h3>
+      <p>Vos données sont conservées tant que votre compte est actif. En cas de suppression de compte, vos données sont supprimées ou anonymisées dans un délai raisonnable, sauf obligation légale de conservation plus longue (notamment en matière comptable pour les données de facturation).</p>
+
+      <h3 style="margin-top:28px;">6. Sécurité</h3>
+      <p>L'accès à vos données est protégé par des règles de sécurité au niveau de la base de données (chaque membre ne peut accéder qu'à ses propres informations complètes, et à un sous-ensemble limité d'informations non sensibles des profils publiés du genre opposé).</p>
+
+      <h3 style="margin-top:28px;">7. Vos droits</h3>
+      <p>Vous pouvez à tout moment demander l'accès, la rectification ou la suppression de vos données personnelles, en nous contactant via le <a href="#contact" onclick="showSite();" style="color:var(--clay);">formulaire de contact</a> ou par email à <a href="mailto:contact@ikpade-ife.com" style="color:var(--clay);">contact@ikpade-ife.com</a>.</p>
+
+      <h3 style="margin-top:28px;">8. Transferts internationaux</h3>
+      <p>Certains de nos prestataires techniques (hébergement, email) peuvent traiter des données en dehors du Bénin. Nous veillons à ne travailler qu'avec des prestataires appliquant des standards de sécurité reconnus.</p>
+
+      <h3 style="margin-top:28px;">9. Mineurs</h3>
+      <p>Le Service est réservé aux personnes majeures (18 ans et plus). Nous ne collectons pas sciemment de données concernant des mineurs.</p>
+
+      <h3 style="margin-top:28px;">10. Modification</h3>
+      <p>Cette politique peut être mise à jour ; la date de dernière modification est indiquée en haut de cette page.</p>
+    </div>
+
+    <div id="legal-remboursement" class="legal-doc" style="display:none;">
+      <div class="eyebrow">Document légal</div>
+      <h2 style="margin-top:8px;">Politique de Remboursement</h2>
+      <p style="color:#57687A; font-size:0.85rem; margin-top:8px;">Dernière mise à jour : 17 septembre 2026</p>
+
+      <h3 style="margin-top:32px;">1. Formule gratuite</h3>
+      <p>La formule Alaafia est gratuite ; aucun paiement, aucun remboursement applicable.</p>
+
+      <h3 style="margin-top:28px;">2. Formules payantes (Khadijath, Hawa)</h3>
+      <p>Les abonnements sont facturés à l'avance pour la période choisie (mensuelle ou annuelle). Sauf erreur technique avérée (double facturation, paiement sans activation du service), les sommes versées pour une période déjà entamée ne sont pas remboursables.</p>
+      <p>Vous pouvez annuler le renouvellement de votre abonnement à tout moment ; l'annulation prend effet à la fin de la période déjà payée, sans remboursement au prorata de la période en cours.</p>
+
+      <h3 style="margin-top:28px;">3. Erreur technique ou double facturation</h3>
+      <p>Si vous constatez un prélèvement en double, un paiement non suivi d'activation de votre abonnement, ou toute autre erreur technique, contactez-nous immédiatement — nous procéderons à la vérification et au remboursement si l'erreur est confirmée.</p>
+
+      <h3 style="margin-top:28px;">4. Comment demander un remboursement</h3>
+      <p>Toute demande doit être adressée via le <a href="#contact" onclick="showSite();" style="color:var(--clay);">formulaire de contact</a> ou par email à <a href="mailto:contact@ikpade-ife.com" style="color:var(--clay);">contact@ikpade-ife.com</a>, en précisant la date du paiement et la référence de transaction FedaPay si possible.</p>
+
+      <h3 style="margin-top:28px;">5. Délai de traitement</h3>
+      <p>Les demandes de remboursement confirmées sont traitées sous 5 à 10 jours ouvrés, selon les délais de notre prestataire de paiement FedaPay.</p>
+    </div>
+
+  </section>
+</div><!-- /legal-view -->
+
+<style>
+  .msg-header{display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;}
+  .msg-header .meta{font-size:0.84rem; color:#57687A;}
+  .adab-banner{
+    background:#EAF3FF; border:1px solid var(--line); border-left:3px solid var(--gold);
+    padding:14px 18px; font-size:0.84rem; color:#3E4C58; line-height:1.55; border-radius:2px; margin-bottom:28px;
+  }
+  .chat-window{
+    border:1px solid var(--line); border-radius:8px; background:#F6FAFC;
+    padding:26px; display:flex; flex-direction:column; gap:18px;
+    max-height:460px; overflow-y:auto;
+  }
+  .msg-row{display:flex; gap:10px; align-items:flex-end; max-width:82%;}
+  .msg-row.from-a{align-self:flex-start;}
+  .msg-row.from-b{align-self:flex-end; flex-direction:row-reverse;}
+  .msg-avatar{
+    width:32px; height:32px; border-radius:50%; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:var(--ivory);
+  }
+  .msg-avatar.a{background:var(--indigo);}
+  .msg-avatar.b{background:var(--emerald);}
+  .msg-bubble{
+    background:var(--ivory); border:1px solid var(--line); border-radius:12px; padding:12px 16px;
+    font-size:0.9rem; line-height:1.5; color:var(--ink);
+  }
+  .msg-row.from-b .msg-bubble{background:#e9f1ec; border-color:rgba(31,92,63,0.22);}
+  .msg-time{font-family:'IBM Plex Mono',monospace; font-size:0.68rem; color:#9FB0BD; margin-top:5px; padding:0 4px;}
+  .msg-row.from-b .msg-time{text-align:right;}
+  .msg-blocked{
+    background:#EAF7F0; border:1px dashed var(--clay); border-radius:12px; padding:12px 16px;
+    font-size:0.84rem; color:#0E7A52; font-style:italic; max-width:340px;
+  }
+  .msg-system{
+    align-self:center; font-family:'IBM Plex Mono',monospace; font-size:0.72rem; color:#7A8B9A;
+    background:transparent; border:1px solid var(--line); border-radius:20px; padding:8px 18px;
+  }
+  .chat-input-row{display:flex; gap:12px; margin-top:22px;}
+  .chat-input-row input{
+    flex:1; padding:13px 16px; border:1px solid var(--line); border-radius:3px; background:#F6FAFC;
+    font-family:'Work Sans',sans-serif; font-size:0.9rem; color:var(--ink);
+  }
+  .chat-input-row input:focus{outline:2px solid var(--clay); outline-offset:1px;}
+  .chat-note{font-size:0.76rem; color:#9FB0BD; margin-top:10px;}
+  @media (max-width:640px){
+    .msg-row{max-width:94%;}
+    .chat-input-row{flex-direction:column;}
+  }
+</style>
+
+<script>
+  let currentDemandeId = null;
+  let currentDemandeAutrePrenom = '';
+  let realtimeChannel = null;
+
+  let currentDemande = null;
+  let currentAutreId = null;
+
+  async function showMessaging(demandeId){
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){ showLogin(); return; }
+
+    const { data: demande, error } = await sb.from('demandes_introduction').select('*').eq('id', demandeId).single();
+    if(error || !demande || demande.statut !== 'acceptee'){
+      alert(t('echange_indisponible'));
+      return;
+    }
+    currentDemande = demande;
+    currentAutreId = demande.demandeur_id === session.user.id ? demande.destinataire_id : demande.demandeur_id;
+    const { data: autreProfil } = await sb.rpc('get_profil_pour_demande', { other_id: currentAutreId });
+    currentDemandeAutrePrenom = (autreProfil && autreProfil[0]) ? autreProfil[0].prenom : 'Membre';
+
+    hideAllViews();
+    document.getElementById('messaging-view').style.display='block';
+    window.scrollTo(0,0);
+
+    document.getElementById('msg-title').textContent = currentDemandeAutrePrenom;
+    document.getElementById('msg-meta').textContent = `Introduction acceptée le ${new Date(demande.updated_at).toLocaleDateString('fr-FR')}`;
+
+    await renderIntroFormelleStatusAsync();
+    await loadMsgPhoto();
+
+    currentDemandeId = demandeId;
+    await loadMessages();
+
+    if(realtimeChannel) sb.removeChannel(realtimeChannel);
+    realtimeChannel = sb.channel('messages-' + demandeId)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages_echange', filter: `demande_id=eq.${demandeId}` }, () => loadMessages())
+      .subscribe();
+  }
+
+  async function loadMsgPhoto(){
+    const imgEl = document.getElementById('msg-photo');
+    const fichier = currentDemande.photo_revelee ? 'original.jpg' : 'floute.jpg';
+    try {
+      const { data, error } = await sb.storage.from('photos-profil').createSignedUrl(`${currentAutreId}/${fichier}`, 120);
+      if(error || !data || !data.signedUrl){
+        imgEl.style.display = 'none';
+        return;
+      }
+      imgEl.src = data.signedUrl;
+      imgEl.style.display = 'block';
+    } catch(e){
+      imgEl.style.display = 'none';
+    }
+  }
+
+  async function renderIntroFormelleStatusAsync(){
+    const { data: { session } } = await sb.auth.getSession();
+    const mySide = currentDemande.demandeur_id === session.user.id ? 'demandeur' : 'destinataire';
+    const monAccord = mySide === 'demandeur' ? currentDemande.intro_formelle_demandeur : currentDemande.intro_formelle_destinataire;
+    const sonAccord = mySide === 'demandeur' ? currentDemande.intro_formelle_destinataire : currentDemande.intro_formelle_demandeur;
+
+    const statusEl = document.getElementById('intro-formelle-status');
+    const btnEl = document.getElementById('intro-formelle-btn');
+
+    if(currentDemande.photo_revelee){
+      statusEl.textContent = t('intro_formelle_confirmee');
+      btnEl.style.display = 'none';
+    } else if(monAccord){
+      statusEl.textContent = t('intro_formelle_en_attente_autre');
+      btnEl.style.display = 'none';
+    } else {
+      statusEl.textContent = sonAccord ? t('intro_formelle_autre_a_confirme') : t('intro_formelle_explication');
+      btnEl.style.display = 'inline-block';
+    }
+  }
+
+  async function confirmerIntroFormelle(){
+    const { data: { session } } = await sb.auth.getSession();
+    const champ = currentDemande.demandeur_id === session.user.id ? 'intro_formelle_demandeur' : 'intro_formelle_destinataire';
+
+    const { data, error } = await sb
+      .from('demandes_introduction')
+      .update({ [champ]: true })
+      .eq('id', currentDemande.id)
+      .select()
+      .single();
+
+    if(error){
+      alert(t('erreur_prefixe') + error.message);
+      return;
+    }
+    currentDemande = data;
+    await renderIntroFormelleStatusAsync();
+    await loadMsgPhoto();
+  }
+
+  async function loadMessages(){
+    const { data: { session } } = await sb.auth.getSession();
+    const win = document.getElementById('chat-window');
+    const { data: messages, error } = await sb
+      .from('messages_echange')
+      .select('*')
+      .eq('demande_id', currentDemandeId)
+      .order('created_at', { ascending: true });
+
+    if(error){
+      win.innerHTML = `<p style="color:#8a2f2f;">Erreur : ${error.message}</p>`;
+      return;
+    }
+    if(!messages || messages.length === 0){
+      win.innerHTML = `<p style="color:#7A8B9A;">${t('aucun_message')}</p>`;
+      return;
+    }
+    win.innerHTML = messages.map(m => {
+      const mine = m.expediteur_id === session?.user?.id;
+      const cls = mine ? 'from-b' : 'from-a';
+      const heure = new Date(m.created_at).toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+      const safeText = escapeHtml(m.contenu);
+      return `<div class="msg-row ${cls}">
+        <div><div class="msg-bubble">${safeText}</div><div class="msg-time">${heure}</div></div>
+      </div>`;
+    }).join('');
+    win.scrollTop = win.scrollHeight;
+  }
+
+  async function sendChatMessage(){
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if(!text || !currentDemandeId) return;
+    const { data: { session } } = await sb.auth.getSession();
+
+    input.value = '';
+    const { error } = await sb.from('messages_echange').insert({
+      demande_id: currentDemandeId,
+      expediteur_id: session.user.id,
+      contenu: text,
+    });
+
+    if(error){
+      const win = document.getElementById('chat-window');
+      const row = document.createElement('div');
+      row.className = 'msg-row from-b';
+      row.innerHTML = `<div><div class="msg-blocked">🔒 ${error.message.includes('bloqué') ? error.message.replace('bloquer_coordonnees: ','') : t('blocked_message')}</div><div class="msg-time">${t('a_linstant')}</div></div>`;
+      win.appendChild(row);
+      win.scrollTop = win.scrollHeight;
+      return;
+    }
+    loadMessages();
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Enter' && document.activeElement && document.activeElement.id==='chat-input'){
+      sendChatMessage();
+    }
+  });
+</script>
+
+<div id="payment-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="marquee-bar">
+  <div class="marquee-track">
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+    <span>Chez Ikpadé Ifê, c&#39;est rencontrer ton cœur que Dieu t&#39;a réservé</span>
+  </div>
+</div>
+
+  <section style="padding-top:56px; max-width:640px; margin:0 auto;">
+
+    <div id="pay-form-wrap">
+      <div class="section-head" style="margin-bottom:8px;">
+        <div class="eyebrow">Paiement</div>
+        <h2 id="payment-plan-name" style="font-size:1.7rem; margin-top:8px;">Abonnement Khadijath</h2>
+        <p id="payment-plan-price" style="margin-top:6px; font-family:'IBM Plex Mono',monospace; color:var(--clay); font-size:0.95rem;">5 000 FCFA / mois</p>
+      </div>
+
+      <div class="adab-banner" style="margin:26px 0 30px;">
+        <b>Paiement sécurisé :</b> vous serez redirigé vers FedaPay pour régler par Mobile Money (MTN/Moov) ou carte bancaire. Ceci est un paiement réel.
+      </div>
+
+      <!-- BLOC CONNEXION (affiché si aucune session Supabase active) -->
+      <div id="pay-auth-block" style="display:none;">
+        <p style="font-size:0.9rem; color:#3E4C58; margin-bottom:22px;">Connectez-vous pour continuer votre abonnement.</p>
+        <label class="pay-label">Email
+          <input type="email" id="pay-login-email" placeholder="vous@exemple.com">
+        </label>
+        <label class="pay-label">Mot de passe
+          <input type="password" id="pay-login-password" placeholder="••••••••">
+        </label>
+        <button class="btn-primary" style="width:100%;" onclick="payLogin()">Se connecter</button>
+        <div id="pay-login-status" class="pay-status" style="display:none;"></div>
+        <p class="chat-note" style="text-align:center; margin-top:16px;">Pas encore de compte ? <a href="#" onclick="showSignup();return false;" style="color:var(--clay);">Créer un profil</a></p>
+      </div>
+
+      <!-- BLOC PAIEMENT (affiché une fois connecté) -->
+      <div id="pay-confirm-block" style="display:none;">
+        <div class="pay-summary-row">
+          <span>Montant à payer</span>
+          <b id="pay-amount">5 000 FCFA</b>
+        </div>
+        <button class="btn-primary" style="width:100%;" id="pay-continue-btn" onclick="startFedaPayCheckout()">Continuer vers le paiement sécurisé</button>
+        <div id="pay-continue-status" class="pay-status" style="display:none;"></div>
+        <p class="chat-note" style="text-align:center; margin-top:16px;">Vous serez redirigé vers la page sécurisée FedaPay pour choisir Mobile Money (MTN/Moov) ou carte bancaire — aucune donnée de paiement ne transite par ce site.</p>
+      </div>
+
+      <p class="chat-note" style="text-align:center; margin-top:22px;">Connexion chiffrée · vos informations ne sont jamais partagées avec les autres membres.</p>
+    </div>
+
+    <!-- SUCCÈS -->
+    <div id="payment-success" style="display:none; text-align:center; padding:20px 0 60px;">
+      <div class="success-check" id="receipt-icon">✓</div>
+      <h2 style="font-size:1.6rem; margin-top:22px; color:var(--indigo);" id="receipt-title">Paiement confirmé</h2>
+      <p style="color:#57687A; margin-top:8px;" id="receipt-subtitle">Votre abonnement est actif.</p>
+
+      <div class="recap-box" style="text-align:left; margin-top:32px;">
+        <div class="dossier-row"><span>Formule</span><b id="receipt-plan">—</b></div>
+        <div class="dossier-row"><span>Montant</span><b id="receipt-amount">—</b></div>
+        <div class="dossier-row"><span>Statut</span><b id="receipt-status">—</b></div>
+        <div class="dossier-row"><span>Référence</span><b id="receipt-ref">—</b></div>
+      </div>
+
+      <a href="#" class="btn-primary" style="display:inline-block; margin-top:28px;" onclick="showSite();return false;">Retour à l'accueil</a>
+    </div>
+
+  </section>
+</div><!-- /payment-view -->
+
+<style>
+  .operator-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;}
+  .pay-method-card{
+    border:1px solid var(--line); border-radius:6px; padding:16px; display:flex; gap:12px; align-items:flex-start;
+    cursor:pointer; background:#F6FAFC; transition:border-color .15s;
+  }
+  .pay-method-card.selected{border-color:var(--indigo); box-shadow:inset 0 0 0 1px var(--indigo);}
+  .op-badge{
+    width:42px; height:42px; border-radius:6px; flex:0 0 auto; display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size:0.68rem; font-weight:700;
+  }
+  .pay-method-card h4{font-size:0.92rem; color:var(--indigo); margin-bottom:4px;}
+  .pay-method-card p{font-size:0.76rem; color:#7A8B9A; line-height:1.4;}
+  .pay-label{display:block; font-size:0.85rem; color:var(--indigo); margin-bottom:18px; font-weight:500;}
+  .pay-label input{
+    width:100%; margin-top:8px; padding:12px 14px; border:1px solid var(--line); border-radius:3px;
+    background:#F6FAFC; font-family:'Work Sans',sans-serif; font-size:0.92rem; color:var(--ink);
+  }
+  .pay-label input:focus{outline:2px solid var(--clay); outline-offset:1px;}
+  .pay-summary-row{
+    display:flex; justify-content:space-between; align-items:center; padding:16px 0; margin:8px 0 20px;
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-size:0.95rem; color:var(--indigo);
+  }
+  .pay-summary-row b{font-family:'Fraunces',serif; font-size:1.2rem;}
+  .pay-status{
+    margin-top:16px; text-align:center; font-size:0.86rem; color:#57687A; display:flex;
+    align-items:center; justify-content:center; gap:10px;
+  }
+  .spinner{
+    width:16px; height:16px; border:2px solid var(--line); border-top-color:var(--clay); border-radius:50%;
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .success-check{
+    width:64px; height:64px; border-radius:50%; background:var(--emerald); color:var(--ivory);
+    font-size:1.8rem; display:flex; align-items:center; justify-content:center; margin:0 auto;
+  }
+  @media (max-width:560px){ .operator-grid{grid-template-columns:1fr;} }
+</style>
+
+<script>
+  // ── Sélection en attente (choisie sur la page tarifs) ────────────────
+  let selectedPlan = { displayName: '', idKey: '', periode: 'mensuel' };
+
+  async function showPayment(displayName, idKey){
+    const priceEl = document.getElementById('price-'+idKey);
+    const price = priceEl ? priceEl.textContent : '';
+    const period = document.querySelector('.mensuel-sub') ? document.querySelector('.mensuel-sub').textContent : ' / mois';
+    const periode = document.getElementById('btn-annuel')?.classList.contains('active') ? 'annuel' : 'mensuel';
+
+    selectedPlan = { displayName, idKey, periode };
+
+    document.getElementById('payment-plan-name').textContent = 'Abonnement ' + displayName;
+    document.getElementById('payment-plan-price').textContent = price + period;
+    document.getElementById('pay-amount').textContent = price;
+
+    document.getElementById('pay-form-wrap').style.display = 'block';
+    document.getElementById('payment-success').style.display = 'none';
+    document.getElementById('pay-continue-status').style.display = 'none';
+    document.getElementById('pay-login-status').style.display = 'none';
+    document.getElementById('pay-continue-btn').disabled = false;
+
+    hideAllViews();
+    document.getElementById('payment-view').style.display = 'block';
+    window.scrollTo(0,0);
+
+    await refreshAuthBlock();
+  }
+
+  // Affiche le bloc connexion ou le bloc paiement selon la session Supabase active
+  async function refreshAuthBlock(){
+    const { data } = await sb.auth.getSession();
+    const loggedIn = !!data.session;
+    document.getElementById('pay-auth-block').style.display = loggedIn ? 'none' : 'block';
+    document.getElementById('pay-confirm-block').style.display = loggedIn ? 'block' : 'none';
+  }
+
+  async function payLogin(){
+    const email = document.getElementById('pay-login-email').value.trim();
+    const password = document.getElementById('pay-login-password').value;
+    const status = document.getElementById('pay-login-status');
+    if(!email || !password){
+      status.style.display='flex'; status.style.color='var(--clay)';
+      status.innerHTML = 'Merci de renseigner votre email et votre mot de passe.';
+      return;
+    }
+    status.style.display='flex'; status.style.color='#57687A';
+    status.innerHTML = '<span class="spinner"></span> Connexion…';
+    const { error } = await sb.auth.signInWithPassword({ email, password });
+    if(error){
+      status.style.color='var(--clay)';
+      status.innerHTML = 'Connexion impossible : ' + error.message;
+      return;
+    }
+    status.style.display='none';
+    await refreshAuthBlock();
+  }
+
+  // Appelle la vraie Edge Function initiate-payment, puis redirige vers FedaPay
+  async function startFedaPayCheckout(){
+    const btn = document.getElementById('pay-continue-btn');
+    const status = document.getElementById('pay-continue-status');
+    const { data: sessionData } = await sb.auth.getSession();
+    if(!sessionData.session){ await refreshAuthBlock(); return; }
+
+    btn.disabled = true;
+    status.style.display = 'flex'; status.style.color = '#57687A';
+    status.innerHTML = '<span class="spinner"></span> Préparation du paiement sécurisé…';
+
+    try {
+      const res = await fetch(`${SUPABASE_FUNCTIONS_URL}/initiate-payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionData.session.access_token}`,
+        },
+        body: JSON.stringify({ formule: selectedPlan.idKey, periode: selectedPlan.periode }),
+      });
+      const data = await res.json();
+      if(!res.ok || !data.url) throw new Error(data.error || 'Réponse invalide du serveur.');
+
+      status.innerHTML = 'Redirection vers la page de paiement FedaPay…';
+      window.location.href = data.url; // quitte le site : page hébergée FedaPay (Mobile Money + carte)
+    } catch(err){
+      btn.disabled = false;
+      status.style.color = 'var(--clay)';
+      status.innerHTML = 'Erreur : ' + err.message;
+    }
+  }
+
+  // ── Retour depuis FedaPay (callback_url ?abonnement_id=...) ──────────
+  async function handlePaymentReturn(abonnementId){
+    hideAllViews();
+    document.getElementById('payment-view').style.display = 'block';
+    document.getElementById('pay-form-wrap').style.display = 'none';
+    document.getElementById('payment-success').style.display = 'block';
+    document.getElementById('receipt-title').textContent = 'Vérification du paiement…';
+    document.getElementById('receipt-subtitle').textContent = '';
+
+    const { data, error } = await sb
+      .from('abonnements')
+      .select('formule, montant_fcfa, statut, fedapay_transaction_id')
+      .eq('id', abonnementId)
+      .single();
+
+    if(error || !data){
+      document.getElementById('receipt-title').textContent = 'Abonnement introuvable';
+      document.getElementById('receipt-subtitle').textContent = "Contactez le support si le débit a bien eu lieu.";
+      return;
+    }
+
+    const statutLabel = { actif: 'Actif', en_attente: 'En attente de confirmation', echoue: 'Échoué', annule: 'Annulé' }[data.statut] || data.statut;
+    document.getElementById('receipt-icon').textContent = data.statut === 'actif' ? '✓' : '…';
+    document.getElementById('receipt-title').textContent = data.statut === 'actif' ? 'Paiement confirmé' : 'Paiement en cours de traitement';
+    document.getElementById('receipt-subtitle').textContent = data.statut === 'actif'
+      ? 'Votre abonnement est actif.'
+      : "FedaPay confirme le paiement en quelques secondes — rafraîchissez si besoin.";
+    document.getElementById('receipt-plan').textContent = data.formule;
+    document.getElementById('receipt-amount').textContent = data.montant_fcfa.toLocaleString('fr-FR') + ' FCFA';
+    document.getElementById('receipt-status').textContent = statutLabel;
+    document.getElementById('receipt-ref').textContent = data.fedapay_transaction_id || '—';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const abonnementId = params.get('abonnement_id');
+    if(abonnementId){
+      handlePaymentReturn(abonnementId);
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  });
+</script>
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    item.querySelector('.faq-q').addEventListener('click',()=>{
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+      if(!isOpen) item.classList.add('open');
+    });
+  });
+
+  const monthly = {ajumose:'5 000 FCFA', idile:'9 000 FCFA', sub:' / mois'};
+  const yearly = {ajumose:'50 000 FCFA', idile:'90 000 FCFA', sub:' / an'};
+  const btnM = document.getElementById('btn-mensuel');
+  const btnA = document.getElementById('btn-annuel');
+  const prices = document.querySelectorAll('.mensuel-price');
+  const subs = document.querySelectorAll('.mensuel-sub');
+  function setPricing(mode){
+    const data = mode==='annuel' ? yearly : monthly;
+    prices[0].textContent = data.ajumose;
+    prices[1].textContent = data.idile;
+    subs.forEach(s=>s.textContent = data.sub);
+    btnM.classList.toggle('active', mode==='mensuel');
+    btnA.classList.toggle('active', mode==='annuel');
+  }
+  btnM.addEventListener('click',()=>setPricing('mensuel'));
+  btnA.addEventListener('click',()=>setPricing('annuel'));
+</script>
+
+</body>
+</html>
