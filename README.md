@@ -54,3 +54,4 @@ Pas de dépôt Git connecté à Netlify pour l'instant — le déploiement se fa
 - **Pas de dépôt Git** à ce jour — donc pas d'historique de versions, pas de possibilité de revenir en arrière facilement, pas de revue de code possible.
 
 Si une deuxième personne rejoint le projet, la priorité devrait être : mettre en place un vrai dépôt Git (GitHub) connecté à Netlify, avant toute refonte de l'architecture.
+Test
