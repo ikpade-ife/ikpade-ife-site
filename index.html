@@ -96,7 +96,8 @@
   // sur tous les menus du site quand un membre est connecté.
   async function updateAuthUI(){
     const links = document.querySelectorAll('[data-i18n="nav_connexion"]');
-    if(links.length === 0) return;
+    const ctas = document.querySelectorAll('.nav-cta[data-i18n="nav_commencer"]');
+    if(links.length === 0 && ctas.length === 0) return;
     const { data: { session } } = await sb.auth.getSession();
 
     if(session){
@@ -114,11 +115,13 @@
           updateAuthUI();
         };
       });
+      ctas.forEach(a => { a.style.display = 'none'; });
     } else {
       links.forEach(a => {
         a.textContent = t('nav_connexion');
         a.onclick = (e) => { e.preventDefault(); showLogin(); };
       });
+      ctas.forEach(a => { a.style.display = ''; });
     }
   }
 
@@ -130,6 +133,11 @@
     document.querySelectorAll('.nav-links a').forEach(a => {
       a.addEventListener('click', () => a.closest('.nav-links')?.classList.remove('open'));
     });
+  });
+  // Active/désactive les champs du tuteur en direct selon le genre choisi à l'inscription
+  document.addEventListener('DOMContentLoaded', () => {
+    const genreSelect = document.getElementById('genre-select');
+    if(genreSelect) genreSelect.addEventListener('change', updateTuteurFields);
   });
 </script>
 <style>
@@ -1180,6 +1188,9 @@
   #signup-form input:focus, #signup-form select:focus, #signup-form textarea:focus{
     outline:2px solid var(--clay); outline-offset:1px;
   }
+  #signup-form input:disabled{
+    background:#E9EDEF; color:#9AA5AB; cursor:not-allowed; border-color:#D6DCDF;
+  }
   .recap-box{border:1px solid var(--line); border-radius:6px; padding:26px; background:#F6FAFC;}
   .check-row{display:flex; align-items:flex-start; gap:10px; font-weight:400 !important; font-size:0.88rem !important; color:#2E3A44 !important;}
   .check-row input{width:auto !important; margin-top:2px !important;}
@@ -1197,6 +1208,7 @@
   function showSignup(){
     hideAllViews();
     document.getElementById('signup-view').style.display='block';
+    updateTuteurFields();
     window.scrollTo(0,0);
   }
   function showSite(){
@@ -1456,11 +1468,18 @@
     document.getElementById('prev-btn').style.visibility = currentStep===1 ? 'hidden' : 'visible';
     document.getElementById('next-btn').textContent = currentStep===totalSteps ? t('btn_creer_profil') : t('btn_suivant');
 
+    updateTuteurFields();
+  }
+  function updateTuteurFields(){
     const genre = document.getElementById('genre-select').value;
     const note = document.getElementById('tuteur-note');
-    if(currentStep===4){
-      note.textContent = genre==='femme' ? t('tuteur_note_femme') : t('tuteur_note_homme');
-    }
+    const estFemme = genre === 'femme';
+    note.textContent = estFemme ? t('tuteur_note_femme') : t('tuteur_note_homme');
+    ['signup-nom-tuteur','signup-lien-parente','signup-contact-tuteur','signup-email-tuteur'].forEach(id => {
+      const champ = document.getElementById(id);
+      champ.disabled = !estFemme;
+      if(!estFemme) champ.value = '';
+    });
   }
   function stepMove(dir){
     if(currentStep===totalSteps && dir===1){
