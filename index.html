@@ -1482,6 +1482,9 @@
     });
   }
   function stepMove(dir){
+    // On ne bloque jamais le retour en arrière, seulement l'avancée avec des champs manquants
+    if(dir===1 && !validerPanelCourant()) return;
+
     if(currentStep===totalSteps && dir===1){
       submitSignup();
       return;
@@ -1489,6 +1492,37 @@
     currentStep = Math.min(totalSteps, Math.max(1, currentStep+dir));
     renderStep();
     window.scrollTo({top:0, behavior:'smooth'});
+  }
+  // Vérifie que les champs obligatoires de l'étape affichée sont bien remplis
+  // avant de laisser le client passer à l'étape suivante (ou valider le profil).
+  function validerPanelCourant(){
+    const panel = document.querySelector('.signup-panel[data-panel="'+currentStep+'"]');
+    if(!panel) return true;
+    const champsRequis = panel.querySelectorAll('input[required], select[required], textarea[required]');
+    for(const champ of champsRequis){
+      if(!champ.checkValidity()){
+        champ.reportValidity();
+        return false;
+      }
+    }
+    // Étape 4 (tuteur) : obligatoire seulement pour un profil féminin
+    if(currentStep === 4 && document.getElementById('genre-select').value === 'femme'){
+      const champsTuteur = ['signup-nom-tuteur','signup-lien-parente','signup-contact-tuteur','signup-email-tuteur'];
+      for(const id of champsTuteur){
+        const champ = document.getElementById(id);
+        if(!champ.value.trim()){
+          champ.focus();
+          showSignupError(t('alert_tuteur_requis'));
+          return false;
+        }
+      }
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(!emailPattern.test(document.getElementById('signup-email-tuteur').value.trim())){
+        showSignupError(t('alert_email_tuteur_invalide'));
+        return false;
+      }
+    }
+    return true;
   }
   function showSignupError(msg){
     const box = document.getElementById('signup-form-error');
@@ -1538,11 +1572,14 @@
       const { canvas: canvasOriginal } = await redimensionnerImage(file, 900);
       const blobOriginal = await new Promise(res => canvasOriginal.toBlob(res, 'image/jpeg', 0.85));
 
-      // Version floutée : même image, flou fort appliqué au tracé
-      const { canvas: canvasFloute } = await redimensionnerImage(file, 900);
+      // Version floutée : on repart de l'image d'origine (pas du canvas déjà dessiné,
+      // sans quoi certains navigateurs redessinent le canevas sur lui-même sans
+      // appliquer le flou, ce qui laissait passer des photos nettes non floutées)
+      const { canvas: canvasFloute, img: imgFloute } = await redimensionnerImage(file, 900);
       const ctx = canvasFloute.getContext('2d');
       ctx.filter = 'blur(18px)';
-      ctx.drawImage(canvasFloute, 0, 0);
+      ctx.clearRect(0, 0, canvasFloute.width, canvasFloute.height);
+      ctx.drawImage(imgFloute, 0, 0, canvasFloute.width, canvasFloute.height);
       const blobFloute = await new Promise(res => canvasFloute.toBlob(res, 'image/jpeg', 0.7));
 
       const { error: err1 } = await sb.storage.from('photos-profil').upload(`${userId}/original.jpg`, blobOriginal, { upsert: true, contentType: 'image/jpeg' });
