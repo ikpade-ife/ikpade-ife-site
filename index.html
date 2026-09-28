@@ -2197,6 +2197,10 @@
   .dossier-row:last-child{border-bottom:none;}
   .dossier-row span{color:#7A8B9A; flex:0 0 auto;}
   .dossier-row b{color:var(--indigo); font-weight:500; text-align:right;}
+  .dossier-photo-row{flex-direction:column; align-items:flex-start;}
+  .dossier-photo-row span{margin-bottom:8px;}
+  .dossier-photo-wrap img{width:180px; height:180px; object-fit:cover; border-radius:6px; display:block; border:1px solid var(--line); cursor:pointer;}
+  .dossier-photo-wrap em{color:#7A8B9A; font-style:normal; font-size:0.82rem;}
   #admin-view .request-info{flex:1;}
   @media (max-width:640px){
     .dossier-row{flex-direction:column; gap:2px;}
@@ -2273,6 +2277,7 @@
           <details class="dossier">
             <summary data-i18n="voir_dossier">Voir le dossier</summary>
             <div class="dossier-body">
+              <div class="dossier-row dossier-photo-row"><span data-i18n="fld_piece_identite">Pièce d'identité</span><div class="dossier-photo-wrap" id="dossier-photo-${p.id}"><em>${t('photo_traitement')}</em></div></div>
               <div class="dossier-row"><span>Genre</span><b>${p.genre === 'femme' ? 'Femme' : 'Homme'}</b></div>
               <div class="dossier-row"><span>Téléphone</span><b>${escapeHtml(p.telephone) || '—'}</b></div>
               <div class="dossier-row"><span data-i18n="fld_tuteur_renseigne">Tuteur renseigné</span><b>${p.nom_tuteur ? `Oui — ${escapeHtml(p.nom_tuteur)} (${escapeHtml(p.lien_parente_tuteur||'')})` : 'Non renseigné'}</b></div>
@@ -2290,6 +2295,21 @@
         </div>
       </div>`;
     }).join('');
+
+    // Charge la photo originale (non floutée) de chaque profil en attente,
+    // uniquement visible ici par l'équipe de modération pour vérifier l'identité.
+    enAttente.forEach(async p => {
+      const wrap = document.getElementById('dossier-photo-' + p.id);
+      if(!wrap) return;
+      const { data: signedUrl, error: errSigned } = await sb.storage
+        .from('photos-profil')
+        .createSignedUrl(`${p.id}/original.jpg`, 300);
+      if(errSigned || !signedUrl){
+        wrap.innerHTML = `<em>${t('photo_aucune')}</em>`;
+        return;
+      }
+      wrap.innerHTML = `<img src="${signedUrl.signedUrl}" alt="" onclick="window.open('${signedUrl.signedUrl}','_blank')">`;
+    });
   }
 
   async function moderateProfil(profilId, nouveauStatut){
