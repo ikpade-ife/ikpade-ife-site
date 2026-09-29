@@ -97,6 +97,8 @@
   async function updateAuthUI(){
     const links = document.querySelectorAll('[data-i18n="nav_connexion"]');
     const ctas = document.querySelectorAll('.nav-cta[data-i18n="nav_commencer"]');
+    // Liens réservés aux membres (recherche de mariage) : n'ont pas de sens pour le compte admin
+    const liensMembre = document.querySelectorAll('[data-i18n="nav_parcourir"], [data-i18n="nav_demandes"], [data-i18n="nav_ma_photo"]');
     if(links.length === 0 && ctas.length === 0) return;
     const { data: { session } } = await sb.auth.getSession();
 
@@ -116,12 +118,15 @@
         };
       });
       ctas.forEach(a => { a.style.display = 'none'; });
+      const estAdmin = session.user.email === ADMIN_EMAIL;
+      liensMembre.forEach(a => { a.style.display = estAdmin ? 'none' : ''; });
     } else {
       links.forEach(a => {
         a.textContent = t('nav_connexion');
         a.onclick = (e) => { e.preventDefault(); showLogin(); };
       });
       ctas.forEach(a => { a.style.display = ''; });
+      liensMembre.forEach(a => { a.style.display = ''; });
     }
   }
 
