@@ -3262,5 +3262,153 @@
   btnA.addEventListener('click',()=>setPricing('annuel'));
 </script>
 
+<!-- ============================================================ -->
+<!-- Widget FAQ flottant — questions fréquentes accessibles depuis -->
+<!-- n'importe quelle page du site, sans avoir à faire défiler     -->
+<!-- jusqu'à la section "Questions fréquentes".                    -->
+<!-- ============================================================ -->
+<style>
+  #ikf-faq-btn{
+    position:fixed; right:22px; bottom:22px; z-index:999;
+    width:56px; height:56px; border-radius:50%;
+    background:var(--emerald); border:1px solid var(--gold-soft);
+    color:var(--ivory); font-family:'IBM Plex Mono',monospace; font-size:1.3rem; font-weight:500;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow:0 6px 18px rgba(14,58,95,0.28);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  #ikf-faq-btn:hover{transform:translateY(-2px); box-shadow:0 10px 22px rgba(14,58,95,0.32);}
+  #ikf-faq-btn .ikf-close-icon{display:none;}
+  #ikf-faq-btn.open .ikf-q-icon{display:none;}
+  #ikf-faq-btn.open .ikf-close-icon{display:block;}
+
+  #ikf-faq-panel{
+    position:fixed; right:22px; bottom:90px; z-index:999;
+    width:min(360px, 90vw); max-height:min(72vh, 560px);
+    background:var(--ivory); border:1px solid var(--line); border-radius:10px;
+    box-shadow:0 18px 40px rgba(14,58,95,0.22);
+    display:none; flex-direction:column; overflow:hidden;
+  }
+  #ikf-faq-panel.open{display:flex;}
+  .ikf-faq-header{
+    background:var(--indigo); color:var(--ivory); padding:16px 18px;
+    display:flex; align-items:center; justify-content:space-between; flex-shrink:0;
+  }
+  .ikf-faq-header .ikf-title{font-family:'Fraunces',serif; font-weight:600; font-size:1rem;}
+  .ikf-faq-header .ikf-sub{font-family:'IBM Plex Mono',monospace; font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-soft); display:block; margin-top:2px;}
+  #ikf-faq-list{overflow-y:auto; flex:1;}
+  .ikf-item{border-bottom:1px solid var(--line);}
+  .ikf-item:last-child{border-bottom:none;}
+  .ikf-q{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:14px 18px; font-family:'Work Sans',sans-serif; font-size:0.88rem; color:var(--ink);
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  }
+  .ikf-q .plus{font-family:'IBM Plex Mono',monospace; color:var(--clay); font-size:1rem; flex-shrink:0; transition:transform .25s;}
+  .ikf-item.open .plus{transform:rotate(45deg);}
+  .ikf-a{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .ikf-item.open .ikf-a{max-height:260px;}
+  .ikf-a p{padding:0 18px 16px; font-size:0.84rem; line-height:1.55; color:#3E4C58;}
+  .ikf-faq-footer{padding:12px 18px; border-top:1px solid var(--line); flex-shrink:0; background:var(--ivory);}
+  .ikf-faq-footer a{color:var(--clay); font-size:0.82rem; text-decoration:underline;}
+</style>
+
+<button id="ikf-faq-btn" aria-label="Questions fréquentes" aria-expanded="false">
+  <span class="ikf-q-icon">?</span>
+  <span class="ikf-close-icon">×</span>
+</button>
+
+<div id="ikf-faq-panel" role="dialog" aria-label="Questions fréquentes">
+  <div class="ikf-faq-header">
+    <div>
+      <span class="ikf-title" id="ikf-faq-title">Des questions ?</span>
+      <span class="ikf-sub" id="ikf-faq-sub">Réponses rapides</span>
+    </div>
+  </div>
+  <div id="ikf-faq-list"></div>
+  <div class="ikf-faq-footer">
+    <a href="#contact" id="ikf-faq-contact-link">Une autre question ? Écrivez-nous →</a>
+  </div>
+</div>
+
+<script>
+  const IKF_FAQ = {
+    fr: {
+      titre: "Des questions ?", sous_titre: "Réponses rapides", contact: "Une autre question ? Écrivez-nous →",
+      items: [
+        {q:"Comment fonctionne Ikpadé Ifê ?", a:"Vous créez votre profil, qui est vérifié par notre équipe avant d'être publié. Une fois publié, vous pouvez consulter les profils publiés du genre opposé et envoyer une demande d'introduction. Si elle est acceptée, un premier échange libre et modéré s'ouvre, avant une éventuelle introduction formelle."},
+        {q:"Est-ce payant ?", a:"La création et la vérification de votre profil sont gratuites. Un abonnement, mensuel ou annuel, donne accès à des fonctionnalités supplémentaires comme les introductions illimitées — le détail est présenté dans la section Abonnement."},
+        {q:"Comment mon profil est-il vérifié ?", a:"Une pièce d'identité est demandée avant toute publication. Notre équipe la vérifie personnellement, et un court entretien téléphonique peut être demandé en cas de doute sur le dossier."},
+        {q:"Ma pièce d'identité est-elle obligatoire ?", a:"Oui. Aucun profil n'est publié sans vérification d'identité. Votre pièce n'est jamais rendue publique ni visible par les autres membres — elle sert uniquement à la vérification par notre équipe."},
+        {q:"Comment ma photo est-elle gérée ?", a:"Votre photo reste floutée pour tous les autres membres. Elle ne se révèle que lorsque vous avez tous les deux confirmé vouloir passer à l'introduction formelle."},
+        {q:"Mes données sont-elles visibles par tout le monde ?", a:"Non. Seuls les membres dont le profil est publié peuvent consulter les profils publiés du genre opposé, et uniquement les informations générales (prénom, âge, ville, présentation...). Votre photo reste floutée et votre pièce d'identité n'est jamais visible par les autres membres."},
+        {q:"Comment se passe une mise en relation ?", a:"Vous envoyez une demande d'introduction à un profil qui vous intéresse. Si elle est acceptée, un espace d'échange modéré s'ouvre pour faire connaissance. Lorsque vous confirmez tous les deux vouloir aller plus loin, le tuteur est notifié et une introduction formelle, puis une rencontre familiale, peuvent être organisées."},
+        {q:"Qui peut s'inscrire ?", a:"Les musulmans béninois du monde entier, en vue du mariage. Un tuteur (wali) est obligatoirement associé aux profils féminins, conformément au cadre islamique."},
+        {q:"Combien de temps avant que mon profil soit publié ?", a:"Généralement quelques jours après réception de votre pièce d'identité. Si votre dossier reste incomplet, nous vous envoyons un rappel par email."}
+      ]
+    },
+    en: {
+      titre: "Any questions?", sous_titre: "Quick answers", contact: "Another question? Write to us →",
+      items: [
+        {q:"How does Ikpadé Ifê work?", a:"You create your profile, which our team verifies before it is published. Once published, you can browse published profiles of the opposite gender and send an introduction request. If it is accepted, a first free, moderated exchange opens, before a possible formal introduction."},
+        {q:"Is it paid?", a:"Creating and verifying your profile is free. A monthly or yearly membership unlocks extra features such as unlimited introductions — details are in the Membership section."},
+        {q:"How is my profile verified?", a:"An ID document is required before any publication. Our team checks it personally, and a short phone interview may be requested if there is any doubt about the file."},
+        {q:"Is my ID document mandatory?", a:"Yes. No profile is published without identity verification. Your document is never made public or visible to other members — it is used only for verification by our team."},
+        {q:"How is my photo handled?", a:"Your photo stays blurred for every other member. It is only revealed once you have both confirmed you want to move to a formal introduction."},
+        {q:"Is my data visible to everyone?", a:"No. Only members whose profile is published can browse published profiles of the opposite gender, and only general information (first name, age, city, introduction...). Your photo stays blurred and your ID document is never visible to other members."},
+        {q:"How does matching work?", a:"You send an introduction request to a profile you're interested in. If accepted, a moderated exchange space opens to get to know each other. Once you both confirm you want to go further, the guardian is notified and a formal introduction, then a family meeting, can be arranged."},
+        {q:"Who can sign up?", a:"Beninese Muslims anywhere in the world, with marriage in mind. A guardian (wali) is mandatory for female profiles, in accordance with the Islamic framework."},
+        {q:"How long before my profile is published?", a:"Usually a few days after we receive your ID document. If your file stays incomplete, we send you a reminder by email."}
+      ]
+    }
+  };
+
+  (function(){
+    const btn = document.getElementById('ikf-faq-btn');
+    const panel = document.getElementById('ikf-faq-panel');
+    const list = document.getElementById('ikf-faq-list');
+    const titleEl = document.getElementById('ikf-faq-title');
+    const subEl = document.getElementById('ikf-faq-sub');
+    const contactEl = document.getElementById('ikf-faq-contact-link');
+
+    function render(){
+      const lang = (localStorage.getItem('ikpadeLang') || 'fr');
+      const data = IKF_FAQ[lang] || IKF_FAQ.fr;
+      titleEl.textContent = data.titre;
+      subEl.textContent = data.sous_titre;
+      contactEl.textContent = data.contact;
+      list.innerHTML = '';
+      data.items.forEach((item, i)=>{
+        const wrap = document.createElement('div');
+        wrap.className = 'ikf-item';
+        wrap.innerHTML = `
+          <button class="ikf-q"><span>${item.q}</span><span class="plus">+</span></button>
+          <div class="ikf-a"><p>${item.a}</p></div>
+        `;
+        wrap.querySelector('.ikf-q').addEventListener('click', ()=>{
+          const isOpen = wrap.classList.contains('open');
+          list.querySelectorAll('.ikf-item').forEach(el=>el.classList.remove('open'));
+          if(!isOpen) wrap.classList.add('open');
+        });
+        list.appendChild(wrap);
+      });
+    }
+
+    btn.addEventListener('click', ()=>{
+      const willOpen = !panel.classList.contains('open');
+      if(willOpen) render();
+      panel.classList.toggle('open', willOpen);
+      btn.classList.toggle('open', willOpen);
+      btn.setAttribute('aria-expanded', String(willOpen));
+    });
+
+    contactEl.addEventListener('click', ()=>{
+      panel.classList.remove('open');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded','false');
+    });
+  })();
+</script>
+
 </body>
 </html>
