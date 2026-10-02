@@ -2220,6 +2220,46 @@
   </section>
 </div><!-- /admin-view -->
 
+<!-- Fenêtre de confirmation de rejet, avec choix obligatoire du motif -->
+<div id="rejet-overlay" class="rejet-overlay" style="display:none;">
+  <div class="rejet-modal">
+    <h3>Motif du rejet</h3>
+    <p class="rejet-sub">Ce motif sera envoyé par email au candidat. Choisissez-le avec soin, de façon factuelle et respectueuse.</p>
+    <select id="rejet-motif-select" onchange="onRejetMotifChange()">
+      <option value="Pièce d'identité manquante ou illisible">Pièce d'identité manquante ou illisible</option>
+      <option value="Informations fournies incohérentes ou incomplètes">Informations fournies incohérentes ou incomplètes</option>
+      <option value="Photo non conforme (illisible ou inappropriée)">Photo non conforme (illisible ou inappropriée)</option>
+      <option value="Profil en double ou déjà existant">Profil en double ou déjà existant</option>
+      <option value="autre">Autre motif (préciser ci-dessous)</option>
+    </select>
+    <textarea id="rejet-motif-autre" placeholder="Précisez le motif du rejet..." style="display:none;"></textarea>
+    <div class="rejet-actions">
+      <button class="req-btn decline" onclick="fermerRejetModal()">Annuler</button>
+      <button class="req-btn approve" style="background:#8a2f2f; border-color:#8a2f2f;" onclick="confirmerRejet()">Confirmer le rejet</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .rejet-overlay{
+    position:fixed; inset:0; z-index:200; background:rgba(14,58,95,0.55);
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .rejet-modal{
+    background:#ffffff; border-radius:8px; max-width:440px; width:100%;
+    padding:28px 26px; box-shadow:0 20px 50px rgba(14,58,95,0.3);
+  }
+  .rejet-modal h3{font-family:'Fraunces',serif; font-weight:600; color:var(--indigo); margin:0 0 8px; font-size:1.1rem;}
+  .rejet-sub{color:#7A8B9A; font-size:0.84rem; line-height:1.5; margin:0 0 18px;}
+  .rejet-modal select, .rejet-modal textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:4px;
+    font-family:'Work Sans',sans-serif; font-size:0.9rem; color:var(--ink); margin-bottom:12px;
+    background:#F6FAFC;
+  }
+  .rejet-modal textarea{min-height:80px; resize:vertical;}
+  .rejet-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:4px;}
+</style>
+
 <style>
   details.dossier{margin-top:10px;}
   details.dossier summary{
@@ -2330,7 +2370,7 @@
           </details>
         </div>
         <div class="request-actions">
-          <button class="req-btn decline" onclick="moderateProfil('${p.id}','rejete')">Rejeter</button>
+          <button class="req-btn decline" onclick="ouvrirRejetModal('${p.id}')">Rejeter</button>
           <button class="req-btn approve" onclick="moderateProfil('${p.id}','publie')">Publier le profil</button>
         </div>
       </div>`;
@@ -2359,6 +2399,56 @@
       return;
     }
     document.querySelector(`[data-profil-id="${profilId}"]`)?.remove();
+    loadAdminQueue();
+  }
+
+  // ------------------------------------------------------------------
+  // Rejet d'un profil en attente : un motif est obligatoire, car il est
+  // envoyé par email au candidat (voir la fonction notify-rejet-profil).
+  // ------------------------------------------------------------------
+  let rejetProfilIdCourant = null;
+
+  function ouvrirRejetModal(profilId){
+    rejetProfilIdCourant = profilId;
+    document.getElementById('rejet-motif-select').value = "Pièce d'identité manquante ou illisible";
+    document.getElementById('rejet-motif-autre').style.display = 'none';
+    document.getElementById('rejet-motif-autre').value = '';
+    document.getElementById('rejet-overlay').style.display = 'flex';
+  }
+
+  function fermerRejetModal(){
+    rejetProfilIdCourant = null;
+    document.getElementById('rejet-overlay').style.display = 'none';
+  }
+
+  function onRejetMotifChange(){
+    const estAutre = document.getElementById('rejet-motif-select').value === 'autre';
+    document.getElementById('rejet-motif-autre').style.display = estAutre ? 'block' : 'none';
+  }
+
+  async function confirmerRejet(){
+    if(!rejetProfilIdCourant) return;
+    const select = document.getElementById('rejet-motif-select');
+    const autre = document.getElementById('rejet-motif-autre');
+    const motif = (select.value === 'autre') ? autre.value.trim() : select.value;
+
+    if(!motif){
+      alert("Merci de préciser le motif du rejet avant de confirmer.");
+      return;
+    }
+
+    const { error } = await sb
+      .from('profils')
+      .update({ statut_verification: 'rejete', motif_rejet: motif, updated_at: new Date().toISOString() })
+      .eq('id', rejetProfilIdCourant);
+
+    if(error){
+      alert(t('erreur_prefixe') + error.message);
+      return;
+    }
+
+    document.querySelector(`[data-profil-id="${rejetProfilIdCourant}"]`)?.remove();
+    fermerRejetModal();
     loadAdminQueue();
   }
 
