@@ -9,3 +9,47 @@
 # La page 404.html personnalisée est servie automatiquement par Netlify
 # pour toute route introuvable — aucune redirection supplémentaire n'est
 # nécessaire pour l'instant (le site n'a pas encore de routage par URL).
+# Redirections : les anciennes adresses en .html mènent à l'adresse propre (301 = définitive,
+# "force" car le fichier .html existe réellement et Netlify le servirait sinon).
+
+[[redirects]]
+  from = "/blog.html"
+  to = "/blog"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/role-tuteur-wali-mariage-islamique.html"
+  to = "/blog/role-tuteur-wali-mariage-islamique"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/vivre-sa-foi-diaspora-beninoise.html"
+  to = "/blog/vivre-sa-foi-diaspora-beninoise"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/etapes-mariage-traditionnel-beninois.html"
+  to = "/blog/etapes-mariage-traditionnel-beninois"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/reconnaitre-plateforme-rencontre-serieuse.html"
+  to = "/blog/reconnaitre-plateforme-rencontre-serieuse"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/photo-voilee-pudeur-rencontre-halal.html"
+  to = "/blog/photo-voilee-pudeur-rencontre-halal"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/blog/questions-avant-mariage-islam.html"
+  to = "/blog/questions-avant-mariage-islam"
+  status = 301
+  force = true
