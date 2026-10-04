@@ -1260,6 +1260,34 @@
   // Suivi anonyme du parcours d'inscription : identifiant aléatoire de visite + étape atteinte.
   // Aucune donnée personnelle ; les échecs sont ignorés pour ne jamais gêner l'inscription.
   const _etapesVues = new Set();
+  // Origine de la visite : ?src=whatsapp dans le lien, sinon le site de provenance, sinon "direct".
+  // Mémorisée pour la durée de la visite (première origine conservée).
+  function detecterSource(){
+    try{
+      let src = null;
+      try{ src = sessionStorage.getItem('ikpSrc'); }catch(e){}
+      if(src) return src;
+      const q = new URLSearchParams(location.search).get('src');
+      if(q && /^[a-z0-9_-]{1,30}$/i.test(q)){
+        src = q.toLowerCase();
+      } else if(document.referrer){
+        let h = '';
+        try{ h = new URL(document.referrer).hostname.replace(/^(www|m|l)\./,''); }catch(e){}
+        if(h && h.indexOf('ikpade-ife.com') === -1){
+          if(h.indexOf('google.') === 0) src = 'google';
+          else if(h.indexOf('facebook.') !== -1 || h === 'fb.com') src = 'facebook';
+          else if(h.indexOf('instagram.') !== -1) src = 'instagram';
+          else if(h.indexOf('tiktok.') !== -1) src = 'tiktok';
+          else if(h.indexOf('whatsapp.') !== -1 || h === 'wa.me') src = 'whatsapp';
+          else src = h.replace(/[^a-z0-9.-]/gi,'').slice(0,30) || 'autre';
+        }
+      }
+      src = src || 'direct';
+      try{ sessionStorage.setItem('ikpSrc', src); }catch(e){}
+      return src;
+    }catch(e){ return 'direct'; }
+  }
+  const _sourceVisite = detecterSource();
   function trackInscription(etape){
     try{
       if(_etapesVues.has(etape)) return;
@@ -1270,7 +1298,7 @@
         sid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2);
         try{ sessionStorage.setItem('ikpSid', sid); }catch(e){}
       }
-      sb.from('evenements_inscription').insert({ session_id: sid, etape }).then(()=>{}, ()=>{});
+      sb.from('evenements_inscription').insert({ session_id: sid, etape, source: _sourceVisite }).then(()=>{}, ()=>{});
     }catch(e){}
   }
   function showSignup(){
@@ -2322,6 +2350,13 @@
     if(tab === 'stats') loadAdminStats();
   }
 
+  function renderSources(list){
+    if(!Array.isArray(list) || !list.length) return '<p style="color:#7A8B9A; font-size:0.92rem;">Pas encore de données. Partagez vos liens avec <b>?src=</b>, par exemple <code>ikpade-ife.com/?src=whatsapp</code>.</p>';
+    return '<div style="background:#fff; border:1px solid #E1E8ED; border-radius:6px; padding:8px 16px;"><table style="width:100%; border-collapse:collapse; font-size:0.9rem; color:#3E4C58;"><tr style="text-align:left; color:#7A8B9A; font-size:0.78rem;"><th style="padding:8px 0;">Canal</th><th>Ont ouvert le formulaire</th><th>Comptes créés</th><th>Taux</th></tr>' +
+      list.map(r => `<tr style="border-top:1px solid #E1E8ED;"><td style="padding:8px 0;"><b>${escapeHtml(r.source)}</b></td><td>${r.ouverts}</td><td>${r.crees}</td><td>${pct(r.crees, r.ouverts)}</td></tr>`).join('') +
+      '</table></div>';
+  }
+
   function renderFunnel(f){
     f = f || {};
     const rows = [
@@ -2354,6 +2389,7 @@
     const body = document.getElementById('admin-stats-body');
     const { data: s, error } = await sb.rpc('get_admin_stats');
     const { data: fun } = await sb.rpc('get_admin_funnel');
+    const { data: srcs } = await sb.rpc('get_admin_sources');
     if(error || !s){
       if(body) body.innerHTML = `<p style="color:#8a2f2f;">Statistiques indisponibles : ${escapeHtml(error ? error.message : 'réponse vide')}. Vérifiez que la migration SQL a bien été appliquée.</p>`;
       return;
@@ -2389,6 +2425,9 @@
 
       <h3 ${h3}>Entonnoir d'inscription (30 derniers jours, visites anonymes)</h3>
       ${renderFunnel(fun)}
+
+      <h3 ${h3}>D'où viennent les inscriptions (30 jours)</h3>
+      ${renderSources(srcs)}
 
       <h3 ${h3}>Rythme et délais</h3>
       <div class="tuteur-stats">
