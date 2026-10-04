@@ -1257,9 +1257,27 @@
       if(el) el.style.display='none';
     });
   }
+  // Suivi anonyme du parcours d'inscription : identifiant aléatoire de visite + étape atteinte.
+  // Aucune donnée personnelle ; les échecs sont ignorés pour ne jamais gêner l'inscription.
+  const _etapesVues = new Set();
+  function trackInscription(etape){
+    try{
+      if(_etapesVues.has(etape)) return;
+      _etapesVues.add(etape);
+      let sid = null;
+      try{ sid = sessionStorage.getItem('ikpSid'); }catch(e){}
+      if(!sid){
+        sid = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2);
+        try{ sessionStorage.setItem('ikpSid', sid); }catch(e){}
+      }
+      sb.from('evenements_inscription').insert({ session_id: sid, etape }).then(()=>{}, ()=>{});
+    }catch(e){}
+  }
   function showSignup(){
     hideAllViews();
     document.getElementById('signup-view').style.display='block';
+    trackInscription('vue_inscription');
+    trackInscription('etape_1');
     updateTuteurFields();
     window.scrollTo(0,0);
   }
@@ -1557,6 +1575,7 @@
     document.getElementById('progress-bar').style.width = (currentStep/totalSteps*100)+'%';
     document.getElementById('prev-btn').style.visibility = currentStep===1 ? 'hidden' : 'visible';
     document.getElementById('next-btn').textContent = currentStep===totalSteps ? t('btn_creer_profil') : t('btn_suivant');
+    if(document.getElementById('signup-view').style.display === 'block') trackInscription('etape_' + currentStep);
 
     updateTuteurFields();
   }
@@ -1772,6 +1791,7 @@
     }
 
     btn.disabled = false;
+    trackInscription('compte_cree');
 
     const photoFile = document.getElementById('signup-photo').files[0];
 
@@ -2302,6 +2322,27 @@
     if(tab === 'stats') loadAdminStats();
   }
 
+  function renderFunnel(f){
+    f = f || {};
+    const rows = [
+      ['vue_inscription', 'Ont ouvert le formulaire'],
+      ['etape_2', 'Étape 2 atteinte'],
+      ['etape_3', 'Étape 3 atteinte'],
+      ['etape_4', 'Étape 4 atteinte (tuteur)'],
+      ['etape_5', 'Étape 5 atteinte (validation)'],
+      ['compte_cree', 'Compte créé'],
+    ];
+    const base = f.vue_inscription || 0;
+    if(!base) return '<p style="color:#7A8B9A; font-size:0.92rem;">Pas encore de données : elles s\'accumulent à partir de la mise en ligne de cette version.</p>';
+    return '<div style="background:#fff; border:1px solid #E1E8ED; border-radius:6px; padding:16px;">' + rows.map(([k, label], i) => {
+      const n = f[k] || 0;
+      const prev = i === 0 ? n : (f[rows[i-1][0]] || 0);
+      const w = Math.max(2, Math.round(n * 100 / base));
+      const perte = i > 0 && prev > 0 ? ` <span style="color:#c0392b;">(−${Math.max(0, Math.round((prev-n)*100/prev))} % vs étape précédente)</span>` : '';
+      return `<div style="margin:8px 0;"><div style="font-size:0.85rem; color:#3E4C58; margin-bottom:3px;">${label} : <b>${n}</b> <span style="color:#7A8B9A;">(${pct(n, base)})</span>${perte}</div><div style="background:#E8F3EE; border-radius:3px;"><div style="width:${w}%; height:12px; background:#159A6D; border-radius:3px;"></div></div></div>`;
+    }).join('') + '</div>';
+  }
+
   function fmtDelai(h){
     if(h === null || h === undefined) return '—';
     h = Number(h);
@@ -2312,6 +2353,7 @@
   async function loadAdminStats(){
     const body = document.getElementById('admin-stats-body');
     const { data: s, error } = await sb.rpc('get_admin_stats');
+    const { data: fun } = await sb.rpc('get_admin_funnel');
     if(error || !s){
       if(body) body.innerHTML = `<p style="color:#8a2f2f;">Statistiques indisponibles : ${escapeHtml(error ? error.message : 'réponse vide')}. Vérifiez que la migration SQL a bien été appliquée.</p>`;
       return;
@@ -2344,6 +2386,9 @@
         ${card(ab.actifs ?? 0, 'Abonnés actifs <small>(' + pct(ab.actifs||0, s.publies) + ' des publiés)</small>')}
         ${card(s.rejetes + ' <small style="font-size:0.6em;">(' + pct(s.rejetes, traites) + ')</small>', 'Profils rejetés (taux de rejet)')}
       </div>
+
+      <h3 ${h3}>Entonnoir d'inscription (30 derniers jours, visites anonymes)</h3>
+      ${renderFunnel(fun)}
 
       <h3 ${h3}>Rythme et délais</h3>
       <div class="tuteur-stats">
