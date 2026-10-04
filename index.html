@@ -2195,15 +2195,16 @@
 
     <div class="tuteur-stats">
       <div class="t-stat"><b id="admin-stat-attente">—</b><span data-i18n="astat_attente">Profils en attente</span></div>
-      <div class="t-stat"><b>—</b><span data-i18n="astat_signalements">Signalements ouverts</span></div>
+      <div class="t-stat"><b id="admin-stat-signal">—</b><span data-i18n="astat_signalements">Signalements ouverts</span></div>
       <div class="t-stat"><b id="admin-stat-publies">—</b><span data-i18n="astat_publies">Profils publiés ce mois</span></div>
-      <div class="t-stat"><b>—</b><span data-i18n="astat_delai">Délai moyen de traitement</span></div>
+      <div class="t-stat"><b id="admin-stat-delai">—</b><span data-i18n="astat_delai">Délai moyen de traitement</span></div>
     </div>
 
     <div class="ward-tabs">
       <button class="ward-tab active" data-tab="verif" onclick="selectAdminTab('verif')"><span data-i18n="tab_verifications">Vérifications</span> <small id="admin-tab-count">—</small></button>
       <button class="ward-tab" data-tab="signal" onclick="selectAdminTab('signal')"><span data-i18n="tab_signalements">Signalements</span> <small id="admin-tab-count-signal">—</small></button>
       <button class="ward-tab" data-tab="publies" onclick="selectAdminTab('publies')"><span data-i18n="tab_publies">Profils publiés</span> <small id="admin-tab-count-publies">—</small></button>
+      <button class="ward-tab" data-tab="stats" onclick="selectAdminTab('stats')"><span>Statistiques</span></button>
     </div>
 
     <div id="admin-panel-verif" class="admin-panel">
@@ -2212,6 +2213,10 @@
 
     <div id="admin-panel-signal" class="admin-panel" style="display:none;">
       <div id="admin-signal-list"><p style="color:#7A8B9A;" data-i18n="loading_queue">Chargement des profils en attente...</p></div>
+    </div>
+
+    <div id="admin-panel-stats" class="admin-panel" style="display:none;">
+      <div id="admin-stats-body"><p style="color:#7A8B9A;">Chargement des statistiques...</p></div>
     </div>
 
     <div id="admin-panel-publies" class="admin-panel" style="display:none;">
@@ -2291,8 +2296,78 @@
     document.getElementById('admin-panel-verif').style.display = tab==='verif' ? '' : 'none';
     document.getElementById('admin-panel-signal').style.display = tab==='signal' ? '' : 'none';
     document.getElementById('admin-panel-publies').style.display = tab==='publies' ? '' : 'none';
+    document.getElementById('admin-panel-stats').style.display = tab==='stats' ? '' : 'none';
     if(tab === 'publies') loadAdminPublies();
     if(tab === 'signal') loadAdminSignalements();
+    if(tab === 'stats') loadAdminStats();
+  }
+
+  function fmtDelai(h){
+    if(h === null || h === undefined) return '—';
+    h = Number(h);
+    return h >= 48 ? (h/24).toFixed(1).replace('.0','') + ' j' : h.toFixed(1).replace('.0','') + ' h';
+  }
+  const pct = (a,b) => b > 0 ? Math.round(a*100/b) + ' %' : '—';
+
+  async function loadAdminStats(){
+    const body = document.getElementById('admin-stats-body');
+    const { data: s, error } = await sb.rpc('get_admin_stats');
+    if(error || !s){
+      if(body) body.innerHTML = `<p style="color:#8a2f2f;">Statistiques indisponibles : ${escapeHtml(error ? error.message : 'réponse vide')}. Vérifiez que la migration SQL a bien été appliquée.</p>`;
+      return;
+    }
+    // Tuiles du haut
+    document.getElementById('admin-stat-publies').textContent = s.publies_ce_mois ?? 0;
+    document.getElementById('admin-stat-signal').textContent = s.signalements_ouverts ?? 0;
+    document.getElementById('admin-stat-delai').textContent = fmtDelai(s.delai_moyen_h);
+    if(!body) return;
+
+    const ab = s.abonnements || {};
+    const traites = (s.publies||0) + (s.rejetes||0);
+    const card = (val, label, warn) => `<div class="t-stat"${warn ? ' style="border-color:#c0392b;"' : ''}><b${warn ? ' style="color:#c0392b;"' : ''}>${val}</b><span>${label}</span></div>`;
+    const maxN = Math.max(1, ...(s.par_semaine||[]).map(w => w.n));
+    const bars = (s.par_semaine||[]).map(w => `
+      <div style="flex:1; text-align:center; font-size:0.72rem; color:#7A8B9A;">
+        <div style="height:90px; display:flex; align-items:flex-end;"><div title="${w.n} inscription(s)" style="width:100%; height:${Math.max(3, Math.round(w.n*90/maxN))}px; background:#159A6D; border-radius:3px 3px 0 0;"></div></div>
+        <div style="color:#0E3A5F; font-weight:600;">${w.n}</div>${escapeHtml(w.semaine)}
+      </div>`).join('');
+    const formules = (s.par_formule||[]).length
+      ? s.par_formule.map(f => `<li>${escapeHtml(f.formule)} : <b>${f.actifs}</b> actif(s) — ${Number(f.revenu_fcfa).toLocaleString('fr-FR')} FCFA</li>`).join('')
+      : '<li style="color:#7A8B9A;">Aucun abonnement actif pour le moment.</li>';
+    const h3 = 'style="color:#0E3A5F; font-size:1.05rem; margin:28px 0 12px;"';
+
+    body.innerHTML = `
+      <h3 ${h3}>Parcours des membres</h3>
+      <div class="tuteur-stats">
+        ${card(s.inscrits_total, 'Inscrits au total')}
+        ${card(s.publies + ' <small style="font-size:0.6em;">(' + pct(s.publies, s.inscrits_total) + ')</small>', 'Profils publiés')}
+        ${card(ab.actifs ?? 0, 'Abonnés actifs <small>(' + pct(ab.actifs||0, s.publies) + ' des publiés)</small>')}
+        ${card(s.rejetes + ' <small style="font-size:0.6em;">(' + pct(s.rejetes, traites) + ')</small>', 'Profils rejetés (taux de rejet)')}
+      </div>
+
+      <h3 ${h3}>Rythme et délais</h3>
+      <div class="tuteur-stats">
+        ${card(s.inscrits_7j, 'Inscriptions — 7 derniers jours')}
+        ${card(s.inscrits_30j, 'Inscriptions — 30 derniers jours')}
+        ${card(fmtDelai(s.delai_moyen_h) + ' / ' + fmtDelai(s.delai_median_h), 'Délai de vérification (moyen / médian)')}
+        ${card(s.en_attente_48h, 'En attente depuis plus de 48 h', s.en_attente_48h > 0)}
+      </div>
+
+      <h3 ${h3}>Inscriptions par semaine (8 dernières semaines)</h3>
+      <div style="display:flex; gap:8px; background:#fff; border:1px solid #E1E8ED; border-radius:6px; padding:16px;">${bars}</div>
+
+      <h3 ${h3}>Abonnements</h3>
+      <div class="tuteur-stats">
+        ${card(ab.actifs ?? 0, 'Actifs')}
+        ${card(ab.en_attente ?? 0, 'En attente de paiement')}
+        ${card(ab.echoues ?? 0, 'Paiements échoués')}
+        ${card(Number(ab.revenu_fcfa||0).toLocaleString('fr-FR') + ' <small style="font-size:0.55em;">FCFA</small>', 'Revenu des abonnements actifs')}
+      </div>
+      <ul style="color:#3E4C58; font-size:0.92rem; line-height:1.8; margin:16px 0 0; padding-left:20px;">${formules}</ul>
+
+      <h3 ${h3}>Répartition</h3>
+      <p style="color:#3E4C58; font-size:0.92rem;">Femmes : <b>${s.femmes}</b> (${pct(s.femmes, s.inscrits_total)}) · Hommes : <b>${s.hommes}</b> (${pct(s.hommes, s.inscrits_total)}) · Signalements ouverts : <b>${s.signalements_ouverts}</b></p>
+    `;
   }
   const ADMIN_EMAIL = 'ikpadeife@gmail.com';
 
@@ -2333,11 +2408,7 @@
     document.getElementById('admin-stat-attente').textContent = enAttente.length;
     document.getElementById('admin-tab-count').textContent = enAttente.length;
 
-    const { count: publiesCount } = await sb
-      .from('profils')
-      .select('*', { count: 'exact', head: true })
-      .eq('statut_verification', 'publie');
-    document.getElementById('admin-stat-publies').textContent = publiesCount ?? 0;
+    loadAdminStats(); // remplit les tuiles du haut (publiés ce mois, signalements, délai) et l'onglet Statistiques
 
     if(enAttente.length === 0){
       listEl.innerHTML = `<p style="color:#7A8B9A;">${t('aucun_profil_attente')}</p>`;
