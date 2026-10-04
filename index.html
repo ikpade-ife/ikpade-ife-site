@@ -279,6 +279,21 @@
     transition:transform .15s, box-shadow .15s;
   }
   .btn-primary:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(168,85,38,0.28);}
+  .sticky-cta{
+    display:none; position:fixed; left:0; right:0; bottom:0; z-index:900;
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,0.96); border-top:1px solid #E1E8ED;
+    box-shadow:0 -4px 16px rgba(14,58,95,0.10);
+    transform:translateY(110%); transition:transform .25s;
+  }
+  .sticky-cta a{
+    display:block; text-align:center; background:var(--clay); color:var(--ivory);
+    padding:14px; border-radius:3px; font-weight:600; font-size:1rem; text-decoration:none;
+  }
+  @media (max-width:768px){
+    .sticky-cta{display:block;}
+    .sticky-cta.visible{transform:translateY(0);}
+  }
   .btn-ghost{
     padding:14px 24px; font-size:0.95rem; border-radius:2px;
     border:1px solid var(--indigo); color:var(--indigo);
@@ -884,6 +899,10 @@
   </div>
 </footer>
 
+<!-- Bouton d'inscription flottant (mobile) : apparaît après le début de la page, pour les visiteurs non connectés -->
+<div id="sticky-cta" class="sticky-cta" aria-hidden="true">
+  <a href="#" onclick="showSignup();return false;" data-i18n="btn_creer_profil">Créer mon profil</a>
+</div>
 </div><!-- /site-view -->
 
 <div id="signup-view" style="display:none;">
@@ -1259,6 +1278,19 @@
   }
   // Suivi anonyme du parcours d'inscription : identifiant aléatoire de visite + étape atteinte.
   // Aucune donnée personnelle ; les échecs sont ignorés pour ne jamais gêner l'inscription.
+  // Bouton flottant : visible après un peu de défilement, seulement pour un visiteur non connecté
+  let _estConnecte = false;
+  function majStickyCta(){
+    const el = document.getElementById('sticky-cta');
+    if(!el) return;
+    const vueSite = document.getElementById('site-view');
+    const visible = !_estConnecte && vueSite && vueSite.style.display !== 'none' && window.scrollY > 500;
+    el.classList.toggle('visible', !!visible);
+    el.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  }
+  window.addEventListener('scroll', majStickyCta, { passive: true });
+  sb.auth.getSession().then(({ data }) => { _estConnecte = !!(data && data.session); majStickyCta(); }).catch(()=>{});
+  sb.auth.onAuthStateChange((_e, session) => { _estConnecte = !!session; majStickyCta(); });
   const _etapesVues = new Set();
   // Origine de la visite : ?src=whatsapp dans le lien, sinon le site de provenance, sinon "direct".
   // Mémorisée pour la durée de la visite (première origine conservée).
