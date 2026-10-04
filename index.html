@@ -279,6 +279,8 @@
     transition:transform .15s, box-shadow .15s;
   }
   .btn-primary:hover{transform:translateY(-2px); box-shadow:0 6px 18px rgba(168,85,38,0.28);}
+  /* Sur la page d'inscription, le bouton "Commencer" du menu n'a plus de raison d'être */
+  #signup-view .nav-cta{display:none;}
   .sticky-cta{
     display:none; position:fixed; left:0; right:0; bottom:0; z-index:900;
     padding:10px 16px calc(10px + env(safe-area-inset-bottom));
