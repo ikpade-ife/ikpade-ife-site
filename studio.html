@@ -359,7 +359,13 @@
       rec.start(250);
       const t0 = performance.now();
       if(voixBuf){
-        const sv = actx.createBufferSource(); sv.buffer = voixBuf; sv.connect(dest); sv.start(actx.currentTime + DEBUT_VOIX);
+        const sv = actx.createBufferSource(); sv.buffer = voixBuf;
+        // voix plus forte : gain x2,8 puis limiteur pour éviter toute saturation
+        const gVoix = actx.createGain(); gVoix.gain.value = 2.8;
+        const lim = actx.createDynamicsCompressor();
+        lim.threshold.value = -6; lim.knee.value = 6; lim.ratio.value = 12; lim.attack.value = 0.003; lim.release.value = 0.15;
+        sv.connect(gVoix); gVoix.connect(lim); lim.connect(dest);
+        sv.start(actx.currentTime + DEBUT_VOIX);
       }
       let arretee = false;
       await new Promise(res => {
