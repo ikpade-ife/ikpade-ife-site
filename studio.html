@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Studio vidéo — Ikpadé Ifê</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<style>
+  :root{--indigo:#0E3A5F; --green:#0B4A34; --clay:#A85526; --bg:#F5F9FC; --line:#E1E8ED; --muted:#57687A;}
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:#1c2b39; font-family:'Helvetica Neue',Arial,sans-serif; line-height:1.5;}
+  header{background:var(--green); padding:18px 16px; text-align:center;}
+  header img{height:48px; display:block; margin:0 auto 6px;}
+  header span{color:#fff; font-size:0.95rem; letter-spacing:.04em;}
+  main{max-width:640px; margin:0 auto; padding:24px 16px 64px;}
+  h1{font-size:1.4rem; color:var(--indigo); margin:0 0 6px;}
+  p.lead{color:var(--muted); margin:0 0 22px; font-size:0.95rem;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:8px; padding:20px; margin-bottom:16px;}
+  label{display:block; font-weight:600; font-size:0.9rem; color:var(--indigo); margin:0 0 6px;}
+  textarea,select{width:100%; padding:12px; border:1px solid #c9d4dc; border-radius:6px; font:inherit; background:#fff;}
+  textarea{min-height:130px; resize:vertical;}
+  .row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:16px;}
+  @media (max-width:520px){.row{grid-template-columns:1fr;}}
+  .hint{font-size:0.8rem; color:var(--muted); margin-top:6px;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:10px;}
+  .chip{border:1px solid #c9d4dc; background:#fff; border-radius:999px; padding:6px 12px; font-size:0.82rem; cursor:pointer; color:var(--indigo);}
+  .chip:hover{background:#eef4f9;}
+  .check{display:flex; gap:10px; align-items:flex-start; margin-top:16px; font-size:0.9rem;}
+  .check input{margin-top:4px;}
+  button.go{width:100%; padding:15px; border:0; border-radius:6px; background:var(--clay); color:#fff; font-size:1rem; font-weight:600; cursor:pointer;}
+  button.go:disabled{opacity:.55; cursor:not-allowed;}
+  .msg{padding:12px 14px; border-radius:6px; font-size:0.9rem; margin-top:14px;}
+  .err{background:#FDECEA; color:#8a2f2f; border:1px solid #8a2f2f;}
+  .info{background:#E8F3EE; color:var(--green); border:1px solid #b9d9c9;}
+  video{width:100%; border-radius:6px; background:#000; max-height:70vh;}
+  .actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;}
+  .actions a{padding:10px 16px; border-radius:6px; border:1px solid var(--indigo); color:var(--indigo); text-decoration:none; font-weight:600; font-size:0.9rem;}
+  .spinner{display:inline-block; width:14px; height:14px; border:2px solid #b9d9c9; border-top-color:var(--green); border-radius:50%; animation:spin 1s linear infinite; vertical-align:-2px; margin-right:8px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  input[type=text],input[type=number],input[type=file]{width:100%; padding:11px; border:1px solid #c9d4dc; border-radius:6px; font:inherit; background:#fff;}
+  h2{font-size:1.1rem; color:var(--indigo); margin:0 0 10px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px;}
+  @media (max-width:520px){.row2{grid-template-columns:1fr;}}
+  button.sec{padding:11px 16px; border-radius:6px; border:1px solid var(--indigo); background:#fff; color:var(--indigo); font-weight:600; cursor:pointer; margin-top:12px;}
+  button.sec:disabled{opacity:.55; cursor:not-allowed;}
+  audio{width:100%; margin-top:10px;}
+  [hidden]{display:none !important;}
+</style>
+</head>
+<body>
+<header><img src="/logo.png" alt="Ikpadé Ifê"><span>Studio vidéo</span></header>
+<main>
+  <div id="acces" class="card" hidden></div>
+
+  <div id="outil" hidden>
+    <h1>Créer une vidéo</h1>
+    <p class="lead">Trois étapes : 1) générer la scène, 2) ajouter une voix en français, 3) assembler avec votre logo.</p>
+
+    <div class="card">
+      <h2>1. La scène</h2>
+      <label for="texte">Décrivez la scène</label>
+      <textarea id="texte" maxlength="1500" placeholder="Ex. : Un coucher de soleil sur la lagune de Ouidah, lumière dorée, vague douce, ambiance calme et chaleureuse."></textarea>
+      <div class="chips" id="idees"></div>
+      <div class="hint">Écrivez ce que l'on <b>voit</b> : lieu, lumière, mouvement. Le texte à l'écran n'est pas fiable : le logo et le slogan sont ajoutés à l'étape 3.</div>
+
+      <div class="row">
+        <div><label for="format">Format</label>
+          <select id="format"><option value="9:16" selected>Vertical 9:16 (TikTok, Reels, statut)</option><option value="16:9">Horizontal 16:9</option><option value="1:1">Carré 1:1</option></select></div>
+        <div><label for="duree">Durée</label>
+          <select id="duree"><option value="5" selected>5 secondes</option><option value="8">8 secondes</option><option value="10">10 secondes</option><option value="12">12 secondes</option><option value="15">15 secondes</option></select></div>
+        <div><label for="resolution">Qualité</label>
+          <select id="resolution"><option value="720p" selected>720p</option><option value="480p">480p (essai)</option></select></div>
+      </div>
+
+      <label class="check"><input type="checkbox" id="audio"><span><b>Générer aussi le son de l'IA</b> (musique, ambiance). Laissez décoché si vous ajoutez une voix à l'étape 2 : les voix générées par Higgsfield ont souvent un mauvais accent en français, et un dialogue trop long pour la durée est lu trop vite ou coupé. Décoché, les personnages ne parlent pas : la voix off n'a donc pas de décalage avec leurs lèvres.</span></label>
+
+      <button class="go" id="go" style="margin-top:18px">Générer la scène</button>
+      <div id="etat"></div>
+
+      <div style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
+        <label for="fichier">Ou partez d'une vidéo de votre ordinateur</label>
+        <input type="file" id="fichier" accept="video/mp4,video/webm,video/quicktime">
+        <div class="hint">Utile pour une vidéo déjà créée ailleurs (par exemple dans le Playground Higgsfield).</div>
+      </div>
+    </div>
+
+    <div class="card" id="resultat" hidden>
+      <h2>Votre scène</h2>
+      <video id="video" controls playsinline></video>
+      <div class="actions"><a id="ouvrir" href="#" download="scene-ikpade-ife.mp4">Télécharger la scène seule</a></div>
+    </div>
+
+    <div class="card" id="carteVoix" hidden>
+      <h2>2. La voix en français (facultatif)</h2>
+      <label for="narration">Texte lu par la voix</label>
+      <textarea id="narration" maxlength="600" style="min-height:100px" placeholder="Ex. : Ikpadé Ifê, le rendez-vous béni de l'amour, entre familles. Rejoignez-nous."></textarea>
+      <div class="hint">Gardez un texte court : environ 15 mots pour 5 secondes. Écrivez les mots comme on les prononce.</div>
+      <div class="row2">
+        <div><label for="voix">Voix</label><select id="voix"><option>Chargement…</option></select></div>
+        <div style="align-self:end"><button class="sec" id="btnVoix" style="margin-top:0;width:100%">Générer la voix</button></div>
+      </div>
+      <div id="etatVoix"></div>
+      <audio id="ecoute" controls hidden></audio>
+    </div>
+
+    <div class="card" id="carteMontage" hidden>
+      <h2>3. Assemblage final</h2>
+      <div class="row2">
+        <div><label for="slogan">Slogan de fin</label><input type="text" id="slogan" maxlength="80" value="Le rendez-vous béni de l'amour, entre familles"></div>
+        <div><label for="adresse">Adresse affichée</label><input type="text" id="adresse" maxlength="60" value="www.ikpade-ife.com"></div>
+      </div>
+      <div class="row2">
+        <div><label for="coupe">Couper la fin de la vidéo (secondes)</label><input type="number" id="coupe" min="0" max="8" step="0.5" value="0"></div>
+        <div></div>
+      </div>
+      <label class="check"><input type="checkbox" id="optLogo" checked><span>Logo en haut à droite pendant toute la vidéo</span></label>
+      <label class="check"><input type="checkbox" id="optFin" checked><span>Écran de fin blanc avec le logo officiel, le slogan et l'adresse (2 secondes)</span></label>
+      <div class="hint">« Couper la fin » sert à retirer un texte déformé ou une fin ratée de l'IA avant d'ajouter votre écran de fin.</div>
+      <button class="go" id="btnMontage" style="margin-top:18px">Assembler la vidéo finale</button>
+      <div id="etatMontage"></div>
+      <div id="finale" hidden style="margin-top:16px">
+        <video id="videoFinale" controls playsinline></video>
+        <div class="actions"><a id="telecharger" href="#" download="ikpade-ife.mp4">Télécharger la vidéo finale</a></div>
+        <div class="hint">Gardez cet onglet ouvert et visible pendant l'assemblage (il se fait en temps réel). Dans le lien publié avec la vidéo, ajoutez <b>?src=tiktok</b> (ou whatsapp, facebook…) pour suivre les inscriptions dans Statistiques.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+  const SUPABASE_URL = "https://rxnjsskjioniclfplsur.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ4bmpzc2tqaW9uaWNsZnBsc3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzNzk2ODcsImV4cCI6MjEwMzk1NTY4N30.X-ELAOXCKYI6a0mT3blnsBTPFKNeYx-B9IOcb0AxrKw";
+  const ADMIN_EMAIL = "ikpadeife@gmail.com";
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const $ = id => document.getElementById(id);
+  const dormir = ms => new Promise(r => setTimeout(r, ms));
+  const echapper = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  let videoBlobUrl = null;   // vidéo source (générée ou choisie), toujours une adresse blob: de même origine
+  let voixBlob = null;       // voix off générée
+
+  const IDEES = [
+    ["Coucher de soleil", "Un coucher de soleil doré sur la lagune de Ouidah, vagues douces, silhouettes de palmiers, ambiance calme et chaleureuse."],
+    ["Mains qui se rejoignent", "Gros plan sur deux mains qui se rejoignent doucement dans un jardin ensoleillé, lumière dorée, fond flou, mouvement lent."],
+    ["Calligraphie", "Calligraphie arabe dorée qui se dessine lentement sur un fond bleu nuit, particules de lumière, mouvement fluide et élégant."],
+    ["Repas en famille", "Une table de famille avec des plats béninois colorés, vue de dessus, des mains qui partagent le repas, lumière chaude, ambiance joyeuse (personnes vues de dos ou cadrées sur les mains)."],
+  ];
+  IDEES.forEach(([nom, texte]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.textContent = nom;
+    b.onclick = () => { $('texte').value = texte; $('texte').focus(); };
+    $('idees').appendChild(b);
+  });
+
+  function montrerAcces(html){ $('acces').innerHTML = html; $('acces').hidden = false; $('outil').hidden = true; }
+  function msg(id, html, cls){ $(id).innerHTML = html ? '<div class="msg ' + cls + '">' + html + '</div>' : ''; }
+  async function session(){ const { data } = await sb.auth.getSession(); return data && data.session ? data.session : null; }
+
+  async function init(){
+    const s = await session();
+    if(!s) return montrerAcces('<b>Connexion requise.</b><br>Connectez-vous d\'abord sur le site avec votre compte administrateur, puis revenez sur cette page.<br><br><a href="/" style="color:#A85526; font-weight:600;">Aller sur ikpade-ife.com</a>');
+    if((s.user.email || '').toLowerCase() !== ADMIN_EMAIL) return montrerAcces('<b>Accès réservé.</b><br>Cet outil est réservé à l\'administrateur du site.');
+    $('acces').hidden = true; $('outil').hidden = false;
+  }
+
+  // Appel d'une fonction du serveur avec le jeton de connexion ; "type" = json ou blob
+  async function appeler(url, options, type){
+    const s = await session();
+    if(!s) throw new Error('Session expirée : reconnectez-vous sur le site.');
+    const r = await fetch(url, Object.assign({}, options, {
+      headers: Object.assign({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + s.access_token }, (options && options.headers) || {})
+    }));
+    if(!r.ok){
+      const d = await r.json().catch(() => ({}));
+      throw new Error(d.erreur || 'Erreur ' + r.status);
+    }
+    return type === 'blob' ? r.blob() : r.json();
+  }
+
+  function definirVideoSource(blobUrl, nomTelechargement){
+    if(videoBlobUrl && videoBlobUrl !== blobUrl) URL.revokeObjectURL(videoBlobUrl);
+    videoBlobUrl = blobUrl;
+    $('video').src = blobUrl;
+    $('ouvrir').href = blobUrl; $('ouvrir').download = nomTelechargement || 'scene-ikpade-ife.mp4';
+    $('resultat').hidden = false; $('carteVoix').hidden = false; $('carteMontage').hidden = false;
+    chargerVoix();
+  }
+
+  // ───────── 1. Génération de la scène ─────────
+  $('go').onclick = async () => {
+    const texte = $('texte').value.trim();
+    if(texte.length < 5){ msg('etat', 'Décrivez la scène en quelques mots.', 'err'); return; }
+    $('go').disabled = true;
+    msg('etat', '<span class="spinner"></span>Envoi de la demande…', 'info');
+    try{
+      const lancement = await appeler('/.netlify/functions/studio-generate', {
+        method: 'POST',
+        body: JSON.stringify({ prompt: texte, format: $('format').value, duree: parseInt($('duree').value, 10), resolution: $('resolution').value, audio: $('audio').checked }),
+      });
+      const debut = Date.now();
+      while(true){
+        if(Date.now() - debut > 8 * 60 * 1000) throw new Error('Délai dépassé. Réessayez dans un moment.');
+        await dormir(5000);
+        const st = await appeler('/.netlify/functions/studio-status?id=' + encodeURIComponent(lancement.requestId), { method: 'GET' });
+        if(st.statut === 'termine') break;
+        if(st.statut === 'echec') throw new Error(st.erreur || 'La génération a échoué.');
+        msg('etat', '<span class="spinner"></span>Génération en cours… ' + Math.round((Date.now() - debut) / 1000) + ' s (comptez 1 à 2 minutes)', 'info');
+      }
+      msg('etat', '<span class="spinner"></span>Récupération de la vidéo…', 'info');
+      const blob = await appeler('/.netlify/functions/studio-video?id=' + encodeURIComponent(lancement.requestId), { method: 'GET' }, 'blob');
+      definirVideoSource(URL.createObjectURL(blob), 'scene-ikpade-ife.mp4');
+      msg('etat', 'Scène prête. Il vous reste ' + lancement.restantes + ' génération(s) aujourd\'hui.', 'info');
+      $('resultat').scrollIntoView({ behavior: 'smooth' });
+    }catch(e){
+      msg('etat', echapper(e.message || 'Erreur inconnue.'), 'err');
+    }finally{
+      $('go').disabled = false;
+    }
+  };
+
+  $('fichier').onchange = () => {
+    const f = $('fichier').files[0];
+    if(!f) return;
+    definirVideoSource(URL.createObjectURL(f), f.name);
+    msg('etat', 'Vidéo chargée depuis votre ordinateur.', 'info');
+  };
+
+  // ───────── 2. Voix ─────────
+  let voixChargees = false;
+  async function chargerVoix(){
+    if(voixChargees) return;
+    try{
+      const d = await appeler('/.netlify/functions/studio-voices', { method: 'GET' });
+      $('voix').innerHTML = d.voix.map(v => '<option value="' + echapper(v.id) + '"' + (v.id === d.defaut ? ' selected' : '') + '>' + echapper(v.nom) + (v.categorie ? ' (' + echapper(v.categorie) + ')' : '') + '</option>').join('');
+      voixChargees = true;
+    }catch(e){
+      $('voix').innerHTML = '<option value="">Indisponible</option>';
+      msg('etatVoix', echapper(e.message), 'err');
+    }
+  }
+  $('btnVoix').onclick = async () => {
+    const texte = $('narration').value.trim();
+    if(texte.length < 5){ msg('etatVoix', 'Écrivez le texte de la voix.', 'err'); return; }
+    if(!$('voix').value){ msg('etatVoix', 'Aucune voix sélectionnée.', 'err'); return; }
+    $('btnVoix').disabled = true;
+    msg('etatVoix', '<span class="spinner"></span>Génération de la voix…', 'info');
+    try{
+      voixBlob = await appeler('/.netlify/functions/studio-voice', { method: 'POST', body: JSON.stringify({ texte, voiceId: $('voix').value }) }, 'blob');
+      $('ecoute').src = URL.createObjectURL(voixBlob); $('ecoute').hidden = false;
+      msg('etatVoix', 'Voix prête : écoutez-la. Si l\'accent ne vous convient pas, changez de voix et relancez.', 'info');
+    }catch(e){
+      msg('etatVoix', echapper(e.message), 'err');
+    }finally{
+      $('btnVoix').disabled = false;
+    }
+  };
+
+  // ───────── 3. Assemblage (dans le navigateur : logo + voix + écran de fin) ─────────
+  function choisirFormat(){
+    const essais = ['video/mp4;codecs=avc1.42E01E,mp4a.40.2', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+    for(const t of essais){ if(window.MediaRecorder && MediaRecorder.isTypeSupported(t)) return t; }
+    return '';
+  }
+  function chargerImage(src){
+    return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('Logo introuvable')); i.src = src; });
+  }
+  function rectArrondi(c, x, y, w, h, r){
+    c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+  }
+  function lignes(c, texte, largeurMax){
+    const mots = texte.split(/\s+/); const out = []; let cur = '';
+    for(const m of mots){ const t = cur ? cur + ' ' + m : m; if(c.measureText(t).width > largeurMax && cur){ out.push(cur); cur = m; } else cur = t; }
+    if(cur) out.push(cur); return out;
+  }
+
+  $('btnMontage').onclick = async () => {
+    if(!videoBlobUrl){ msg('etatMontage', 'Générez ou chargez d\'abord une scène.', 'err'); return; }
+    const mime = choisirFormat();
+    if(!mime){ msg('etatMontage', 'Ce navigateur ne sait pas enregistrer de vidéo. Utilisez Chrome ou Edge sur ordinateur.', 'err'); return; }
+    $('btnMontage').disabled = true; $('finale').hidden = true;
+    msg('etatMontage', '<span class="spinner"></span>Préparation…', 'info');
+    let actx = null;
+    try{
+      const logo = await chargerImage('/studio-logo.png');
+      const v = document.createElement('video');
+      v.src = videoBlobUrl; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous';
+      await new Promise((res, rej) => { v.onloadedmetadata = res; v.onerror = () => rej(new Error('Vidéo illisible')); });
+      const vw = v.videoWidth, vh = v.videoHeight;
+      const echelle = Math.min(1, 1280 / Math.max(vw, vh));
+      const W = Math.round(vw * echelle / 2) * 2, H = Math.round(vh * echelle / 2) * 2;
+      const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
+      const c = canvas.getContext('2d');
+
+      actx = new (window.AudioContext || window.webkitAudioContext)(); await actx.resume();
+      const dest = actx.createMediaStreamDestination();
+      let voixBuf = null;
+      if(voixBlob) voixBuf = await actx.decodeAudioData(await voixBlob.arrayBuffer());
+      const srcVid = actx.createMediaElementSource(v);
+      const gVid = actx.createGain(); gVid.gain.value = voixBuf ? 0.3 : 1;
+      srcVid.connect(gVid); gVid.connect(dest);
+
+      const coupe = Math.max(0, parseFloat($('coupe').value) || 0);
+      const dureeVideo = Math.max(1, (isFinite(v.duration) ? v.duration : 5) - coupe);
+      const DEBUT_VOIX = 0.4, SEC_FIN = $('optFin').checked ? 2 : 0;
+      let total = dureeVideo;
+      if(voixBuf) total = Math.max(total, DEBUT_VOIX + voixBuf.duration + 0.6);
+      total += 0; // l'écran de fin recouvre les dernières secondes ; on garantit un minimum d'images "propres"
+      if(SEC_FIN && total < SEC_FIN + 2) total = SEC_FIN + 2;
+
+      const flux = canvas.captureStream(30);
+      dest.stream.getAudioTracks().forEach(t => flux.addTrack(t));
+      const rec = new MediaRecorder(flux, { mimeType: mime, videoBitsPerSecond: 6000000, audioBitsPerSecond: 128000 });
+      const morceaux = [];
+      rec.ondataavailable = e => { if(e.data && e.data.size) morceaux.push(e.data); };
+      const fini = new Promise(res => { rec.onstop = res; });
+
+      const slogan = $('slogan').value.trim(), adresse = $('adresse').value.trim();
+      const avecLogo = $('optLogo').checked;
+      const ratio = logo.naturalWidth / logo.naturalHeight;
+
+      function dessiner(t){
+        // image de la vidéo (la dernière image est conservée si la vidéo est finie)
+        c.drawImage(v, 0, 0, W, H);
+        const aFin = SEC_FIN ? Math.min(1, Math.max(0, (t - (total - SEC_FIN)) / 0.5)) : 0;
+        if(avecLogo && aFin < 1){
+          c.globalAlpha = 1 - aFin;
+          // logo officiel transparent : l'image de la vidéo reste visible, un halo blanc garde le texte lisible
+          const lw = W * 0.2, lh = lw / ratio, m = W * 0.025;
+          c.save();
+          c.shadowColor = 'rgba(255,255,255,0.95)'; c.shadowBlur = lw * 0.05;
+          c.drawImage(logo, W - m - lw, m, lw, lh);
+          c.drawImage(logo, W - m - lw, m, lw, lh);
+          c.restore();
+          c.globalAlpha = 1;
+        }
+        if(SEC_FIN){
+          const a = aFin;
+          if(a > 0){
+            c.fillStyle = 'rgba(255,255,255,' + a + ')'; c.fillRect(0, 0, W, H);
+            c.globalAlpha = aFin; c.textAlign = 'center';
+            const lw = Math.min(W * 0.6, H * 0.42), lh = lw / ratio;
+            const taille = Math.round(W * 0.045), tailleAdr = Math.round(W * 0.042);
+            c.font = 'italic ' + taille + 'px "Helvetica Neue", Arial, sans-serif';
+            const ls = slogan ? lignes(c, slogan, W * 0.72) : [];
+            const blocH = lh + (ls.length ? 10 + ls.length * taille * 1.3 : 0) + (adresse ? 30 + tailleAdr : 0);
+            let y = (H - blocH) / 2;
+            c.drawImage(logo, (W - lw) / 2, y, lw, lh); y += lh + 10 + taille;
+            c.fillStyle = '#0E3A5F'; c.font = 'italic ' + taille + 'px "Helvetica Neue", Arial, sans-serif';
+            ls.forEach(l => { c.fillText(l, W / 2, y); y += taille * 1.3; });
+            if(adresse){ c.fillStyle = '#0B4A34'; c.font = 'bold ' + tailleAdr + 'px "Helvetica Neue", Arial, sans-serif'; c.fillText(adresse, W / 2, y + 16); }
+            c.globalAlpha = 1;
+          }
+        }
+      }
+
+      v.currentTime = 0; await v.play();
+      rec.start(250);
+      const t0 = performance.now();
+      if(voixBuf){
+        const sv = actx.createBufferSource(); sv.buffer = voixBuf; sv.connect(dest); sv.start(actx.currentTime + DEBUT_VOIX);
+      }
+      let arretee = false;
+      await new Promise(res => {
+        function boucle(){
+          const t = (performance.now() - t0) / 1000;
+          if(!arretee && t >= dureeVideo){ v.pause(); arretee = true; gVid.gain.value = 0; }
+          dessiner(t);
+          msg('etatMontage', '<span class="spinner"></span>Assemblage… ' + Math.min(total, t).toFixed(1) + ' / ' + total.toFixed(1) + ' s', 'info');
+          if(t >= total) return res();
+          requestAnimationFrame(boucle);
+        }
+        boucle();
+      });
+      v.pause(); await dormir(300); rec.stop(); await fini;
+      const blob = new Blob(morceaux, { type: mime.split(';')[0] });
+      const ext = mime.startsWith('video/mp4') ? 'mp4' : 'webm';
+      const codecReel = (rec.mimeType || mime).toLowerCase();
+      const compatible = ext === 'mp4' && codecReel.indexOf('avc1') !== -1;
+      const adr = URL.createObjectURL(blob);
+      $('videoFinale').src = adr; $('telecharger').href = adr; $('telecharger').download = 'ikpade-ife-' + new Date().toISOString().slice(0, 10) + '.' + ext;
+      $('finale').hidden = false;
+      msg('etatMontage', 'Vidéo finale prête (' + ext.toUpperCase() + ', ' + (blob.size / 1048576).toFixed(1) + ' Mo).' + (compatible ? '' : ' Attention : ce format (' + ext.toUpperCase() + (ext === 'mp4' ? ', codec non standard' : '') + ') peut être refusé par WhatsApp, TikTok ou un iPhone. Utilisez Chrome récent sur ordinateur, ou convertissez la vidéo en MP4 (H.264) avant de la publier.'), 'info');
+      window.__montage = { ext, size: blob.size };
+      $('finale').scrollIntoView({ behavior: 'smooth' });
+    }catch(e){
+      msg('etatMontage', echapper(e.message || 'Erreur pendant l\'assemblage.'), 'err');
+    }finally{
+      if(actx) actx.close().catch(() => {});
+      $('btnMontage').disabled = false;
+    }
+  };
+
+  init();
+</script>
+</body>
+</html>
