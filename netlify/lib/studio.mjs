@@ -55,7 +55,7 @@ export function hfHeaders() {
 
 export const EL_BASE = "https://api.elevenlabs.io";
 export function elHeaders() {
-  const key = process.env.ELEVENLABS_API_KEY;
+  const key = (process.env.ELEVENLABS_API_KEY || "").trim().replace(/^["']|["']$/g, "").trim();
   if (!key) return null;
   return { "xi-api-key": key, "Content-Type": "application/json" };
 }
