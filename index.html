@@ -3873,5 +3873,51 @@
   })();
 </script>
 
+<style>
+  .pw-wrap{position:relative; display:block;}
+  .pw-wrap > input{padding-right:46px !important;}
+  .pw-toggle{
+    position:absolute; top:0; bottom:0; right:0; width:44px; display:flex; align-items:center; justify-content:center;
+    background:none; border:0; padding:0; cursor:pointer; color:#57687A;
+  }
+  .pw-toggle:hover{color:var(--indigo);}
+  .pw-toggle:focus-visible{outline:2px solid var(--clay); outline-offset:-4px; border-radius:3px;}
+  .pw-toggle svg{width:20px; height:20px; display:block;}
+</style>
+<script>
+  // Petit œil pour afficher / masquer le mot de passe, sur tous les champs mot de passe du site
+  (function(){
+    const OEIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const OEIL_BARRE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.9 17.9A10.5 10.5 0 0 1 12 19C5.6 19 2 12 2 12a18.5 18.5 0 0 1 4.1-5.1M9.9 5.2A9.8 9.8 0 0 1 12 5c6.4 0 10 7 10 7a18.6 18.6 0 0 1-2.2 3.2M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="M2 2l20 20"/></svg>';
+    const lib = (visible) => (typeof currentLang !== 'undefined' && currentLang === 'en')
+      ? (visible ? 'Hide password' : 'Show password')
+      : (visible ? 'Masquer le mot de passe' : 'Afficher le mot de passe');
+    function ajouterOeil(input){
+      if(input.dataset.pwOeil) return;
+      input.dataset.pwOeil = '1';
+      const wrap = document.createElement('span');
+      wrap.className = 'pw-wrap';
+      input.parentNode.insertBefore(wrap, input);
+      wrap.appendChild(input);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'pw-toggle';
+      btn.innerHTML = OEIL;
+      btn.setAttribute('aria-label', lib(false));
+      btn.setAttribute('aria-pressed', 'false');
+      btn.onclick = () => {
+        const visible = input.type === 'password';
+        input.type = visible ? 'text' : 'password';
+        btn.innerHTML = visible ? OEIL_BARRE : OEIL;
+        btn.setAttribute('aria-label', lib(visible));
+        btn.setAttribute('aria-pressed', visible ? 'true' : 'false');
+        input.focus();
+      };
+      wrap.appendChild(btn);
+    }
+    function init(){ document.querySelectorAll('input[type="password"]').forEach(ajouterOeil); }
+    if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+  })();
+</script>
 </body>
 </html>
