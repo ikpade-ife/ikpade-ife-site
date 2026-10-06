@@ -117,10 +117,22 @@
           updateAuthUI();
         };
       });
+      links.forEach(a => {
+        const nxt = a.nextElementSibling;
+        if(!(nxt && nxt.hasAttribute('data-nav-mdp'))){
+          const b = document.createElement('a');
+          b.href = '#';
+          b.setAttribute('data-nav-mdp', '');
+          b.onclick = (e) => { e.preventDefault(); showResetNew(false); };
+          a.after(b);
+        }
+        a.nextElementSibling.textContent = currentLang === 'en' ? 'Change my password' : 'Changer mon mot de passe';
+      });
       ctas.forEach(a => { a.style.display = 'none'; });
       const estAdmin = session.user.email === ADMIN_EMAIL;
       liensMembre.forEach(a => { a.style.display = estAdmin ? 'none' : ''; });
     } else {
+      document.querySelectorAll('[data-nav-mdp]').forEach(x => x.remove());
       links.forEach(a => {
         a.textContent = t('nav_connexion');
         a.onclick = (e) => { e.preventDefault(); showLogin(); };
@@ -1108,12 +1120,74 @@
     </label>
     <div id="login-status" style="display:none; font-size:0.85rem; margin-bottom:16px;"></div>
     <button type="button" class="btn-primary" style="width:100%;" onclick="submitLogin()" data-i18n="btn_connexion">Se connecter</button>
+    <p style="margin-top:14px; font-size:0.88rem; text-align:center;">
+      <a href="#" id="lien-mdp-oublie" onclick="showResetRequest();return false;" style="color:var(--clay); font-weight:500;">Mot de passe oublié ?</a>
+    </p>
     <p style="margin-top:20px; font-size:0.88rem; text-align:center;">
       <span data-i18n="login_pas_de_compte">Pas encore de compte ?</span>
       <a href="#" onclick="showSignup();return false;" style="color:var(--clay); font-weight:500;" data-i18n="login_creer_compte">Créer mon profil</a>
     </p>
   </section>
 </div><!-- /login-view -->
+
+<div id="reset-view" style="display:none;">
+  <nav>
+  <a href="#" class="logo" onclick="showSite();return false;" aria-label="Retour à l'accueil Ikpadé Ifê">
+    <div class="logo-mark"></div>
+  </a>
+  <div class="nav-links">
+    <a href="#parcours" onclick="showSite();" data-i18n="nav_parcours">Le parcours</a>
+    <a href="#valeurs" onclick="showSite();" data-i18n="nav_valeurs">Nos principes</a>
+    <a href="#confiance" onclick="showSite();" data-i18n="nav_confiance">Confiance</a>
+    <a href="#apercu" onclick="showSite();" data-i18n="nav_apercu">L'application</a>
+    <a href="#abonnement" onclick="showSite();" data-i18n="nav_abonnement">Abonnement</a>
+    <a href="#" onclick="showTuteur();return false;" data-i18n="nav_tuteur">Espace tuteur</a>
+    <a href="#contact" onclick="showSite();" data-i18n="nav_contact">Nous contacter</a>
+    <a href="blog.html" data-i18n="nav_blog">Blog</a>
+    <a href="#" onclick="showLogin();return false;" data-i18n="nav_connexion">Se connecter</a>
+    <a href="#" onclick="showBrowse();return false;" data-i18n="nav_parcourir">Profils</a>
+    <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
+    <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button data-lang-btn="fr" onclick="setLang('fr')" class="active">FR</button>
+      <button data-lang-btn="en" onclick="setLang('en')">EN</button>
+    </div>
+    <a href="#" class="nav-cta" onclick="showSignup();return false;" data-i18n="nav_commencer">Commencer</a>
+    <button class="nav-toggle" onclick="toggleMobileMenu(this)" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+  <section style="padding-top:56px; max-width:440px; margin:0 auto;">
+    <div class="section-head" style="margin-bottom:32px;">
+      <div class="eyebrow" id="reset-eyebrow">Mot de passe</div>
+      <h2 id="reset-titre">Mot de passe oublié</h2>
+      <p id="reset-intro">Saisissez votre adresse e-mail : nous vous envoyons un lien pour choisir un nouveau mot de passe.</p>
+    </div>
+    <div id="reset-bloc-demande">
+      <label class="pay-label"><span>Email</span>
+        <input type="email" id="reset-email" autocomplete="email">
+      </label>
+      <div id="reset-demande-status" style="display:none; font-size:0.85rem; margin-bottom:16px;"></div>
+      <button type="button" class="btn-primary" id="reset-btn-demande" style="width:100%;" onclick="submitResetRequest()">Envoyer le lien</button>
+    </div>
+    <div id="reset-bloc-nouveau" style="display:none;">
+      <label class="pay-label"><span id="reset-lbl-new">Nouveau mot de passe</span>
+        <input type="password" id="reset-new" autocomplete="new-password">
+      </label>
+      <label class="pay-label"><span id="reset-lbl-conf">Confirmer le mot de passe</span>
+        <input type="password" id="reset-confirm" autocomplete="new-password">
+      </label>
+      <div id="reset-nouveau-status" style="display:none; font-size:0.85rem; margin-bottom:16px;"></div>
+      <button type="button" class="btn-primary" id="reset-btn-nouveau" style="width:100%;" onclick="submitNewPassword()">Enregistrer le mot de passe</button>
+    </div>
+    <p style="margin-top:20px; font-size:0.88rem; text-align:center;">
+      <a href="#" id="reset-retour" onclick="resetRetour();return false;" style="color:var(--clay); font-weight:500;">Retour à la connexion</a>
+    </p>
+  </section>
+</div><!-- /reset-view -->
 
 <div id="browse-view" style="display:none;">
   <nav>
@@ -1273,7 +1347,7 @@
 
 <script>
   function hideAllViews(){
-    ['site-view','signup-view','tuteur-view','admin-view','messaging-view','payment-view','login-view','browse-view','requests-view','legal-view','photo-view'].forEach(id=>{
+    ['site-view','signup-view','tuteur-view','admin-view','messaging-view','payment-view','login-view','reset-view','browse-view','requests-view','legal-view','photo-view'].forEach(id=>{
       const el = document.getElementById(id);
       if(el) el.style.display='none';
     });
@@ -1292,7 +1366,14 @@
   }
   window.addEventListener('scroll', majStickyCta, { passive: true });
   sb.auth.getSession().then(({ data }) => { _estConnecte = !!(data && data.session); majStickyCta(); }).catch(()=>{});
-  sb.auth.onAuthStateChange((_e, session) => { _estConnecte = !!session; majStickyCta(); });
+  sb.auth.onAuthStateChange((_e, session) => {
+    _estConnecte = !!session; majStickyCta();
+    // Arrivée depuis le lien « mot de passe oublié » reçu par e-mail : on propose de choisir le nouveau mot de passe
+    if(_e === 'PASSWORD_RECOVERY'){
+      try{ window.history.replaceState({}, '', window.location.pathname); }catch(_){}
+      setTimeout(() => showResetNew(true), 0);
+    }
+  });
   const _etapesVues = new Set();
   // Origine de la visite : ?src=whatsapp dans le lien, sinon le site de provenance, sinon "direct".
   // Mémorisée pour la durée de la visite (première origine conservée).
@@ -1351,6 +1432,8 @@
   function showLogin(){
     hideAllViews();
     document.getElementById('login-view').style.display='block';
+    const lm = document.getElementById('lien-mdp-oublie');
+    if(lm) lm.textContent = currentLang === 'en' ? 'Forgot your password?' : 'Mot de passe oublié ?';
     window.scrollTo(0,0);
   }
   function showLegal(page){
@@ -1624,6 +1707,107 @@
     status.style.display='none';
     updateAuthUI();
     showSite();
+  }
+
+  // ───────── Mot de passe oublié / changer mon mot de passe ─────────
+  const _tr = (fr, en) => currentLang === 'en' ? en : fr;
+  let _modeRecuperation = false;   // vrai quand on arrive depuis le lien reçu par e-mail
+  function _msgReset(id, texte, ok){
+    const el = document.getElementById(id);
+    el.style.display = 'block';
+    el.style.color = ok ? '#0B4A34' : 'var(--clay)';
+    el.textContent = texte;
+  }
+  function showResetRequest(){
+    hideAllViews();
+    document.getElementById('reset-view').style.display = 'block';
+    document.getElementById('reset-eyebrow').textContent = _tr('Mot de passe', 'Password');
+    document.getElementById('reset-titre').textContent = _tr('Mot de passe oublié', 'Forgot your password');
+    document.getElementById('reset-intro').textContent = _tr('Saisissez votre adresse e-mail : nous vous envoyons un lien pour choisir un nouveau mot de passe.', 'Enter your email address: we will send you a link to choose a new password.');
+    document.getElementById('reset-bloc-demande').style.display = 'block';
+    document.getElementById('reset-bloc-nouveau').style.display = 'none';
+    document.getElementById('reset-demande-status').style.display = 'none';
+    document.getElementById('reset-btn-demande').textContent = _tr('Envoyer le lien', 'Send the link');
+    document.getElementById('reset-btn-demande').disabled = false;
+    document.getElementById('reset-retour').textContent = _tr('Retour à la connexion', 'Back to log in');
+    const e = document.getElementById('login-email').value.trim();
+    if(e) document.getElementById('reset-email').value = e;
+    window.scrollTo(0, 0);
+  }
+  function showResetNew(depuisLien){
+    _modeRecuperation = !!depuisLien;
+    hideAllViews();
+    document.getElementById('reset-view').style.display = 'block';
+    document.getElementById('reset-eyebrow').textContent = _tr('Mot de passe', 'Password');
+    document.getElementById('reset-titre').textContent = depuisLien ? _tr('Choisissez un nouveau mot de passe', 'Choose a new password') : _tr('Changer mon mot de passe', 'Change my password');
+    document.getElementById('reset-intro').textContent = _tr('Au moins 8 caractères. Choisissez un mot de passe que vous n\'utilisez nulle part ailleurs.', 'At least 8 characters. Pick a password you do not use anywhere else.');
+    document.getElementById('reset-bloc-demande').style.display = 'none';
+    document.getElementById('reset-bloc-nouveau').style.display = 'block';
+    document.getElementById('reset-nouveau-status').style.display = 'none';
+    document.getElementById('reset-lbl-new').textContent = _tr('Nouveau mot de passe', 'New password');
+    document.getElementById('reset-lbl-conf').textContent = _tr('Confirmer le mot de passe', 'Confirm password');
+    document.getElementById('reset-btn-nouveau').textContent = _tr('Enregistrer le mot de passe', 'Save password');
+    document.getElementById('reset-btn-nouveau').disabled = false;
+    document.getElementById('reset-new').value = '';
+    document.getElementById('reset-confirm').value = '';
+    document.getElementById('reset-retour').textContent = depuisLien ? _tr('Aller à l\'accueil', 'Go to home') : _tr('Annuler', 'Cancel');
+    window.scrollTo(0, 0);
+  }
+  function resetRetour(){
+    if(document.getElementById('reset-bloc-nouveau').style.display === 'block') showSite(); else showLogin();
+  }
+  async function submitResetRequest(){
+    const email = document.getElementById('reset-email').value.trim();
+    const btn = document.getElementById('reset-btn-demande');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      _msgReset('reset-demande-status', _tr('Merci de saisir une adresse e-mail valide.', 'Please enter a valid email address.'), false);
+      return;
+    }
+    btn.disabled = true;
+    _msgReset('reset-demande-status', _tr('Envoi en cours…', 'Sending…'), true);
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/' });
+    if(error && (error.status === 429 || /rate|seconds|limit/i.test(error.message || ''))){
+      _msgReset('reset-demande-status', _tr('Trop de demandes. Patientez quelques minutes avant de réessayer.', 'Too many requests. Please wait a few minutes before trying again.'), false);
+      setTimeout(() => { btn.disabled = false; }, 30000);
+      return;
+    }
+    // Message identique que le compte existe ou non : on ne révèle pas qui est inscrit.
+    _msgReset('reset-demande-status', _tr('Si un compte existe avec cette adresse, un e-mail vient d\'être envoyé. Vérifiez aussi vos courriers indésirables.', 'If an account exists with this address, an email has just been sent. Also check your spam folder.'), true);
+    setTimeout(() => { btn.disabled = false; }, 60000);
+  }
+  async function submitNewPassword(){
+    const mdp = document.getElementById('reset-new').value;
+    const conf = document.getElementById('reset-confirm').value;
+    const btn = document.getElementById('reset-btn-nouveau');
+    if(mdp.length < 8){
+      _msgReset('reset-nouveau-status', _tr('Le mot de passe doit contenir au moins 8 caractères.', 'The password must be at least 8 characters.'), false);
+      return;
+    }
+    if(mdp !== conf){
+      _msgReset('reset-nouveau-status', _tr('Les deux mots de passe ne sont pas identiques.', 'The two passwords do not match.'), false);
+      return;
+    }
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session){
+      _msgReset('reset-nouveau-status', _tr('Votre session a expiré. Redemandez un lien via « Mot de passe oublié ».', 'Your session has expired. Request a new link using “Forgot your password”.'), false);
+      return;
+    }
+    btn.disabled = true;
+    _msgReset('reset-nouveau-status', _tr('Enregistrement…', 'Saving…'), true);
+    const { error } = await sb.auth.updateUser({ password: mdp });
+    if(error){
+      btn.disabled = false;
+      const m = /different|same/i.test(error.message || '')
+        ? _tr('Choisissez un mot de passe différent de l\'ancien.', 'Choose a password different from the old one.')
+        : _tr('Impossible d\'enregistrer : ', 'Could not save: ') + error.message;
+      _msgReset('reset-nouveau-status', m, false);
+      return;
+    }
+    document.getElementById('reset-new').value = '';
+    document.getElementById('reset-confirm').value = '';
+    _msgReset('reset-nouveau-status', _tr('Mot de passe modifié. Utilisez-le à votre prochaine connexion.', 'Password updated. Use it the next time you log in.'), true);
+    _modeRecuperation = false;
+    setTimeout(() => { updateAuthUI(); showSite(); }, 1800);
   }
   let currentStep = 1;
   const totalSteps = 5;
