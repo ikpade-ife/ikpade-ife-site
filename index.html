@@ -1571,7 +1571,11 @@
     document.getElementById('piece-deja').style.display = deja ? 'block' : 'none';
   }
 
-  function apercuPiece(cote){
+  function _enDataUrl(blob){
+    return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(blob); });
+  }
+  // Aperçu en « data: » (et non « blob: ») : la politique de sécurité du site n'autorise que data: pour les images.
+  async function apercuPiece(cote){
     const input = document.getElementById('piece-input-'+cote);
     const zone = document.getElementById('piece-apercu-'+cote);
     zone.innerHTML = '';
@@ -1581,8 +1585,13 @@
       zone.innerHTML = '<p style="font-size:0.85rem; color:#57687A;">📄 ' + escapeHtml(f.name) + '</p>';
       return;
     }
-    const url = URL.createObjectURL(f);
-    zone.innerHTML = '<img alt="" src="' + url + '" style="max-width:100%; max-height:200px; border-radius:6px; border:1px solid var(--line); display:block;">';
+    try {
+      const url = await _enDataUrl(await compresserPiece(f));
+      if(input.files[0] !== f) return;   // l'utilisateur a changé de fichier entre-temps
+      zone.innerHTML = '<img alt="" src="' + url + '" style="max-width:100%; max-height:200px; border-radius:6px; border:1px solid var(--line); display:block;">';
+    } catch(e) {
+      zone.innerHTML = '<p style="font-size:0.85rem; color:#57687A;">✓ ' + escapeHtml(f.name) + '</p>';
+    }
   }
 
   // Réduit la photo (≈1600 px, JPEG) : un cliché de téléphone de 6 à 12 Mo passe à ≈300 Ko,
@@ -1593,11 +1602,12 @@
     try {
       bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
     } catch(e) {
+      const dataUrl = await _enDataUrl(file);
       bitmap = await new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => resolve(img);
         img.onerror = () => reject(new Error('illisible'));
-        img.src = URL.createObjectURL(file);
+        img.src = dataUrl;
       });
     }
     const w0 = bitmap.width || bitmap.naturalWidth, h0 = bitmap.height || bitmap.naturalHeight;
