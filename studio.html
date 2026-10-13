@@ -96,6 +96,15 @@
         <div id="listeRecentes"></div>
       </div>
 
+      <details style="margin-top:14px">
+        <summary class="hint" style="cursor:pointer">Récupérer une vidéo avec son identifiant</summary>
+        <div class="row2" style="margin-top:8px">
+          <div><input type="text" id="idManuel" placeholder="Identifiant (request_id)" maxlength="80"></div>
+          <div><button type="button" class="sec" id="btnIdManuel" style="margin-top:0;width:100%">Récupérer</button></div>
+        </div>
+        <div class="hint">L'identifiant se trouve dans Supabase (colonne « request_id » de la table des générations du Studio).</div>
+      </details>
+
       <div style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
         <label for="fichier">Ou partez d'une vidéo de votre ordinateur</label>
         <input type="file" id="fichier" accept="video/mp4,video/webm,video/quicktime">
@@ -362,6 +371,12 @@
     }
   };
   afficherHist();
+  $('btnIdManuel').onclick = () => {
+    const id = $('idManuel').value.trim();
+    if(!/^[A-Za-z0-9_-]{8,80}$/.test(id)){ msg('etat', 'Identifiant invalide.', 'err'); return; }
+    ajouterHist(id, 'Récupération manuelle');
+    recuperer(id, $('btnIdManuel'));
+  };
 
   $('fichier').onchange = () => {
     const f = $('fichier').files[0];
