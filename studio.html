@@ -209,21 +209,28 @@
   // puis envoyée une seule fois vers le stockage Higgsfield (l'adresse est gardée en mémoire).
   const MAX_PHOTOS = 4;
   let photos = []; // { apercu, dataUrl, url }
+  // Lecture en "data:" (et non "blob:") : la politique de sécurité du site (CSP img-src) n'autorise que data:.
   function lireImage(fichier){
     return new Promise((res, rej) => {
-      const adr = URL.createObjectURL(fichier); const i = new Image();
-      i.onload = () => res({ img: i, adr }); i.onerror = () => { URL.revokeObjectURL(adr); rej(new Error('Image illisible : ' + fichier.name)); };
-      i.src = adr;
+      const fr = new FileReader();
+      fr.onerror = () => rej(new Error('Image illisible : ' + fichier.name));
+      fr.onload = () => {
+        const i = new Image();
+        i.onload = () => res(i); i.onerror = () => rej(new Error('Image illisible : ' + fichier.name));
+        i.src = fr.result;
+      };
+      fr.readAsDataURL(fichier);
     });
   }
   async function preparerPhoto(fichier){
-    const { img, adr } = await lireImage(fichier);
+    const img = await lireImage(fichier);
     const e = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
     const cv = document.createElement('canvas');
     cv.width = Math.round(img.naturalWidth * e); cv.height = Math.round(img.naturalHeight * e);
     const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
     cx.drawImage(img, 0, 0, cv.width, cv.height);
-    return { apercu: adr, dataUrl: cv.toDataURL('image/jpeg', 0.9), url: null };
+    const dataUrl = cv.toDataURL('image/jpeg', 0.9);
+    return { apercu: dataUrl, dataUrl, url: null };
   }
   function afficherPhotos(){
     $('apercus').innerHTML = '';
@@ -231,7 +238,7 @@
       const d = document.createElement('div'); d.className = 'photo';
       const im = document.createElement('img'); im.src = p.apercu; im.alt = 'Photo ' + (i + 1);
       const b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.title = 'Retirer';
-      b.onclick = () => { URL.revokeObjectURL(p.apercu); photos.splice(i, 1); afficherPhotos(); };
+      b.onclick = () => { photos.splice(i, 1); afficherPhotos(); };
       d.appendChild(im); d.appendChild(b); $('apercus').appendChild(d);
     });
     const avec = photos.length > 0;
