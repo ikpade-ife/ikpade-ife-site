@@ -88,6 +88,13 @@
 
       <button class="go" id="go" style="margin-top:18px">Générer la scène</button>
       <div id="etat"></div>
+      <div id="lienDirectBloc" class="actions" hidden><a id="lienDirect" href="#" target="_blank" rel="noopener">Ouvrir la vidéo générée (nouvel onglet)</a></div>
+
+      <div id="recentes" style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;" hidden>
+        <label>Vidéos générées récemment</label>
+        <div class="hint" style="margin-top:0">Une génération payée n'est jamais perdue : si le chargement a échoué, récupérez-la ici.</div>
+        <div id="listeRecentes"></div>
+      </div>
 
       <div style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
         <label for="fichier">Ou partez d'une vidéo de votre ordinateur</label>
@@ -267,10 +274,74 @@
   }
 
   // ───────── 1. Génération de la scène ─────────
+  // ───────── Historique local des générations (pour ne jamais perdre une vidéo payée) ─────────
+  const CLE_HIST = 'studio_historique_v1';
+  function lireHist(){ try{ return JSON.parse(localStorage.getItem(CLE_HIST) || '[]'); }catch(_){ return []; } }
+  function ecrireHist(h){ try{ localStorage.setItem(CLE_HIST, JSON.stringify(h.slice(0, 10))); }catch(_){} afficherHist(); }
+  function ajouterHist(id, texte){ const h = lireHist().filter(x => x.id !== id); h.unshift({ id, date: new Date().toISOString(), texte: texte.slice(0, 70) }); ecrireHist(h); }
+  function afficherHist(){
+    const h = lireHist();
+    $('recentes').hidden = !h.length;
+    $('listeRecentes').innerHTML = '';
+    h.forEach(x => {
+      const d = document.createElement('div'); d.className = 'hint'; d.style.marginTop = '8px';
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = 'Récupérer';
+      b.onclick = () => recuperer(x.id, b);
+      d.appendChild(b);
+      d.appendChild(document.createTextNode(' ' + new Date(x.date).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) + ' — ' + x.texte + '…'));
+      $('listeRecentes').appendChild(d);
+    });
+  }
+
+  // Suivi tolérant aux coupures : une erreur réseau passagère ne fait plus échouer la génération.
+  async function attendre(requestId){
+    const debut = Date.now(); let erreurs = 0;
+    while(true){
+      if(Date.now() - debut > 10 * 60 * 1000) throw new Error('Délai dépassé. La vidéo est peut-être prête : utilisez « Récupérer » plus bas dans quelques minutes.');
+      await dormir(5000);
+      let st;
+      try{ st = await appeler('/.netlify/functions/studio-status?id=' + encodeURIComponent(requestId), { method: 'GET' }); erreurs = 0; }
+      catch(e){ if(++erreurs >= 6) throw new Error('Connexion perdue. La génération continue chez Higgsfield : utilisez « Récupérer » plus bas dans quelques minutes.'); continue; }
+      if(st.statut === 'termine') return st.url;
+      if(st.statut === 'echec') throw new Error(st.erreur || 'La génération a échoué.');
+      msg('etat', '<span class="spinner"></span>Génération en cours… ' + Math.round((Date.now() - debut) / 1000) + ' s (comptez 1 à 3 minutes)', 'info');
+    }
+  }
+
+  // Une fois la vidéo prête : lien direct d'abord (toujours disponible), puis chargement dans le Studio.
+  async function charger(requestId, urlDirecte){
+    if(urlDirecte){ $('lienDirect').href = urlDirecte; $('lienDirectBloc').hidden = false; }
+    msg('etat', '<span class="spinner"></span>Récupération de la vidéo…', 'info');
+    try{
+      const blob = await appeler('/.netlify/functions/studio-video?id=' + encodeURIComponent(requestId), { method: 'GET' }, 'blob');
+      definirVideoSource(URL.createObjectURL(blob), 'scene-ikpade-ife.mp4');
+      return true;
+    }catch(_){
+      msg('etat', '<b>La vidéo est bien générée</b>, mais elle est trop lourde pour être chargée directement dans le Studio. '
+        + '1) Cliquez sur « Ouvrir la vidéo générée », puis enregistrez-la (clic droit → Enregistrer la vidéo sous). '
+        + '2) Chargez-la avec « Ou partez d\'une vidéo de votre ordinateur » pour l\'assemblage. '
+        + 'Astuce : en 720p, la vidéo est plus légère et moins chère.', 'info');
+      return false;
+    }
+  }
+
+  async function recuperer(id, bouton){
+    if(bouton) bouton.disabled = true;
+    try{
+      msg('etat', '<span class="spinner"></span>Vérification…', 'info');
+      const st = await appeler('/.netlify/functions/studio-status?id=' + encodeURIComponent(id), { method: 'GET' });
+      if(st.statut === 'en_cours'){ msg('etat', 'Cette vidéo est encore en cours de génération. Réessayez dans une minute.', 'info'); return; }
+      if(st.statut === 'echec'){ msg('etat', echapper(st.erreur || 'Cette génération a échoué.'), 'err'); return; }
+      if(await charger(id, st.url)){ msg('etat', 'Vidéo récupérée.', 'info'); $('resultat').scrollIntoView({ behavior: 'smooth' }); }
+    }catch(e){
+      msg('etat', echapper(e.message || 'Erreur inconnue.'), 'err');
+    }finally{ if(bouton) bouton.disabled = false; }
+  }
+
   $('go').onclick = async () => {
     const texte = $('texte').value.trim();
     if(texte.length < 5){ msg('etat', 'Décrivez la scène en quelques mots.', 'err'); return; }
-    $('go').disabled = true;
+    $('go').disabled = true; $('lienDirectBloc').hidden = true;
     try{
       const urlsPhotos = await envoyerPhotos();
       msg('etat', '<span class="spinner"></span>Envoi de la demande…', 'info');
@@ -278,26 +349,19 @@
         method: 'POST',
         body: JSON.stringify({ prompt: texte, format: $('format').value, duree: parseInt($('duree').value, 10), resolution: $('resolution').value, audio: $('audio').checked, photos: urlsPhotos }),
       });
-      const debut = Date.now();
-      while(true){
-        if(Date.now() - debut > 8 * 60 * 1000) throw new Error('Délai dépassé. Réessayez dans un moment.');
-        await dormir(5000);
-        const st = await appeler('/.netlify/functions/studio-status?id=' + encodeURIComponent(lancement.requestId), { method: 'GET' });
-        if(st.statut === 'termine') break;
-        if(st.statut === 'echec') throw new Error(st.erreur || 'La génération a échoué.');
-        msg('etat', '<span class="spinner"></span>Génération en cours… ' + Math.round((Date.now() - debut) / 1000) + ' s (comptez 1 à 2 minutes)', 'info');
+      ajouterHist(lancement.requestId, texte);
+      const url = await attendre(lancement.requestId);
+      if(await charger(lancement.requestId, url)){
+        msg('etat', 'Scène prête. Il vous reste ' + lancement.restantes + ' génération(s) aujourd\'hui.', 'info');
+        $('resultat').scrollIntoView({ behavior: 'smooth' });
       }
-      msg('etat', '<span class="spinner"></span>Récupération de la vidéo…', 'info');
-      const blob = await appeler('/.netlify/functions/studio-video?id=' + encodeURIComponent(lancement.requestId), { method: 'GET' }, 'blob');
-      definirVideoSource(URL.createObjectURL(blob), 'scene-ikpade-ife.mp4');
-      msg('etat', 'Scène prête. Il vous reste ' + lancement.restantes + ' génération(s) aujourd\'hui.', 'info');
-      $('resultat').scrollIntoView({ behavior: 'smooth' });
     }catch(e){
       msg('etat', echapper(e.message || 'Erreur inconnue.'), 'err');
     }finally{
       $('go').disabled = false;
     }
   };
+  afficherHist();
 
   $('fichier').onchange = () => {
     const f = $('fichier').files[0];

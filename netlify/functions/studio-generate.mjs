@@ -61,7 +61,7 @@ export default async (req) => {
     const texteFinal = (avecPhotos ? CONSIGNE_PHOTOS : "") + prompt + CONSIGNE + (audio ? "" : CONSIGNE_SANS_PAROLES);
     const demande = avecPhotos
       ? { url: `${HF_BASE}/bytedance/seedance-2.5/reference-to-video`,
-          corps: { prompt: texteFinal, duration: duree, image_urls: photos, resolution, aspect_ratio: format, generate_audio: audio } }
+          corps: { prompt: texteFinal, duration: duree, image_urls: photos, resolution, aspect_ratio: format, generate_audio: audio, bitrate_mode: "standard" } }
       : { url: `${HF_BASE}/bytedance/seedance-2.5/text-to-video`,
           corps: { prompt: texteFinal, duration: duree, resolution, aspect_ratio: format, output_format: "mp4", generate_audio: audio } };
     hf = await fetch(demande.url, { method: "POST", headers, body: JSON.stringify(demande.corps) });
