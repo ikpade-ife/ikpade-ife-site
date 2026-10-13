@@ -1,8 +1,14 @@
 // Lance une génération vidéo (Seedance 2.5 via Higgsfield). Réservé à l'administrateur.
+// Sans photo : texte → vidéo. Avec 1 à 4 photos d'un personnage : "reference-to-video",
+// qui garde le visage des photos tout en respectant le format choisi (9:16…).
 import { json, verifierAdmin, rpc, hfHeaders, HF_BASE, LIMITE_PAR_JOUR } from "../lib/studio.mjs";
 
 const FORMATS = ["9:16", "16:9", "1:1", "4:3", "3:4", "21:9"];
 const RESOLUTIONS = ["480p", "720p"];
+const RESOLUTIONS_PHOTO = ["480p", "720p", "1080p"];
+const MAX_PHOTOS = 4;
+// Rappel donné à l'IA quand des photos de personnage sont fournies.
+const CONSIGNE_PHOTOS = "The main character is exactly the person shown in the reference image(s): keep the same face, skin tone, hair or head covering, and outfit. ";
 // Le texte à l'écran généré par l'IA est illisible : on l'interdit toujours dans le prompt.
 const CONSIGNE = " No text, no captions, no subtitles, no logos or watermarks on screen.";
 // Sans le son de l'IA, on évite aussi que les personnages "parlent" : la voix off (étape 2) ne serait pas synchronisée avec leurs lèvres.
@@ -27,11 +33,16 @@ export default async (req) => {
   const duree = Number.isInteger(body.duree) ? body.duree : 5;
   if (duree < 4 || duree > 15) return json({ erreur: "La durée doit être de 4 à 15 secondes." }, 400);
   const format = FORMATS.includes(body.format) ? body.format : "9:16";
-  const resolution = RESOLUTIONS.includes(body.resolution) ? body.resolution : "720p";
+  const photos = Array.isArray(body.photos) ? body.photos.map(String) : [];
+  if (photos.length > MAX_PHOTOS || photos.some(u => !/^https:\/\/[^\s"']{8,500}$/.test(u))) {
+    return json({ erreur: `Photos invalides (${MAX_PHOTOS} maximum).` }, 400);
+  }
+  const avecPhotos = photos.length > 0;
+  const resolution = (avecPhotos ? RESOLUTIONS_PHOTO : RESOLUTIONS).includes(body.resolution) ? body.resolution : "720p";
   const audio = body.audio === true;
 
   // 1) Réserver une des générations du jour (refuse au-delà de la limite).
-  const params = { duree, format, resolution, audio };
+  const params = { duree, format, resolution, audio, photos: photos.length };
   const res = await rpc(token, "studio_reserve_generation", {
     p_prompt: prompt.slice(0, 500), p_params: params, p_limite: LIMITE_PAR_JOUR,
   });
@@ -47,18 +58,13 @@ export default async (req) => {
   // 2) Envoyer la demande à Higgsfield.
   let hf;
   try {
-    hf = await fetch(`${HF_BASE}/bytedance/seedance-2.5/text-to-video`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        prompt: prompt + CONSIGNE + (audio ? "" : CONSIGNE_SANS_PAROLES),
-        duration: duree,
-        resolution,
-        aspect_ratio: format,
-        output_format: "mp4",
-        generate_audio: audio,
-      }),
-    });
+    const texteFinal = (avecPhotos ? CONSIGNE_PHOTOS : "") + prompt + CONSIGNE + (audio ? "" : CONSIGNE_SANS_PAROLES);
+    const demande = avecPhotos
+      ? { url: `${HF_BASE}/bytedance/seedance-2.5/reference-to-video`,
+          corps: { prompt: texteFinal, duration: duree, image_urls: photos, resolution, aspect_ratio: format, generate_audio: audio } }
+      : { url: `${HF_BASE}/bytedance/seedance-2.5/text-to-video`,
+          corps: { prompt: texteFinal, duration: duree, resolution, aspect_ratio: format, output_format: "mp4", generate_audio: audio } };
+    hf = await fetch(demande.url, { method: "POST", headers, body: JSON.stringify(demande.corps) });
   } catch (_) {
     await rpc(token, "studio_cancel_reservation", { p_id: reservationId });
     return json({ erreur: "Higgsfield est injoignable pour le moment." }, 502);

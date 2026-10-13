@@ -45,6 +45,10 @@
   button.sec{padding:11px 16px; border-radius:6px; border:1px solid var(--indigo); background:#fff; color:var(--indigo); font-weight:600; cursor:pointer; margin-top:12px;}
   button.sec:disabled{opacity:.55; cursor:not-allowed;}
   audio{width:100%; margin-top:10px;}
+  .photos{display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;}
+  .photo{position:relative; width:84px; height:112px; border-radius:6px; overflow:hidden; border:1px solid var(--line); background:#eef4f9;}
+  .photo img{width:100%; height:100%; object-fit:cover; display:block;}
+  .photo button{position:absolute; top:4px; right:4px; width:24px; height:24px; border-radius:50%; border:0; background:rgba(0,0,0,.65); color:#fff; font-size:14px; line-height:24px; cursor:pointer; padding:0;}
   [hidden]{display:none !important;}
 </style>
 </head>
@@ -64,16 +68,23 @@
       <div class="chips" id="idees"></div>
       <div class="hint">Écrivez ce que l'on <b>voit</b> : lieu, lumière, mouvement. Le texte à l'écran n'est pas fiable : le logo et le slogan sont ajoutés à l'étape 3.</div>
 
+      <div style="margin-top:18px; border-top:1px solid var(--line); padding-top:14px;">
+        <label for="photosPerso">Photos du personnage (facultatif)</label>
+        <input type="file" id="photosPerso" accept="image/jpeg,image/png,image/webp" multiple>
+        <div class="photos" id="apercus"></div>
+        <div class="hint">Ajoutez 1 à 4 photos du même personnage (par exemple Tantie Adoukê) : la vidéo gardera son visage. Le format choisi ci-dessous (9:16…) est respecté même si la photo est horizontale. Dans le texte, parlez de « la femme des photos ».</div>
+      </div>
+
       <div class="row">
         <div><label for="format">Format</label>
           <select id="format"><option value="9:16" selected>Vertical 9:16 (TikTok, Reels, statut)</option><option value="16:9">Horizontal 16:9</option><option value="1:1">Carré 1:1</option></select></div>
         <div><label for="duree">Durée</label>
           <select id="duree"><option value="5" selected>5 secondes</option><option value="8">8 secondes</option><option value="10">10 secondes</option><option value="12">12 secondes</option><option value="15">15 secondes</option></select></div>
         <div><label for="resolution">Qualité</label>
-          <select id="resolution"><option value="720p" selected>720p</option><option value="480p">480p (essai)</option></select></div>
+          <select id="resolution"><option value="1080p" id="opt1080" hidden>1080p (avec photos)</option><option value="720p" selected>720p</option><option value="480p">480p (essai)</option></select></div>
       </div>
 
-      <label class="check"><input type="checkbox" id="audio"><span><b>Générer aussi le son de l'IA</b> (musique, ambiance). Laissez décoché si vous ajoutez une voix à l'étape 2 : les voix générées par Higgsfield ont souvent un mauvais accent en français, et un dialogue trop long pour la durée est lu trop vite ou coupé. Décoché, les personnages ne parlent pas : la voix off n'a donc pas de décalage avec leurs lèvres.</span></label>
+      <label class="check"><input type="checkbox" id="audio"><span><b>Le personnage parle (son de l'IA)</b> : Seedance génère la voix, les lèvres synchronisées et l'ambiance. Écrivez la réplique entre guillemets dans le texte, en comptant environ 2 mots par seconde. Dans ce cas, ne générez pas de voix à l'étape 2 (deux voix se superposeraient).<br>Décoché : les personnages ne parlent pas, et vous pouvez ajouter une voix off à l'étape 2.</span></label>
 
       <button class="go" id="go" style="margin-top:18px">Générer la scène</button>
       <div id="etat"></div>
@@ -142,15 +153,20 @@
   let voixBlob = null;       // voix off générée
 
   const IDEES = [
+    ["Tantie Adoukê se présente", "Vertical 9:16. The woman from the photos, a warm and elegant Beninese woman in an emerald silk hijab and green gold-embroidered kaftan, starts on a Paris street at golden hour, then the scene smoothly transitions to a cozy living room with warm lamps. She speaks to the camera in French with a playful, confident smile: \"Mes chéris, Tantie Adoukê est là ! Oui, je suis une IA... et alors ? Je connais l'amour mieux que ton ex. Où que vous soyez, votre moitié vous attend sur Ikpadé Ifè.\" At the end she places her hand on her heart and smiles tenderly. Voice: warm, friendly female voice in her thirties, light West African accent, cheerful and confident. Medium close-up, slow push-in.", { duree: "15", audio: true }],
     ["Coucher de soleil", "Un coucher de soleil doré sur la lagune de Ouidah, vagues douces, silhouettes de palmiers, ambiance calme et chaleureuse."],
     ["Mains qui se rejoignent", "Gros plan sur deux mains qui se rejoignent doucement dans un jardin ensoleillé, lumière dorée, fond flou, mouvement lent."],
     ["Calligraphie", "Calligraphie arabe dorée qui se dessine lentement sur un fond bleu nuit, particules de lumière, mouvement fluide et élégant."],
     ["Repas en famille", "Une table de famille avec des plats béninois colorés, vue de dessus, des mains qui partagent le repas, lumière chaude, ambiance joyeuse (personnes vues de dos ou cadrées sur les mains)."],
   ];
-  IDEES.forEach(([nom, texte]) => {
+  IDEES.forEach(([nom, texte, reglages]) => {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'chip'; b.textContent = nom;
-    b.onclick = () => { $('texte').value = texte; $('texte').focus(); };
+    b.onclick = () => {
+      $('texte').value = texte;
+      if(reglages){ if(reglages.duree) $('duree').value = reglages.duree; if('audio' in reglages) $('audio').checked = reglages.audio; }
+      $('texte').focus();
+    };
     $('idees').appendChild(b);
   });
 
@@ -188,16 +204,72 @@
     chargerVoix();
   }
 
+  // ───────── Photos du personnage ─────────
+  // Chaque photo est réduite (1600 px max) et convertie en JPEG dans le navigateur,
+  // puis envoyée une seule fois vers le stockage Higgsfield (l'adresse est gardée en mémoire).
+  const MAX_PHOTOS = 4;
+  let photos = []; // { apercu, dataUrl, url }
+  function lireImage(fichier){
+    return new Promise((res, rej) => {
+      const adr = URL.createObjectURL(fichier); const i = new Image();
+      i.onload = () => res({ img: i, adr }); i.onerror = () => { URL.revokeObjectURL(adr); rej(new Error('Image illisible : ' + fichier.name)); };
+      i.src = adr;
+    });
+  }
+  async function preparerPhoto(fichier){
+    const { img, adr } = await lireImage(fichier);
+    const e = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+    const cv = document.createElement('canvas');
+    cv.width = Math.round(img.naturalWidth * e); cv.height = Math.round(img.naturalHeight * e);
+    const cx = cv.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, cv.width, cv.height);
+    cx.drawImage(img, 0, 0, cv.width, cv.height);
+    return { apercu: adr, dataUrl: cv.toDataURL('image/jpeg', 0.9), url: null };
+  }
+  function afficherPhotos(){
+    $('apercus').innerHTML = '';
+    photos.forEach((p, i) => {
+      const d = document.createElement('div'); d.className = 'photo';
+      const im = document.createElement('img'); im.src = p.apercu; im.alt = 'Photo ' + (i + 1);
+      const b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.title = 'Retirer';
+      b.onclick = () => { URL.revokeObjectURL(p.apercu); photos.splice(i, 1); afficherPhotos(); };
+      d.appendChild(im); d.appendChild(b); $('apercus').appendChild(d);
+    });
+    const avec = photos.length > 0;
+    $('opt1080').hidden = !avec;
+    if(!avec && $('resolution').value === '1080p') $('resolution').value = '720p';
+  }
+  $('photosPerso').onchange = async () => {
+    const fichiers = Array.from($('photosPerso').files || []);
+    $('photosPerso').value = '';
+    try{
+      for(const f of fichiers){
+        if(photos.length >= MAX_PHOTOS){ msg('etat', MAX_PHOTOS + ' photos maximum.', 'err'); break; }
+        photos.push(await preparerPhoto(f));
+      }
+    }catch(e){ msg('etat', echapper(e.message), 'err'); }
+    afficherPhotos();
+  };
+  async function envoyerPhotos(){
+    for(let i = 0; i < photos.length; i++){
+      if(photos[i].url) continue;
+      msg('etat', '<span class="spinner"></span>Envoi de la photo ' + (i + 1) + ' / ' + photos.length + '…', 'info');
+      const r = await appeler('/.netlify/functions/studio-upload', { method: 'POST', body: JSON.stringify({ image: photos[i].dataUrl }) });
+      photos[i].url = r.url;
+    }
+    return photos.map(p => p.url);
+  }
+
   // ───────── 1. Génération de la scène ─────────
   $('go').onclick = async () => {
     const texte = $('texte').value.trim();
     if(texte.length < 5){ msg('etat', 'Décrivez la scène en quelques mots.', 'err'); return; }
     $('go').disabled = true;
-    msg('etat', '<span class="spinner"></span>Envoi de la demande…', 'info');
     try{
+      const urlsPhotos = await envoyerPhotos();
+      msg('etat', '<span class="spinner"></span>Envoi de la demande…', 'info');
       const lancement = await appeler('/.netlify/functions/studio-generate', {
         method: 'POST',
-        body: JSON.stringify({ prompt: texte, format: $('format').value, duree: parseInt($('duree').value, 10), resolution: $('resolution').value, audio: $('audio').checked }),
+        body: JSON.stringify({ prompt: texte, format: $('format').value, duree: parseInt($('duree').value, 10), resolution: $('resolution').value, audio: $('audio').checked, photos: urlsPhotos }),
       });
       const debut = Date.now();
       while(true){
