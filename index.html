@@ -175,6 +175,7 @@
       });
       ctas.forEach(a => { a.style.display = ''; });
       liensMembre.forEach(a => { a.style.display = ''; });
+      document.querySelectorAll('[data-i18n="nav_mes_notifs"]').forEach(a => { a.style.display = 'none'; });
     }
   }
 
@@ -269,6 +270,7 @@
     padding:10px 22px; border-radius:2px; font-size:0.88rem;
     border:1px solid var(--gold);
     transition:background .2s;
+    white-space:nowrap; flex-shrink:0;
   }
   .nav-cta:hover{background:var(--gold-soft); color:var(--indigo-deep);}
   .lang-switch{display:flex; border:1px solid rgba(245,249,252,0.4); border-radius:20px; padding:3px; gap:2px;}
@@ -549,7 +551,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -992,7 +994,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -1153,7 +1155,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -1209,7 +1211,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -1270,7 +1272,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -1312,7 +1314,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -2563,7 +2565,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -2872,7 +2874,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -3443,7 +3445,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -3520,7 +3522,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
@@ -3902,7 +3904,7 @@
     <a href="#" onclick="showRequests();return false;" data-i18n="nav_demandes">Demandes</a>
     <a href="#" onclick="showPhotoPage();return false;" data-i18n="nav_ma_photo">Ma photo</a>
     <a href="#" onclick="showPiecePage();return false;" data-i18n="nav_ma_piece">Ma pièce d'identité</a>
-    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs">Mes notifications</a>
+    <a href="#" onclick="showNotifsPage();return false;" data-i18n="nav_mes_notifs" style="display:none;">Mes notifications</a>
   </div>
   <div class="nav-right">
     <div class="lang-switch">
