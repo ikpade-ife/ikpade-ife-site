@@ -273,7 +273,11 @@
     white-space:nowrap; flex-shrink:0;
   }
   .nav-cta:hover{background:var(--gold-soft); color:var(--indigo-deep);}
-  .lang-switch{display:flex; border:1px solid rgba(245,249,252,0.4); border-radius:20px; padding:3px; gap:2px;}
+  .lang-switch{display:flex; border:1px solid rgba(245,249,252,0.4); border-radius:20px; padding:3px; gap:2px; flex-shrink:0;}
+  .lang-switch button{white-space:nowrap; flex-shrink:0;}
+  .nav-right{flex-shrink:0;}
+  /* Écrans d'ordinateur moyens : le menu se resserre au lieu d'écraser les boutons de droite */
+  @media (min-width:861px) and (max-width:1320px){ .nav-links{gap:14px; font-size:0.82rem;} .nav-links a{white-space:nowrap;} }
   .lang-switch button{
     border:none; background:transparent; padding:5px 12px; border-radius:16px; font-size:0.76rem;
     font-family:'IBM Plex Mono',monospace; letter-spacing:0.04em; color:var(--ivory); cursor:pointer;
