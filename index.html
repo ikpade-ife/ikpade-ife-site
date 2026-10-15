@@ -145,7 +145,7 @@
         if(profil && profil.prenom) displayName = profil.prenom;
       } catch(e) {}
       links.forEach(a => {
-        a.textContent = '👤 ' + displayName + ' — ' + (currentLang === 'en' ? 'Log out' : 'Se déconnecter');
+        a.textContent = (currentLang === 'en' ? 'Log out' : 'Se déconnecter');
         a.onclick = async (e) => {
           e.preventDefault();
           await sb.auth.signOut();
@@ -167,7 +167,9 @@
       ctas.forEach(a => { a.style.display = 'none'; });
       const estAdmin = session.user.email === ADMIN_EMAIL;
       liensMembre.forEach(a => { a.style.display = estAdmin ? 'none' : ''; });
+      regrouperCompte(displayName);
     } else {
+      degrouperCompte();
       document.querySelectorAll('[data-nav-mdp]').forEach(x => x.remove());
       links.forEach(a => {
         a.textContent = t('nav_connexion');
@@ -178,6 +180,39 @@
       document.querySelectorAll('[data-i18n="nav_mes_notifs"]').forEach(a => { a.style.display = 'none'; });
     }
   }
+
+
+  // ───────── Menu « compte » : regroupe les liens personnels sous le prénom du membre ─────────
+  function regrouperCompte(nom){
+    document.querySelectorAll('.nav-links').forEach(nl => {
+      let box = nl.querySelector(':scope > .nav-compte');
+      if(!box){
+        box = document.createElement('div');
+        box.className = 'nav-compte';
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'nav-compte-btn';
+        btn.addEventListener('click', e => { e.stopPropagation(); box.classList.toggle('open'); });
+        const panel = document.createElement('div');
+        panel.className = 'nav-compte-panel';
+        panel.addEventListener('click', () => { box.classList.remove('open'); nl.classList.remove('open'); });
+        box.append(btn, panel);
+        nl.appendChild(box);
+      }
+      box.querySelector('.nav-compte-btn').textContent = '👤 ' + nom + ' ▾';
+      const panel = box.querySelector('.nav-compte-panel');
+      ['[data-i18n="nav_ma_photo"]', '[data-i18n="nav_ma_piece"]', '[data-i18n="nav_mes_notifs"]', '[data-i18n="nav_connexion"]', '[data-nav-mdp]']
+        .forEach(sel => nl.querySelectorAll(':scope > ' + sel + ', :scope > .nav-compte > .nav-compte-panel > ' + sel).forEach(a => panel.appendChild(a)));
+    });
+  }
+  function degrouperCompte(){
+    document.querySelectorAll('.nav-compte').forEach(box => {
+      const panel = box.querySelector('.nav-compte-panel');
+      while(panel && panel.firstChild) box.parentElement.insertBefore(panel.firstChild, box);
+      box.remove();
+    });
+  }
+  document.addEventListener('click', () => document.querySelectorAll('.nav-compte.open').forEach(b => b.classList.remove('open')));
 
   function toggleMobileMenu(btn){
     btn.closest('nav')?.querySelector('.nav-links')?.classList.toggle('open');
@@ -499,6 +534,26 @@
   .footer-col a{display:block; font-size:1.05rem; padding:6px 0; color:#C7D3DA;}
   .footer-bottom{padding-top:24px; font-size:0.78rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
 
+
+  .nav-links{flex-wrap:nowrap; align-items:center;}
+  .nav-links a{white-space:nowrap;}
+  .nav-compte{position:relative;}
+  .nav-compte-btn{background:none; border:none; padding:0; font:inherit; color:var(--ivory); opacity:0.85; cursor:pointer; white-space:nowrap;}
+  .nav-compte-btn:hover, .nav-compte.open .nav-compte-btn{opacity:1;}
+  .nav-compte-panel{
+    display:none; position:absolute; right:0; top:100%; margin-top:14px; z-index:60;
+    flex-direction:column; min-width:240px; padding:8px 0;
+    background:#0B4A34; border:1px solid rgba(46,156,255,0.25); border-radius:6px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.25);
+  }
+  .nav-compte.open .nav-compte-panel{display:flex;}
+  .nav-compte-panel a{padding:10px 18px;}
+  .nav-compte-panel a:hover{background:rgba(245,249,252,0.08);}
+  @media (max-width:860px){
+    .nav-compte-btn{display:block; width:100%; text-align:left; padding:12px 0; border-bottom:1px solid rgba(245,249,252,0.08); opacity:1;}
+    .nav-compte-panel{display:flex; position:static; margin:0; min-width:0; padding:0 0 0 14px; background:none; border:none; box-shadow:none;}
+    .nav-compte-panel a{padding:12px 0;}
+  }
   .nav-toggle{display:none;}
   @media (max-width:860px){
     nav{padding:12px 4vw; flex-wrap:wrap; position:relative; transition:none; gap:8px 0;}
