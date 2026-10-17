@@ -164,10 +164,14 @@
       ctas.forEach(a => { a.style.display = 'none'; });
       const estAdmin = session.user.email === ADMIN_EMAIL;
       document.body.classList.toggle('est-membre', !estAdmin);
+      document.body.classList.add('connecte');
+      links.forEach(a => construireCompte(a.closest('nav'), a, displayName, estAdmin));
       liensMembre.forEach(a => { const mon = a.getAttribute('data-i18n') === 'nav_mon_dossier'; a.style.display = estAdmin ? 'none' : (mon ? 'inline' : ''); });
     } else {
       document.querySelectorAll('[data-nav-mdp]').forEach(x => x.remove());
       document.body.classList.remove('est-membre');
+      document.body.classList.remove('connecte');
+      document.querySelectorAll('.nav-compte').forEach(x => x.remove());
       links.forEach(a => {
         a.textContent = navCoupe(t('nav_connexion'));
         a.onclick = (e) => { e.preventDefault(); showLogin(); };
@@ -177,6 +181,48 @@
     }
     ajusterNavPlusTard();
   }
+
+  // Menu du compte (ordinateur) : « 👤 Prénom ▾ » ouvre la liste des options du membre (ou de l'admin) juste en dessous
+  function construireCompte(nav, lienConnexion, nom, estAdmin){
+    const R = nav && nav.querySelector('.nav-right');
+    if(!R) return;
+    R.querySelectorAll('.nav-compte').forEach(x => x.remove());
+    const box = document.createElement('div');
+    box.className = 'nav-compte';
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'nav-compte-btn';
+    btn.setAttribute('aria-haspopup', 'true'); btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '👤 <span class="nav-nom">' + escapeHtml(nom) + '</span><span class="nav-compte-fleche">▾</span>';
+    const menu = document.createElement('div');
+    menu.className = 'nav-compte-menu'; menu.setAttribute('role', 'menu');
+    const ajouter = (txt, cible) => {
+      if(!cible) return;
+      const it = document.createElement('button');
+      it.type = 'button'; it.setAttribute('role', 'menuitem'); it.textContent = txt;
+      it.onclick = (e) => { e.stopPropagation(); fermerComptes(); cible.click(); };
+      menu.appendChild(it);
+    };
+    if(!estAdmin){
+      ['nav_parcourir', 'nav_demandes', 'nav_ma_photo', 'nav_ma_piece', 'nav_mon_dossier'].forEach(k => ajouter(t(k), nav.querySelector('.nav-links [data-i18n="' + k + '"]')));
+      const sep = document.createElement('div'); sep.className = 'nav-compte-sep'; menu.appendChild(sep);
+    }
+    ajouter(currentLang === 'en' ? 'Change my password' : 'Changer mon mot de passe', nav.querySelector('[data-nav-mdp]'));
+    ajouter(currentLang === 'en' ? 'Log out' : 'Se déconnecter', lienConnexion);
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const ouvert = !box.classList.contains('ouvert');
+      fermerComptes();
+      box.classList.toggle('ouvert', ouvert);
+      btn.setAttribute('aria-expanded', ouvert ? 'true' : 'false');
+    };
+    box.appendChild(btn); box.appendChild(menu);
+    R.insertBefore(box, R.firstChild);
+  }
+  function fermerComptes(){
+    document.querySelectorAll('.nav-compte.ouvert').forEach(b => { b.classList.remove('ouvert'); const x = b.querySelector('.nav-compte-btn'); if(x) x.setAttribute('aria-expanded', 'false'); });
+  }
+  document.addEventListener('click', fermerComptes);
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') fermerComptes(); });
 
   function toggleMobileMenu(btn){
     btn.closest('nav')?.querySelector('.nav-links')?.classList.toggle('open');
@@ -547,6 +593,27 @@
   @media (min-width:1580px){ .nav-links{gap:18px; font-size:0.95rem;} .nav-cta{font-size:0.95rem; padding:10px 18px;} .logo-mark{width:80px; height:80px;} }
   @media (min-width:1710px){ .nav-links{gap:22px; font-size:1rem;} .nav-cta{font-size:0.95rem; padding:10px 20px;} .logo-mark{width:90px; height:90px;} .lang-switch button{padding:5px 10px;} }
   @media (min-width:1750px){ .nav-links{gap:24px;} .nav-cta{padding:10px 22px;} .logo-mark{width:100px; height:100px;} }
+  /* menu du compte (ordinateur) : « 👤 Prénom ▾ » avec ses options dessous ; sur ≡ / téléphone, la liste à plat reste utilisée */
+  .nav-compte{display:none; position:relative;}
+  .nav-compte-btn{display:flex; align-items:center; gap:6px; background:transparent; border:1px solid rgba(245,249,252,0.4); border-radius:20px; color:var(--ivory); font:inherit; font-size:0.84rem; padding:6px 12px; cursor:pointer; white-space:nowrap;}
+  .nav-compte-btn:hover,.nav-compte.ouvert .nav-compte-btn{background:rgba(245,249,252,0.14);}
+  .nav-compte-btn .nav-nom{max-width:9em;}
+  .nav-compte-fleche{font-size:0.7rem; opacity:0.85;}
+  .nav-compte-menu{display:none; position:absolute; right:0; top:calc(100% + 8px); min-width:240px; background:#fff; border-radius:8px; box-shadow:0 14px 34px rgba(7,31,53,0.3); padding:6px 0; z-index:1000;}
+  .nav-compte.ouvert .nav-compte-menu{display:block;}
+  .nav-compte-menu button{display:block; width:100%; text-align:left; background:none; border:0; padding:10px 18px; font:inherit; font-size:0.92rem; color:var(--indigo-deep); cursor:pointer; white-space:nowrap;}
+  .nav-compte-menu button:hover,.nav-compte-menu button:focus-visible{background:#EAF2F8; outline:none;}
+  .nav-compte-sep{height:1px; background:#D9E3EA; margin:6px 0;}
+  @media (min-width:1270px){
+    body.connecte:not(.nav-force-burger) .nav-compte{display:block;}
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_connexion"],
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-nav-mdp],
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_parcourir"],
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_demandes"],
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_ma_photo"],
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_ma_piece"],
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_mon_dossier"]{display:none !important;}
+  }
   /* menu déroulant (≡) : téléphone et écrans étroits, libellés sur une seule ligne */
   @media (max-width:860px){ .nav-links a{white-space:normal; text-align:left; line-height:1.4;} .nav-nom{max-width:none; white-space:normal;} .nav-tiret{display:inline;} }
   @media (min-width:861px) and (max-width:1269px){
