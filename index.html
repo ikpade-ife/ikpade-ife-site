@@ -81,6 +81,24 @@
     }
     return mots.slice(0, meilleur).join(' ') + '\n' + mots.slice(meilleur).join(' ');
   }
+  // Menu : si les liens ne tiennent pas sur une ligne (police réelle, prénom long, zoom du navigateur…), bascule sur le menu ≡
+  function ajusterNav(){
+    const body = document.body;
+    body.classList.remove('nav-force-burger');
+    if(window.innerWidth <= 860) return;
+    const n = [...document.querySelectorAll('nav')].find(x => x.getClientRects().length > 0);
+    if(!n) return;
+    const L = n.querySelector('.nav-links'), R = n.querySelector('.nav-right'), G = n.querySelector('.logo');
+    if(!L || !R || !G) return;
+    const l = L.getBoundingClientRect(), r = R.getBoundingClientRect(), g = G.getBoundingClientRect();
+    const padD = parseFloat(getComputedStyle(n).paddingRight) || 0;
+    if(l.right > r.left - 6 || l.left < g.right + 6 || r.right > n.clientWidth - padD + 1 || n.scrollWidth > n.clientWidth + 1) body.classList.add('nav-force-burger');
+  }
+  let _navTimer = null;
+  const ajusterNavPlusTard = () => { clearTimeout(_navTimer); _navTimer = setTimeout(ajusterNav, 80); };
+  window.addEventListener('resize', ajusterNavPlusTard);
+  window.addEventListener('load', ajusterNav);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(ajusterNav);
   function applyI18n(){
     document.documentElement.lang = currentLang;
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -157,6 +175,7 @@
       ctas.forEach(a => { a.style.display = ''; });
       liensMembre.forEach(a => { a.style.display = a.getAttribute('data-i18n') === 'nav_mon_dossier' ? 'none' : ''; });
     }
+    ajusterNavPlusTard();
   }
 
   function toggleMobileMenu(btn){
@@ -513,21 +532,24 @@
   .nav-right{flex-shrink:0;}
   .nav-cta{white-space:nowrap; flex-shrink:0;}
   .nav-links a[data-i18n="nav_mon_dossier"]{display:none;}  /* affiché seulement pour un membre connecté */
-  /* taille des liens du menu : la plus grande qui tient selon la largeur de l'écran */
-  @media (min-width:1261px){
+  /* taille des liens du menu : la plus grande qui tient selon la largeur de l'écran (mesuré avec la vraie police Work Sans) */
+  @media (min-width:1270px){
     nav{gap:14px; padding-left:3vw; padding-right:3vw;}
-    .nav-links{gap:12px; font-size:0.84rem;}
+    .nav-links{gap:8px; font-size:0.78rem;}
     .nav-right{gap:8px;}
-    .nav-cta{padding:9px 14px; font-size:0.82rem;}
-    .logo-mark{width:64px; height:64px;}
+    .nav-cta{padding:9px 14px; font-size:0.78rem;}
+    .logo-mark{width:56px; height:56px;}
     .lang-switch button{padding:4px 8px;}
   }
-  @media (min-width:1400px){ .nav-links{gap:16px; font-size:0.9rem;} .nav-cta{font-size:0.88rem;} .logo-mark{width:72px; height:72px;} }
-  @media (min-width:1500px){ .nav-links{gap:20px; font-size:0.95rem;} .nav-cta{font-size:0.92rem; padding:10px 18px;} .logo-mark{width:84px; height:84px;} }
-  @media (min-width:1760px){ .nav-links{gap:24px; font-size:1rem;} .nav-cta{font-size:0.95rem; padding:10px 22px;} .logo-mark{width:100px; height:100px;} .lang-switch button{padding:5px 10px;} }
+  @media (min-width:1350px){ .nav-links{gap:12px; font-size:0.84rem;} .nav-cta{font-size:0.84rem;} .logo-mark{width:64px; height:64px;} }
+  @media (min-width:1420px){ .nav-links{gap:14px; font-size:0.88rem;} .nav-cta{font-size:0.88rem;} .logo-mark{width:68px; height:68px;} }
+  @media (min-width:1480px){ .nav-links{gap:16px; font-size:0.9rem;} .nav-cta{font-size:0.9rem;} .logo-mark{width:72px; height:72px;} }
+  @media (min-width:1580px){ .nav-links{gap:18px; font-size:0.95rem;} .nav-cta{font-size:0.95rem; padding:10px 18px;} .logo-mark{width:80px; height:80px;} }
+  @media (min-width:1710px){ .nav-links{gap:22px; font-size:1rem;} .nav-cta{font-size:0.95rem; padding:10px 20px;} .logo-mark{width:90px; height:90px;} .lang-switch button{padding:5px 10px;} }
+  @media (min-width:1750px){ .nav-links{gap:24px;} .nav-cta{padding:10px 22px;} .logo-mark{width:100px; height:100px;} }
   /* menu déroulant (≡) : téléphone et écrans étroits, libellés sur une seule ligne */
   @media (max-width:860px){ .nav-links a{white-space:normal; text-align:left; line-height:1.4;} .nav-nom{max-width:none; white-space:normal;} .nav-tiret{display:inline;} }
-  @media (min-width:861px) and (max-width:1260px){
+  @media (min-width:861px) and (max-width:1269px){
     .lang-switch{order:2;}
     nav{padding:12px 4vw; flex-wrap:wrap; position:relative; transition:none; gap:8px 0;}
     .logo-mark{width:56px; height:56px;}
@@ -545,6 +567,26 @@
     .nav-links.open{display:flex;}
     .nav-links a{padding:12px 0; border-bottom:1px solid rgba(245,249,252,0.08); white-space:normal; text-align:left; line-height:1.4;}
     .nav-nom{max-width:none; white-space:normal;} .nav-tiret{display:inline;}
+  }
+  /* si les liens ne tiennent pas sur une ligne (vraie police, nom long, zoom…), le script ajoute cette classe : menu ≡ */
+  @media (min-width:861px){
+body.nav-force-burger .lang-switch{order:2;}
+body.nav-force-burger nav{padding:12px 4vw; flex-wrap:wrap; position:relative; transition:none; gap:8px 0;}
+body.nav-force-burger .logo-mark{width:56px; height:56px;}
+body.nav-force-burger .nav-toggle{
+      display:flex; flex-direction:column; justify-content:center; gap:5px;
+      width:32px; height:32px; flex-shrink:0; background:none; border:none; cursor:pointer; padding:4px; margin-left:10px;
+    }
+body.nav-force-burger .nav-toggle span{display:block; width:100%; height:2px; background:var(--ivory); border-radius:2px;}
+body.nav-force-burger .nav-links{
+      display:none; width:100%; flex-direction:column; gap:2px; font-size:0.9rem;
+      position:absolute; top:100%; left:0; right:0;
+      background:#0B4A34; padding:10px 6vw 18px;
+      border-bottom:1px solid rgba(46,156,255,0.25);
+    }
+body.nav-force-burger .nav-links.open{display:flex;}
+body.nav-force-burger .nav-links a{padding:12px 0; border-bottom:1px solid rgba(245,249,252,0.08); white-space:normal; text-align:left; line-height:1.4;}
+body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-force-burger .nav-tiret{display:inline;}
   }
 </style>
 </head>
@@ -1582,6 +1624,7 @@
 
 <script>
   function hideAllViews(){
+    ajusterNavPlusTard();
     ['site-view','signup-view','tuteur-view','admin-view','messaging-view','payment-view','login-view','reset-view','browse-view','requests-view','legal-view','photo-view','piece-view','correction-view'].forEach(id=>{
       const el = document.getElementById(id);
       if(el) el.style.display='none';
