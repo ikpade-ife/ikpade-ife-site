@@ -69,12 +69,24 @@
       .replace(/'/g, '&#39;');
   }
 
+  // Menu : un libellé de plusieurs mots est coupé en deux lignes (ex. « Le » / « parcours ») pour gagner de la place
+  function navCoupe(txt){
+    if(typeof txt !== 'string') return txt;
+    const mots = txt.trim().split(/\s+/);
+    if(mots.length < 2) return txt;
+    let meilleur = 1, ecart = Infinity;
+    for(let i = 1; i < mots.length; i++){
+      const g = mots.slice(0, i).join(' ').length, d = mots.slice(i).join(' ').length;
+      if(Math.abs(g - d) < ecart){ ecart = Math.abs(g - d); meilleur = i; }
+    }
+    return mots.slice(0, meilleur).join(' ') + '\n' + mots.slice(meilleur).join(' ');
+  }
   function applyI18n(){
     document.documentElement.lang = currentLang;
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       const value = t(key);
-      if (value !== undefined) el.innerHTML = value;
+      if (value !== undefined) el.innerHTML = (el.closest('.nav-links') && !el.classList.contains('nav-cta')) ? navCoupe(value) : value;
     });
     document.querySelectorAll('[data-lang-btn]').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-lang-btn') === currentLang);
@@ -112,7 +124,7 @@
         if(profil && profil.prenom) displayName = profil.prenom;
       } catch(e) {}
       links.forEach(a => {
-        a.textContent = '👤 ' + displayName + ' — ' + (currentLang === 'en' ? 'Log out' : 'Se déconnecter');
+        a.innerHTML = '👤 <span class="nav-nom">' + escapeHtml(displayName) + '</span><span class="nav-tiret"> —</span>\n' + (currentLang === 'en' ? 'Log out' : 'Se déconnecter');
         a.onclick = async (e) => {
           e.preventDefault();
           await sb.auth.signOut();
@@ -129,7 +141,7 @@
           b.onclick = (e) => { e.preventDefault(); showResetNew(false); };
           a.after(b);
         }
-        a.nextElementSibling.textContent = currentLang === 'en' ? 'Change my password' : 'Changer mon mot de passe';
+        a.nextElementSibling.textContent = navCoupe(currentLang === 'en' ? 'Change my password' : 'Changer mon mot de passe');
       });
       ctas.forEach(a => { a.style.display = 'none'; });
       const estAdmin = session.user.email === ADMIN_EMAIL;
@@ -139,7 +151,7 @@
       document.querySelectorAll('[data-nav-mdp]').forEach(x => x.remove());
       document.body.classList.remove('est-membre');
       links.forEach(a => {
-        a.textContent = t('nav_connexion');
+        a.textContent = navCoupe(t('nav_connexion'));
         a.onclick = (e) => { e.preventDefault(); showLogin(); };
       });
       ctas.forEach(a => { a.style.display = ''; });
@@ -495,25 +507,27 @@
     .footer-cols{gap:32px; grid-template-columns:1fr; grid-auto-flow:row;}
   }
   /* ---------- barre de navigation : jamais coupée, quelle que soit la largeur de l'écran ---------- */
-  .nav-links a{white-space:nowrap;}
-  .nav-links a[data-i18n="nav_mon_dossier"]{display:none;}  /* affiché seulement pour un membre connecté */
+  .nav-links a{white-space:pre-line; text-align:center; line-height:1.25; flex-shrink:0;}   /* libellés sur deux lignes : « Le » / « parcours » */
+  .nav-nom{display:inline-block; max-width:8em; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:bottom;}
+  .nav-tiret{display:none;}
   .nav-right{flex-shrink:0;}
   .nav-cta{white-space:nowrap; flex-shrink:0;}
-  /* taille des liens du menu : la plus grande qui tient sur une ligne selon la largeur de l'écran */
-  @media (min-width:1401px){
+  .nav-links a[data-i18n="nav_mon_dossier"]{display:none;}  /* affiché seulement pour un membre connecté */
+  /* taille des liens du menu : la plus grande qui tient selon la largeur de l'écran */
+  @media (min-width:1261px){
     nav{gap:14px; padding-left:3vw; padding-right:3vw;}
-    .nav-links{gap:10px; font-size:0.78rem;}
+    .nav-links{gap:12px; font-size:0.84rem;}
     .nav-right{gap:8px;}
-    .nav-cta{padding:9px 14px; font-size:0.8rem;}
+    .nav-cta{padding:9px 14px; font-size:0.82rem;}
     .logo-mark{width:64px; height:64px;}
     .lang-switch button{padding:4px 8px;}
   }
-  @media (min-width:1470px){ .nav-links{gap:12px; font-size:0.84rem;} .nav-cta{font-size:0.84rem;} .logo-mark{width:70px; height:70px;} }
-  @media (min-width:1580px){ .nav-links{gap:16px; font-size:0.88rem;} .nav-cta{font-size:0.88rem; padding:10px 18px;} .logo-mark{width:80px; height:80px;} }
-  @media (min-width:1740px){ .nav-links{gap:20px; font-size:0.95rem;} .nav-cta{font-size:0.92rem;} .logo-mark{width:90px; height:90px;} .lang-switch button{padding:5px 10px;} }
-  @media (min-width:1860px){ .nav-links{gap:24px; font-size:1rem;} .nav-cta{font-size:0.95rem; padding:10px 22px;} .logo-mark{width:100px; height:100px;} }
-  /* écrans moyens : même menu déroulant (≡) que sur téléphone, car 14 liens ne tiennent plus sur une ligne */
-  @media (min-width:861px) and (max-width:1400px){
+  @media (min-width:1400px){ .nav-links{gap:16px; font-size:0.9rem;} .nav-cta{font-size:0.88rem;} .logo-mark{width:72px; height:72px;} }
+  @media (min-width:1500px){ .nav-links{gap:20px; font-size:0.95rem;} .nav-cta{font-size:0.92rem; padding:10px 18px;} .logo-mark{width:84px; height:84px;} }
+  @media (min-width:1760px){ .nav-links{gap:24px; font-size:1rem;} .nav-cta{font-size:0.95rem; padding:10px 22px;} .logo-mark{width:100px; height:100px;} .lang-switch button{padding:5px 10px;} }
+  /* menu déroulant (≡) : téléphone et écrans étroits, libellés sur une seule ligne */
+  @media (max-width:860px){ .nav-links a{white-space:normal; text-align:left; line-height:1.4;} .nav-nom{max-width:none; white-space:normal;} .nav-tiret{display:inline;} }
+  @media (min-width:861px) and (max-width:1260px){
     .lang-switch{order:2;}
     nav{padding:12px 4vw; flex-wrap:wrap; position:relative; transition:none; gap:8px 0;}
     .logo-mark{width:56px; height:56px;}
@@ -529,25 +543,8 @@
       border-bottom:1px solid rgba(46,156,255,0.25);
     }
     .nav-links.open{display:flex;}
-    .nav-links a{padding:12px 0; border-bottom:1px solid rgba(245,249,252,0.08);}
-  }
-  @media (min-width:861px){
-    body.est-membre .lang-switch{order:2;}
-    body.est-membre nav{padding:12px 4vw; flex-wrap:wrap; position:relative; transition:none; gap:8px 0;}
-    body.est-membre .logo-mark{width:56px; height:56px;}
-    body.est-membre .nav-toggle{
-      display:flex; flex-direction:column; justify-content:center; gap:5px;
-      width:32px; height:32px; flex-shrink:0; background:none; border:none; cursor:pointer; padding:4px; margin-left:10px;
-    }
-    body.est-membre .nav-toggle span{display:block; width:100%; height:2px; background:var(--ivory); border-radius:2px;}
-    body.est-membre .nav-links{
-      display:none; width:100%; flex-direction:column; gap:2px; font-size:0.9rem;
-      position:absolute; top:100%; left:0; right:0;
-      background:#0B4A34; padding:10px 6vw 18px;
-      border-bottom:1px solid rgba(46,156,255,0.25);
-    }
-    body.est-membre .nav-links.open{display:flex;}
-    body.est-membre .nav-links a{padding:12px 0; border-bottom:1px solid rgba(245,249,252,0.08);}
+    .nav-links a{padding:12px 0; border-bottom:1px solid rgba(245,249,252,0.08); white-space:normal; text-align:left; line-height:1.4;}
+    .nav-nom{max-width:none; white-space:normal;} .nav-tiret{display:inline;}
   }
 </style>
 </head>
