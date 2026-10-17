@@ -615,6 +615,13 @@
     body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_ma_piece"],
     body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_mon_dossier"]{display:none !important;}
   }
+  /* connecté : libellés sur une ligne, donc un peu plus grands (plus de place disponible) */
+  @media (min-width:1270px){ body.connecte:not(.nav-force-burger) .nav-links{font-size:0.86rem; gap:12px;} }
+  @media (min-width:1350px){ body.connecte:not(.nav-force-burger) .nav-links{font-size:0.92rem; gap:14px;} }
+  @media (min-width:1420px){ body.connecte:not(.nav-force-burger) .nav-links{font-size:0.97rem; gap:16px;} }
+  @media (min-width:1480px){ body.connecte:not(.nav-force-burger) .nav-links{font-size:1.02rem; gap:18px;} }
+  @media (min-width:1580px){ body.connecte:not(.nav-force-burger) .nav-links{font-size:1.07rem; gap:22px;} }
+  @media (min-width:1710px){ body.connecte:not(.nav-force-burger) .nav-links{font-size:1.12rem; gap:26px;} }
   /* menu déroulant (≡) : téléphone et écrans étroits, libellés sur une seule ligne */
   @media (max-width:860px){ .nav-links a{white-space:normal; text-align:left; line-height:1.4;} .nav-nom{max-width:none; white-space:normal;} .nav-tiret{display:inline;} }
   @media (min-width:861px) and (max-width:1269px){
