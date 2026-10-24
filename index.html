@@ -51,6 +51,8 @@
   };
   Object.assign(I18N.fr, {"faq5_q": "Pourquoi Ikpadé Ifê s'adresse-t-il aux musulmans ?", "faq5_a": "Ikpadé Ifê accompagne les Béninois musulmans, au Bénin et dans la diaspora, vers un mariage conforme à leur foi : présence du tuteur (wali), photos protégées, introductions entre familles. Ce choix ne vise personne : il réunit des personnes qui partagent les mêmes valeurs et la même vision du mariage. Nous respectons toutes les croyances et toutes les familles du Bénin."});
   Object.assign(I18N.en, {"faq5_q": "Why is Ikpadé Ifê for Muslims?", "faq5_a": "Ikpadé Ifê guides Beninese Muslims, in Benin and in the diaspora, towards a marriage in keeping with their faith: a guardian (wali), protected photos, introductions between families. This choice is not aimed against anyone: it brings together people who share the same values and the same vision of marriage. We respect all beliefs and all families of Benin."});
+  Object.assign(I18N.fr, {"check4": "J'accepte expressément le traitement de mes données sensibles, nécessaire au service : mon appartenance et ma pratique religieuses, et la copie de ma pièce d'identité (utilisée uniquement pour vérifier mon dossier, puis supprimée). Ces données sont hébergées par nos prestataires techniques, y compris hors du Bénin.", "alert_checkboxes": "Merci de cocher les quatre cases ci-dessus, y compris l'acceptation des Conditions Générales d'Utilisation et de la Politique de Confidentialité et le consentement au traitement de vos données sensibles, avant de créer votre profil."});
+  Object.assign(I18N.en, {"check4": "I expressly consent to the processing of my sensitive data, which the service requires: my religious affiliation and practice, and the copy of my ID document (used only to verify my file, then deleted). This data is hosted by our technical providers, including outside Benin.", "alert_checkboxes": "Please check the four boxes above, including acceptance of the Terms of Use and Privacy Policy and consent to the processing of your sensitive data, before creating your profile."});
   let currentLang = localStorage.getItem('ikpadeLang') || 'fr';
 
   function t(key){
@@ -1262,6 +1264,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
             <label class="check-row"><input type="checkbox" id="signup-check1"> <span data-i18n="check1">Je certifie que les informations fournies sont exactes.</span></label>
             <label class="check-row"><input type="checkbox" id="signup-check2"> <span data-i18n="check2">J'accepte que mon tuteur soit notifié des introductions acceptées.</span></label>
             <label class="check-row"><input type="checkbox" id="signup-check3"> <span data-i18n="check3">J'accepte les <a href="#" onclick="showLegal('cgu');event.stopPropagation();return false;" style="color:var(--clay); text-decoration:underline;">Conditions Générales d'Utilisation</a> et la <a href="#" onclick="showLegal('confidentialite');event.stopPropagation();return false;" style="color:var(--clay); text-decoration:underline;">Politique de Confidentialité</a> d'Ikpadé Ifê.</span></label>
+            <label class="check-row"><input type="checkbox" id="signup-check4"> <span data-i18n="check4">J'accepte expressément le traitement de mes données sensibles, nécessaire au service : mon appartenance et ma pratique religieuses, et la copie de ma pièce d'identité (utilisée uniquement pour vérifier mon dossier, puis supprimée). Ces données sont hébergées par nos prestataires techniques, y compris hors du Bénin.</span></label>
             <div style="margin:18px 0 0; padding:14px 16px; background:#EAF6F0; border:1px solid #BFE3D0; border-radius:4px; color:#0B4A34; font-size:0.88rem; line-height:1.55;">
               <div style="font-weight:600; margin-bottom:8px;" data-i18n="signup_piece_t">Une copie de votre pièce d'identité vous sera demandée : ce qu'il faut savoir</div>
               <div style="display:flex; gap:8px; margin-bottom:4px;"><span aria-hidden="true">✓</span><span data-i18n="signup_piece_1">Une pièce d'identité périmée ou un permis de conduire est accepté.</span></div>
@@ -2696,7 +2699,8 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
 
     if(!document.getElementById('signup-check1').checked
        || !document.getElementById('signup-check2').checked
-       || !document.getElementById('signup-check3').checked){
+       || !document.getElementById('signup-check3').checked
+       || !document.getElementById('signup-check4').checked){
       showSignupError(t('alert_checkboxes'));
       return;
     }
@@ -2727,6 +2731,8 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
       showSignupError(t('alert_nom_manquant'));
       return;
     }
+    // Consentement explicite au traitement des données sensibles (date enregistrée en base, preuve pour l'APDP)
+    profil.consentement_donnees = true;
 
     if(!profil.age || isNaN(profil.age) || profil.age < 18 || profil.age > 100){
       showSignupError(t('alert_age_invalide'));
