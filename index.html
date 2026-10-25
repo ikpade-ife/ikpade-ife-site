@@ -2681,6 +2681,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
 
   async function submitSignup(){
     const errorBox = document.getElementById('signup-form-error');
+    trackInscription('clic_valider');
     errorBox.style.display = 'none';
 
     const email = document.getElementById('signup-email').value.trim();
@@ -2689,11 +2690,11 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if(!email || password.length < 8){
-      showSignupError(t('alert_email_password'));
+      trackInscription('echec_email_mdp'); showSignupError(t('alert_email_password'));
       return;
     }
     if(!emailPattern.test(email)){
-      showSignupError(t('alert_email_invalide'));
+      trackInscription('echec_email_invalide'); showSignupError(t('alert_email_invalide'));
       return;
     }
 
@@ -2701,7 +2702,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
        || !document.getElementById('signup-check2').checked
        || !document.getElementById('signup-check3').checked
        || !document.getElementById('signup-check4').checked){
-      showSignupError(t('alert_checkboxes'));
+      trackInscription('echec_cases'); showSignupError(t('alert_checkboxes'));
       return;
     }
 
@@ -2728,24 +2729,24 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     };
 
     if(!profil.prenom || !profil.nom){
-      showSignupError(t('alert_nom_manquant'));
+      trackInscription('echec_nom'); showSignupError(t('alert_nom_manquant'));
       return;
     }
     // Consentement explicite au traitement des données sensibles (date enregistrée en base, preuve pour l'APDP)
     profil.consentement_donnees = true;
 
     if(!profil.age || isNaN(profil.age) || profil.age < 18 || profil.age > 100){
-      showSignupError(t('alert_age_invalide'));
+      trackInscription('echec_age'); showSignupError(t('alert_age_invalide'));
       return;
     }
 
     if(profil.genre === 'femme' && (!profil.nom_tuteur || !profil.lien_parente_tuteur || !profil.contact_tuteur || !profil.tuteur_email)){
-      showSignupError(t('alert_tuteur_requis'));
+      trackInscription('echec_tuteur'); showSignupError(t('alert_tuteur_requis'));
       return;
     }
 
     if(profil.genre === 'femme' && !emailPattern.test(profil.tuteur_email)){
-      showSignupError(t('alert_email_tuteur_invalide'));
+      trackInscription('echec_email_tuteur'); showSignupError(t('alert_email_tuteur_invalide'));
       return;
     }
 
@@ -2765,6 +2766,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     if(error){
       btn.disabled = false;
       btn.textContent = t('btn_creer_profil');
+      trackInscription(/already|registered|exist/i.test(error.message || '') ? 'echec_email_deja_utilise' : 'echec_technique');
       showSignupError(t('alert_signup_failed') + " " + error.message);
       return;
     }
@@ -2781,7 +2783,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
         btn.textContent = t('photo_traitement');
         const resultatPhoto = await envoyerPhotoProfil(photoFile, data.user.id, null);
         if(!resultatPhoto.ok){
-          showSignupError(t('photo_erreur_envoi') + ' ' + resultatPhoto.message + ' ' + t('photo_reessai_plus_tard'));
+          trackInscription('echec_photo'); showSignupError(t('photo_erreur_envoi') + ' ' + resultatPhoto.message + ' ' + t('photo_reessai_plus_tard'));
         }
         btn.textContent = t('btn_creer_profil');
       }
@@ -3354,6 +3356,33 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     }).join('') + '</div>';
   }
 
+  // Raisons pour lesquelles la création de compte n'aboutit pas (visites anonymes)
+  function renderEchecs(f){
+    f = f || {};
+    const libelles = {
+      echec_cases: 'Une case obligatoire non cochée',
+      echec_tuteur: 'Informations du tuteur manquantes',
+      echec_email_tuteur: 'E-mail du tuteur invalide',
+      echec_email_deja_utilise: 'E-mail déjà utilisé (compte existant)',
+      echec_email_mdp: 'E-mail ou mot de passe manquant / trop court',
+      echec_email_invalide: 'E-mail invalide',
+      echec_nom: 'Prénom ou nom manquant',
+      echec_age: 'Âge invalide',
+      echec_technique: 'Erreur technique à la création',
+      echec_photo: 'Échec d\'envoi de la photo (compte créé quand même)',
+    };
+    const clics = f.clic_valider || 0;
+    const lignes = Object.keys(libelles).filter(k => f[k]).sort((a, b) => f[b] - f[a])
+      .map(k => `<li>${libelles[k]} : <b>${f[k]}</b></li>`).join('');
+    const sansClic = Math.max(0, (f.etape_5 || 0) - clics);
+    if(!clics && !lignes) return '<p style="color:#7A8B9A; font-size:0.92rem;">Pas encore de données : elles s\'accumulent à partir de la mise en ligne de cette version.</p>';
+    return `<div style="background:#fff; border:1px solid #E1E8ED; border-radius:6px; padding:16px; color:#3E4C58; font-size:0.92rem; line-height:1.8;">
+      Ont cliqué sur « Créer mon profil » : <b>${clics}</b> · Arrivés à l'étape 5 sans cliquer : <b>${sansClic}</b>
+      <ul style="margin:8px 0 0; padding-left:20px;">${lignes || '<li style="color:#7A8B9A;">Aucun échec enregistré.</li>'}</ul>
+      <p style="font-size:0.8rem; color:#7A8B9A; margin:8px 0 0;">Chaque visite n'est comptée qu'une fois par raison. Une personne peut corriger puis réussir.</p>
+    </div>`;
+  }
+
   function fmtDelai(h){
     if(h === null || h === undefined) return '—';
     h = Number(h);
@@ -3401,6 +3430,9 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
 
       <h3 ${h3}>Entonnoir d'inscription (30 derniers jours, visites anonymes)</h3>
       ${renderFunnel(fun)}
+
+      <h3 ${h3}>Échecs au clic sur « Créer mon profil » (30 jours)</h3>
+      ${renderEchecs(fun)}
 
       <h3 ${h3}>D'où viennent les inscriptions (30 jours)</h3>
       ${renderSources(srcs)}
