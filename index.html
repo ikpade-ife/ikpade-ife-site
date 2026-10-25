@@ -3431,6 +3431,74 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
   }
   const ADMIN_EMAIL = 'ikpadeife@gmail.com';
 
+
+  // ───────── Double authentification (code à 6 chiffres d'une application, TOTP) pour l'administrateur ─────────
+  // La base refuse aussi l'accès aux données des membres tant que ce niveau n'est pas atteint (aal2).
+  async function exigerDoubleAuthAdmin(){
+    try {
+      const { data: niveau } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+      if(niveau && niveau.currentLevel === 'aal2') return true;
+      const { data: facteurs, error } = await sb.auth.mfa.listFactors();
+      if(error) throw error;
+      const verifie = (facteurs.totp || []).find(f => f.status === 'verified');
+      if(verifie) return await fenetreCodeAdmin({ factorId: verifie.id });
+      // Aucun facteur : première configuration (on retire d'abord les essais inachevés)
+      for(const f of (facteurs.all || [])){
+        if(f.status !== 'verified') await sb.auth.mfa.unenroll({ factorId: f.id });
+      }
+      const { data: inscrit, error: e2 } = await sb.auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Ikpade Ife admin' });
+      if(e2) throw e2;
+      return await fenetreCodeAdmin({ factorId: inscrit.id, qr: inscrit.totp.qr_code, secret: inscrit.totp.secret });
+    } catch(e) {
+      alert('Double authentification : ' + (e && e.message ? e.message : e));
+      return false;
+    }
+  }
+
+  function fenetreCodeAdmin({ factorId, qr, secret }){
+    return new Promise(resolve => {
+      const fond = document.createElement('div');
+      fond.setAttribute('role', 'dialog');
+      fond.setAttribute('aria-modal', 'true');
+      fond.style.cssText = 'position:fixed; inset:0; z-index:1000; background:rgba(7,25,40,0.65); display:flex; align-items:center; justify-content:center; padding:16px;';
+      const configuration = qr ? `
+          <p style="margin:0 0 12px; line-height:1.5;">Première configuration : scannez ce code avec une application d'authentification (Google Authenticator, Microsoft Authenticator…), puis saisissez le code à 6 chiffres affiché.</p>
+          <img src="${qr}" alt="QR code de configuration" style="width:180px; height:180px; display:block; margin:0 auto 10px; background:#fff;">
+          <p style="font-size:0.8rem; color:#57687A; margin:0 0 14px; word-break:break-all;">Ou saisissez cette clé dans l'application : <b>${escapeHtml(secret)}</b></p>`
+        : `<p style="margin:0 0 14px; line-height:1.5;">Saisissez le code à 6 chiffres affiché dans votre application d'authentification.</p>`;
+      fond.innerHTML = `
+        <div style="background:#fff; color:#0E3A5F; border-radius:8px; max-width:380px; width:100%; padding:24px; box-shadow:0 18px 40px rgba(0,0,0,0.3); font-size:0.92rem;">
+          <h3 style="margin:0 0 12px; font-size:1.15rem;">Double authentification</h3>
+          ${configuration}
+          <input id="mfa-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456"
+                 style="width:100%; box-sizing:border-box; font-size:1.4rem; letter-spacing:0.3em; text-align:center; padding:10px; border:1px solid #C9D6DF; border-radius:4px;">
+          <div id="mfa-erreur" style="display:none; color:#8a2f2f; font-size:0.85rem; margin-top:10px;"></div>
+          <div style="display:flex; gap:10px; margin-top:16px;">
+            <button type="button" id="mfa-annuler" class="btn-ghost" style="flex:1;">Annuler</button>
+            <button type="button" id="mfa-valider" class="btn-primary" style="flex:1;">Valider</button>
+          </div>
+        </div>`;
+      document.body.appendChild(fond);
+      const champ = fond.querySelector('#mfa-code');
+      const erreur = fond.querySelector('#mfa-erreur');
+      const valider = fond.querySelector('#mfa-valider');
+      setTimeout(() => champ.focus(), 50);
+      const fermer = (ok) => { fond.remove(); resolve(ok); };
+      fond.querySelector('#mfa-annuler').onclick = () => fermer(false);
+      const envoyer = async () => {
+        const code = champ.value.replace(/\D/g, '');
+        if(code.length !== 6){ erreur.style.display = 'block'; erreur.textContent = 'Le code doit contenir 6 chiffres.'; return; }
+        valider.disabled = true;
+        const { error } = await sb.auth.mfa.challengeAndVerify({ factorId, code });
+        valider.disabled = false;
+        if(error){ erreur.style.display = 'block'; erreur.textContent = 'Code incorrect ou expiré. Réessayez avec le code affiché maintenant.'; champ.value = ''; champ.focus(); return; }
+        fermer(true);
+      };
+      valider.onclick = envoyer;
+      champ.addEventListener('keydown', e => { if(e.key === 'Enter') envoyer(); });
+    });
+  }
+
   async function showAdmin(){
     const { data: { session } } = await sb.auth.getSession();
     if(!session || session.user.email !== ADMIN_EMAIL){
@@ -3438,6 +3506,8 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
       showSite();
       return;
     }
+    // Double authentification obligatoire pour la console d'administration
+    if(!(await exigerDoubleAuthAdmin())){ showSite(); return; }
     hideAllViews();
     document.getElementById('admin-view').style.display='block';
     window.scrollTo(0,0);
