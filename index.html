@@ -53,6 +53,8 @@
   Object.assign(I18N.en, {"faq5_q": "Why is Ikpadé Ifê for Muslims?", "faq5_a": "Ikpadé Ifê guides Beninese Muslims, in Benin and in the diaspora, towards a marriage in keeping with their faith: a guardian (wali), protected photos, introductions between families. This choice is not aimed against anyone: it brings together people who share the same values and the same vision of marriage. We respect all beliefs and all families of Benin."});
   Object.assign(I18N.fr, {"check4": "J'accepte expressément le traitement de mes données sensibles, nécessaire au service : mon appartenance et ma pratique religieuses, et la copie de ma pièce d'identité (utilisée uniquement pour vérifier mon dossier, puis supprimée). Ces données sont hébergées par nos prestataires techniques, y compris hors du Bénin.", "alert_checkboxes": "Merci de cocher les quatre cases ci-dessus, y compris l'acceptation des Conditions Générales d'Utilisation et de la Politique de Confidentialité et le consentement au traitement de vos données sensibles, avant de créer votre profil."});
   Object.assign(I18N.en, {"check4": "I expressly consent to the processing of my sensitive data, which the service requires: my religious affiliation and practice, and the copy of my ID document (used only to verify my file, then deleted). This data is hosted by our technical providers, including outside Benin.", "alert_checkboxes": "Please check the four boxes above, including acceptance of the Terms of Use and Privacy Policy and consent to the processing of your sensitive data, before creating your profile."});
+  Object.assign(I18N.fr, {"inviter_eyebrow": "Parrainage", "inviter_h": "Invitez une personne de votre entourage", "inviter_p": "Un fils, une fille, un frère, une amie qui cherche à se marier ? Envoyez-lui Ikpadé Ifê en un clic.", "inviter_btn": "Inviter un proche", "inviter_apercu": "Voici le message qui sera envoyé. Vous pouvez le modifier avant de l'envoyer.", "inviter_message": "Assalamu alaykum ! Je te recommande Ikpadé Ifê, une plateforme sérieuse pour se marier entre Béninois musulmans, avec le tuteur et des profils vérifiés. L'inscription est gratuite :", "inviter_wa": "Envoyer sur WhatsApp", "inviter_autre": "Partager autrement…", "inviter_copier": "Copier le message", "inviter_copie_ok": "Message copié ✓", "inviter_fermer": "Fermer"});
+  Object.assign(I18N.en, {"inviter_eyebrow": "Referral", "inviter_h": "Invite someone close to you", "inviter_p": "A son, a daughter, a brother, a friend looking to get married? Send them Ikpadé Ifê in one click.", "inviter_btn": "Invite someone", "inviter_apercu": "Here is the message that will be sent. You can edit it before sending.", "inviter_message": "Assalamu alaykum! I recommend Ikpadé Ifê, a serious platform for Beninese Muslims to get married, with the guardian involved and verified profiles. Sign-up is free:", "inviter_wa": "Send on WhatsApp", "inviter_autre": "Share another way…", "inviter_copier": "Copy the message", "inviter_copie_ok": "Message copied ✓", "inviter_fermer": "Close"});
   let currentLang = localStorage.getItem('ikpadeLang') || 'fr';
 
   function t(key){
@@ -170,12 +172,19 @@
       document.body.classList.toggle('est-membre', !estAdmin);
       document.body.classList.add('connecte');
       links.forEach(a => construireCompte(a.closest('nav'), a, displayName, estAdmin));
+      document.querySelectorAll('.nav-links').forEach(nl => {
+        let l = nl.querySelector(':scope > a[data-nav-inviter]');
+        if(!l){ l = document.createElement('a'); l.href = '#'; l.setAttribute('data-nav-inviter', ''); l.onclick = (e) => { e.preventDefault(); ouvrirParrainage(); }; nl.appendChild(l); }
+        l.textContent = t('inviter_btn');
+        l.style.display = estAdmin ? 'none' : '';
+      });
       liensMembre.forEach(a => { const mon = a.getAttribute('data-i18n') === 'nav_mon_dossier'; a.style.display = estAdmin ? 'none' : (mon ? 'inline' : ''); });
     } else {
       document.querySelectorAll('[data-nav-mdp]').forEach(x => x.remove());
       document.body.classList.remove('est-membre');
       document.body.classList.remove('connecte');
       document.querySelectorAll('.nav-compte').forEach(x => x.remove());
+      document.querySelectorAll('a[data-nav-inviter]').forEach(x => x.remove());
       links.forEach(a => {
         a.textContent = navCoupe(t('nav_connexion'));
         a.onclick = (e) => { e.preventDefault(); showLogin(); };
@@ -208,6 +217,10 @@
     };
     if(!estAdmin){
       ['nav_parcourir', 'nav_demandes', 'nav_ma_photo', 'nav_ma_piece', 'nav_mon_dossier'].forEach(k => ajouter(t(k), nav.querySelector('.nav-links [data-i18n="' + k + '"]')));
+      const inv = document.createElement('button');
+      inv.type = 'button'; inv.setAttribute('role', 'menuitem'); inv.textContent = t('inviter_btn');
+      inv.onclick = (e) => { e.stopPropagation(); fermerComptes(); ouvrirParrainage(); };
+      menu.appendChild(inv);
       const sep = document.createElement('div'); sep.className = 'nav-compte-sep'; menu.appendChild(sep);
     }
     ajouter(currentLang === 'en' ? 'Change my password' : 'Changer mon mot de passe', nav.querySelector('[data-nav-mdp]'));
@@ -227,6 +240,43 @@
   }
   document.addEventListener('click', fermerComptes);
   document.addEventListener('keydown', (e) => { if(e.key === 'Escape') fermerComptes(); });
+
+
+  // ───────── Parrainage : « Invitez une personne de votre entourage » ─────────
+  // Le lien porte ?src=parrainage : les inscriptions venues ainsi apparaissent dans « D'où viennent les inscriptions ».
+  const LIEN_PARRAINAGE = 'https://www.ikpade-ife.com/?src=parrainage';
+  function ouvrirParrainage(){
+    const message = t('inviter_message') + ' ' + LIEN_PARRAINAGE;
+    const fond = document.createElement('div');
+    fond.setAttribute('role', 'dialog'); fond.setAttribute('aria-modal', 'true');
+    fond.style.cssText = 'position:fixed; inset:0; z-index:1000; background:rgba(7,25,40,0.6); display:flex; align-items:center; justify-content:center; padding:16px;';
+    const peutPartager = !!navigator.share;
+    fond.innerHTML = `
+      <div style="background:#fff; color:#0E3A5F; border-radius:8px; max-width:420px; width:100%; padding:24px; box-shadow:0 18px 40px rgba(0,0,0,0.3);">
+        <h3 style="margin:0 0 8px; font-size:1.2rem;">${escapeHtml(t('inviter_h'))}</h3>
+        <p style="margin:0 0 12px; font-size:0.9rem; color:#3E4C58; line-height:1.5;">${escapeHtml(t('inviter_apercu'))}</p>
+        <div style="background:#F5F9FC; border:1px solid #E1E8ED; border-radius:6px; padding:12px; font-size:0.88rem; line-height:1.5; color:#3E4C58; word-break:break-word;">${escapeHtml(message)}</div>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-top:16px;">
+          <a id="parr-wa" href="https://wa.me/?text=${encodeURIComponent(message)}" target="_blank" rel="noopener" class="btn-primary" style="text-align:center;">${escapeHtml(t('inviter_wa'))}</a>
+          ${peutPartager ? `<button type="button" id="parr-share" class="btn-ghost">${escapeHtml(t('inviter_autre'))}</button>` : ''}
+          <button type="button" id="parr-copy" class="btn-ghost">${escapeHtml(t('inviter_copier'))}</button>
+          <button type="button" id="parr-close" style="background:none; border:0; color:#7A8B9A; font-size:0.85rem; cursor:pointer; padding:6px;">${escapeHtml(t('inviter_fermer'))}</button>
+        </div>
+      </div>`;
+    document.body.appendChild(fond);
+    const fermer = () => fond.remove();
+    fond.addEventListener('click', (e) => { if(e.target === fond) fermer(); });
+    fond.querySelector('#parr-close').onclick = fermer;
+    const copier = fond.querySelector('#parr-copy');
+    copier.onclick = async () => {
+      try { await navigator.clipboard.writeText(message); copier.textContent = t('inviter_copie_ok'); }
+      catch(e) { window.prompt(t('inviter_copier'), message); }
+    };
+    const partager = fond.querySelector('#parr-share');
+    if(partager) partager.onclick = async () => {
+      try { await navigator.share({ title: 'Ikpadé Ifê', text: t('inviter_message'), url: LIEN_PARRAINAGE }); fermer(); } catch(e) {}
+    };
+  }
 
   function toggleMobileMenu(btn){
     btn.closest('nav')?.querySelector('.nav-links')?.classList.toggle('open');
@@ -617,7 +667,8 @@
     body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_demandes"],
     body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_ma_photo"],
     body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_ma_piece"],
-    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_mon_dossier"]{display:none !important;}
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-i18n="nav_mon_dossier"],
+    body.connecte:not(.nav-force-burger) .nav-links > a[data-nav-inviter]{display:none !important;}
   }
   /* connecté : libellés sur une ligne, donc un peu plus grands (plus de place disponible) */
   @media (min-width:1270px){ body.connecte:not(.nav-force-burger) .nav-links{font-size:0.86rem; gap:12px;} }
@@ -1005,6 +1056,17 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
       </ul>
       <div class="plan-cta" style="cursor:pointer;" onclick="showPayment('Hawa','idile')" data-i18n="plan3_cta">Choisir Hawa</div>
     </div>
+  </div>
+</section>
+
+<section id="inviter" style="padding-top:0;">
+  <div style="max-width:760px; background:#EAF6F0; border:1px solid #BFE3D0; border-radius:8px; padding:28px 24px; display:flex; flex-wrap:wrap; gap:18px; align-items:center; justify-content:space-between;">
+    <div style="flex:1 1 320px;">
+      <div class="eyebrow" data-i18n="inviter_eyebrow">Parrainage</div>
+      <h3 style="color:var(--indigo); font-size:1.35rem; margin:8px 0 6px;" data-i18n="inviter_h">Invitez une personne de votre entourage</h3>
+      <p style="color:#3E4C58; font-size:0.95rem; line-height:1.55; margin:0;" data-i18n="inviter_p">Un fils, une fille, un frère, une amie qui cherche à se marier ? Envoyez-lui Ikpadé Ifê en un clic.</p>
+    </div>
+    <button type="button" class="btn-primary" onclick="ouvrirParrainage()" data-i18n="inviter_btn">Inviter un proche</button>
   </div>
 </section>
 
