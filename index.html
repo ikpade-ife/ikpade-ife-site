@@ -55,6 +55,8 @@
   Object.assign(I18N.en, {"check4": "I expressly consent to the processing of my sensitive data, which the service requires: my religious affiliation and practice, and the copy of my ID document (used only to verify my file, then deleted). This data is hosted by our technical providers, including outside Benin.", "alert_checkboxes": "Please check the four boxes above, including acceptance of the Terms of Use and Privacy Policy and consent to the processing of your sensitive data, before creating your profile."});
   Object.assign(I18N.fr, {"inviter_eyebrow": "Parrainage", "inviter_h": "Invitez une personne de votre entourage", "inviter_p": "Un fils, une fille, un frère, une amie qui cherche à se marier ? Envoyez-lui Ikpadé Ifê en un clic.", "inviter_btn": "Inviter un proche", "inviter_apercu": "Voici le message qui sera envoyé. Vous pouvez le modifier avant de l'envoyer.", "inviter_message": "Assalamu alaykum ! Je te recommande Ikpadé Ifê, une plateforme sérieuse pour se marier entre Béninois musulmans, avec le tuteur et des profils vérifiés. L'inscription est gratuite :", "inviter_wa": "Envoyer sur WhatsApp", "inviter_autre": "Partager autrement…", "inviter_copier": "Copier le message", "inviter_copie_ok": "Message copié ✓", "inviter_fermer": "Fermer"});
   Object.assign(I18N.en, {"inviter_eyebrow": "Referral", "inviter_h": "Invite someone close to you", "inviter_p": "A son, a daughter, a brother, a friend looking to get married? Send them Ikpadé Ifê in one click.", "inviter_btn": "Invite someone", "inviter_apercu": "Here is the message that will be sent. You can edit it before sending.", "inviter_message": "Assalamu alaykum! I recommend Ikpadé Ifê, a serious platform for Beninese Muslims to get married, with the guardian involved and verified profiles. Sign-up is free:", "inviter_wa": "Send on WhatsApp", "inviter_autre": "Share another way…", "inviter_copier": "Copy the message", "inviter_copie_ok": "Message copied ✓", "inviter_fermer": "Close"});
+  Object.assign(I18N.fr, {"conf_titre": "Plus qu'une étape", "conf_texte": "Nous venons d'envoyer un e-mail à {email}. Ouvrez-le et cliquez sur le bouton « Confirmer mon adresse » pour activer votre compte.", "conf_spam": "Vous ne le voyez pas d'ici quelques minutes ? Regardez dans vos spams ou courriers indésirables, et marquez-le comme « non spam ».", "btn_renvoyer": "Renvoyer l'e-mail de confirmation", "conf_renvoye": "C'est envoyé ! Un nouvel e-mail vient de partir. Utilisez le lien du message le plus récent.", "conf_attendre": "Nouvel envoi possible dans {s} s", "conf_patienter": "merci de patienter une minute avant de redemander un e-mail.", "conf_erreur": "Envoi impossible pour le moment :", "conf_fermer": "Fermer", "conf_ok_titre": "Adresse confirmée", "conf_ok_texte": "Merci, votre compte est activé ! Prochaine étape : envoyez votre pièce d'identité pour que notre équipe vérifie votre profil avant sa publication.", "conf_ok_btn": "Envoyer ma pièce d'identité", "conf_ok_tuteur": "Merci, votre compte est activé. Vous pouvez maintenant suivre les personnes dont vous avez la charge depuis l'Espace tuteur.", "conf_ko_titre": "Ce lien n'est plus valable", "conf_ko_texte": "Le lien a expiré ou a déjà été utilisé. Si votre adresse est déjà confirmée, connectez-vous simplement. Sinon, indiquez votre e-mail pour recevoir un nouveau lien :", "login_non_confirme": "Votre adresse e-mail n'est pas encore confirmée. Ouvrez l'e-mail « Confirmez votre inscription sur Ikpadé Ifê » (pensez à regarder dans vos spams), ou demandez un nouveau lien :"});
+  Object.assign(I18N.en, {"conf_titre": "One last step", "conf_texte": "We have just sent an email to {email}. Open it and click the “Confirm my address” button to activate your account.", "conf_spam": "Not there within a few minutes? Check your spam or junk folder and mark it as “not spam”.", "btn_renvoyer": "Resend the confirmation email", "conf_renvoye": "Sent! A new email is on its way. Please use the link in the most recent message.", "conf_attendre": "You can resend in {s} s", "conf_patienter": "please wait a minute before requesting another email.", "conf_erreur": "Unable to send right now:", "conf_fermer": "Close", "conf_ok_titre": "Address confirmed", "conf_ok_texte": "Thank you, your account is now active! Next step: send your ID document so our team can verify your profile before it is published.", "conf_ok_btn": "Send my ID document", "conf_ok_tuteur": "Thank you, your account is now active. You can now follow the people in your care from the Guardian area.", "conf_ko_titre": "This link is no longer valid", "conf_ko_texte": "The link has expired or has already been used. If your address is already confirmed, simply log in. Otherwise, enter your email to receive a new link:", "login_non_confirme": "Your email address is not confirmed yet. Open the email “Confirmez votre inscription sur Ikpadé Ifê” (check your spam folder too), or request a new link:"});
   let currentLang = localStorage.getItem('ikpadeLang') || 'fr';
 
   function t(key){
@@ -2356,6 +2358,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     status.textContent = 'Connexion…';
     const { error } = await sb.auth.signInWithPassword({ email, password });
     if(error){
+      if(estEmailNonConfirme(error)){ afficherNonConfirmeConnexion(status, email); return; }
       status.style.color='var(--clay)';
       status.textContent = 'Connexion impossible : ' + error.message;
       return;
@@ -2854,8 +2857,8 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
       showSite();
       document.querySelector('#abonnement')?.scrollIntoView({behavior:'smooth'});
     } else {
-      alert(photoFile ? t('alert_account_created') + ' ' + t('photo_apres_confirmation') : t('alert_account_created'));
       showSite();
+      afficherConfirmation('attente', email, !!photoFile);
     }
   }
 
@@ -2904,6 +2907,114 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     successBox.style.display = 'block';
     document.getElementById('contact-form').reset();
   }
+
+  // ───────── Confirmation de l'adresse e-mail ─────────
+  // Écran « Plus qu'une étape » après l'inscription, bouton « Renvoyer l'e-mail »,
+  // message clair à la connexion, et validation des liens reçus par e-mail
+  // (https://www.ikpade-ife.com/?token_hash=…&type=…).
+  let _confEmail = '';
+  function afficherConfirmation(mode, email, avecPhoto){
+    if(email) _confEmail = email;
+    const $ = id => document.getElementById(id);
+    const statut = $('conf-statut'), saisie = $('conf-email-saisie'), btnR = $('conf-renvoyer'), btnA = $('conf-action');
+    statut.style.display = 'none'; statut.textContent = '';
+    saisie.style.display = 'none'; btnR.style.display = 'none'; btnA.style.display = 'none';
+    btnR.disabled = false; btnR.textContent = t('btn_renvoyer');
+    $('conf-fermer').textContent = t('conf_fermer');
+    $('conf-extra').textContent = '';
+    if(mode === 'attente'){
+      $('conf-icone').textContent = '✉️';
+      $('conf-titre').textContent = t('conf_titre');
+      $('conf-texte').innerHTML = escapeHtml(t('conf_texte')).replace('{email}', '<b style="color:var(--indigo);">' + escapeHtml(_confEmail) + '</b>');
+      $('conf-extra').textContent = t('conf_spam') + (avecPhoto ? ' ' + t('photo_apres_confirmation') : '');
+      btnR.style.display = 'inline-block';
+    } else if(mode === 'ok' || mode === 'ok_tuteur'){
+      $('conf-icone').textContent = '✅';
+      $('conf-titre').textContent = t('conf_ok_titre');
+      $('conf-texte').textContent = t(mode === 'ok' ? 'conf_ok_texte' : 'conf_ok_tuteur');
+      if(mode === 'ok'){
+        btnA.textContent = t('conf_ok_btn');
+        btnA.onclick = () => { fermerConfirmation(); showPiecePage(); };
+        btnA.style.display = 'inline-block';
+      }
+    } else {
+      $('conf-icone').textContent = '⏳';
+      $('conf-titre').textContent = t('conf_ko_titre');
+      $('conf-texte').textContent = t('conf_ko_texte');
+      saisie.value = _confEmail || '';
+      saisie.style.display = 'block';
+      btnR.style.display = 'inline-block';
+    }
+    $('conf-overlay').style.display = 'flex';
+  }
+  function fermerConfirmation(){ document.getElementById('conf-overlay').style.display = 'none'; }
+
+  async function renvoyerConfirmation(email, btn, statut){
+    email = (email || '').trim();
+    statut.style.display = 'block';
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      statut.style.color = 'var(--clay)'; statut.textContent = t('alert_email_invalide'); return;
+    }
+    btn.disabled = true;
+    const { error } = await sb.auth.resend({ type: 'signup', email });
+    if(error){
+      statut.style.color = 'var(--clay)';
+      statut.textContent = t('conf_erreur') + ' ' + (/rate|security purposes|seconds|too many/i.test(error.message || '') ? t('conf_patienter') : error.message);
+      btn.disabled = false;
+      return;
+    }
+    statut.style.color = '#0B6E4F';
+    statut.textContent = t('conf_renvoye');
+    const libelle = t('btn_renvoyer');
+    let s = 60;
+    (function tic(){
+      if(s <= 0){ btn.disabled = false; btn.textContent = libelle; return; }
+      btn.textContent = t('conf_attendre').replace('{s}', s); s--; setTimeout(tic, 1000);
+    })();
+  }
+  function renvoyerDepuisModal(){
+    const saisie = document.getElementById('conf-email-saisie');
+    const email = saisie.style.display !== 'none' ? saisie.value : _confEmail;
+    if(email) _confEmail = email.trim();
+    renvoyerConfirmation(email, document.getElementById('conf-renvoyer'), document.getElementById('conf-statut'));
+  }
+
+  function estEmailNonConfirme(error){
+    return !!error && (error.code === 'email_not_confirmed' || /email not confirmed/i.test(error.message || ''));
+  }
+  function afficherNonConfirmeConnexion(statusEl, email){
+    statusEl.style.display = 'block';
+    statusEl.style.color = 'var(--clay)';
+    statusEl.innerHTML = escapeHtml(t('login_non_confirme'))
+      + '<br><button type="button" class="req-btn approve" style="margin-top:10px;" data-email="' + escapeHtml(email) + '" onclick="renvoyerConfirmationConnexion(this)">' + escapeHtml(t('btn_renvoyer')) + '</button>'
+      + '<span style="display:none; margin-top:8px; font-size:0.88rem;"></span>';
+  }
+  function renvoyerConfirmationConnexion(btn){
+    renvoyerConfirmation(btn.dataset.email, btn, btn.nextElementSibling);
+  }
+
+  // Arrivée depuis le lien « Confirmer mon adresse » d'un e-mail
+  function traiterLienConfirmation(){
+    let p;
+    try{ p = new URLSearchParams(window.location.search); }catch(_){ return; }
+    const token_hash = p.get('token_hash'), type = p.get('type');
+    if(!token_hash || ['signup', 'magiclink', 'email'].indexOf(type) === -1) return;
+    try{ window.history.replaceState({}, '', window.location.pathname); }catch(_){}
+    sb.auth.verifyOtp({ token_hash, type }).then(async ({ data, error }) => {
+      if(error || !data || !data.user){ afficherConfirmation('ko'); return; }
+      _confEmail = data.user.email || '';
+      let estMembre = false;
+      try{
+        const { data: prof } = await sb.from('profils').select('id').eq('id', data.user.id).maybeSingle();
+        estMembre = !!prof;
+      }catch(_){}
+      try{ await updateAuthUI(); }catch(_){}
+      if(!estMembre){ try{ await refreshTuteurView(); }catch(_){} }
+      afficherConfirmation(estMembre ? 'ok' : 'ok_tuteur');
+    }).catch(() => afficherConfirmation('ko'));
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', traiterLienConfirmation);
+  else traiterLienConfirmation();
 </script>
 
 <div id="tuteur-view" style="display:none;">
@@ -3126,6 +3237,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     status.textContent = t('creating_account') === 'Création du compte...' ? 'Connexion…' : 'Signing in…';
     const { error } = await sb.auth.signInWithPassword({ email, password });
     if(error){
+      if(estEmailNonConfirme(error)){ afficherNonConfirmeConnexion(status, email); return; }
       status.style.color='var(--clay)';
       status.textContent = t('alert_signup_failed') + ' ' + error.message;
       return;
@@ -3167,8 +3279,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
       updateAuthUI();
       await refreshTuteurView();
     } else {
-      status.style.display='block'; status.style.color='#57687A';
-      status.textContent = t('alert_account_created');
+      afficherConfirmation('attente', email, false);
     }
   }
 
@@ -3292,6 +3403,23 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     </div>
   </section>
 </div><!-- /admin-view -->
+
+<!-- Confirmation de l'adresse e-mail (après inscription, lien reçu, lien expiré) -->
+<div id="conf-overlay" class="rejet-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="conf-titre">
+  <div class="rejet-modal" style="text-align:center;">
+    <div id="conf-icone" style="font-size:2.2rem; line-height:1; margin-bottom:10px;">✉️</div>
+    <h3 id="conf-titre"></h3>
+    <p id="conf-texte" style="color:#3E4C58; font-size:0.95rem; line-height:1.6; margin:0 0 12px;"></p>
+    <p id="conf-extra" class="rejet-sub"></p>
+    <input type="email" id="conf-email-saisie" autocomplete="email" placeholder="votre@email.com" style="display:none; width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:4px; font-size:0.95rem; margin-bottom:12px; box-sizing:border-box;">
+    <div id="conf-statut" style="display:none; font-size:0.88rem; line-height:1.5; margin:0 0 14px;"></div>
+    <div class="rejet-actions" style="justify-content:center; flex-wrap:wrap;">
+      <button type="button" class="req-btn decline" id="conf-fermer" onclick="fermerConfirmation()">Fermer</button>
+      <button type="button" class="req-btn approve" id="conf-renvoyer" onclick="renvoyerDepuisModal()">Renvoyer l'e-mail de confirmation</button>
+      <button type="button" class="req-btn approve" id="conf-action" style="display:none;"></button>
+    </div>
+  </div>
+</div>
 
 <!-- Fenêtre de confirmation de rejet, avec choix obligatoire du motif -->
 <div id="rejet-overlay" class="rejet-overlay" style="display:none;">
@@ -3649,7 +3777,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
         <div class="request-info">
           <h4>${escapeHtml(p.prenom)} ${escapeHtml(p.nom)}, ${escapeHtml(p.age)} ans</h4>
           <div class="meta">${escapeHtml(p.ville_origine) || '—'} · réside à ${escapeHtml(p.ville_residence) || '—'}, ${escapeHtml(p.pays_residence) || '—'}</div>
-          <div class="meta-sub">Soumis ${escapeHtml(tempsEcoule(p.created_at))} · ${p.piece_identite_envoyee_le ? '<b style="color:#0B6E4F;">Pièce reçue</b>' : '<b style="color:#B4472A;">Pièce non reçue</b>'}${_badgeCorrection(p)}</div>
+          <div class="meta-sub">Soumis ${escapeHtml(tempsEcoule(p.created_at))} · ${p.piece_identite_envoyee_le ? '<b style="color:#0B6E4F;">Pièce reçue</b>' : '<b style="color:#B4472A;">Pièce non reçue</b>'}${_badgeCorrection(p)}<span id="conf-badge-${p.id}"></span></div>
           <details class="dossier">
             <summary data-i18n="voir_dossier">Voir le dossier</summary>
             <div class="dossier-body">
@@ -3669,10 +3797,12 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
         <div class="request-actions">
           <button class="req-btn decline" onclick="ouvrirRejetModal('${p.id}')">Rejeter</button>
           <button class="req-btn decline" style="border-color:#B8860B; color:#8A6508;" onclick="ouvrirCorrectionModal('${p.id}')">Demander une correction</button>
-          <button class="req-btn approve" onclick="moderateProfil('${p.id}','publie')">Publier le profil</button>
+          <button class="req-btn approve" id="btn-publier-${p.id}" onclick="moderateProfil('${p.id}','publie')">Publier le profil</button>
         </div>
       </div>`;
     }).join('');
+
+    marquerEmailsNonConfirmes(enAttente.map(p => p.id));
 
     // Charge la photo originale (non floutée) de chaque profil en attente,
     // uniquement visible ici par l'équipe de modération pour vérifier l'identité.
@@ -3701,6 +3831,36 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     return faite
       ? ' · <b style="color:#0B6E4F;">✎ Corrigé par le candidat</b>'
       : ' · <b style="color:#8A6508;">⏳ Correction demandée ' + escapeHtml(tempsEcoule(p.correction_demandee_le)) + '</b>';
+  }
+
+  // File de modération : repère les membres qui n'ont pas encore confirmé leur e-mail.
+  // Leur profil ne peut pas être publié (verrou aussi en base) ; on peut leur renvoyer le lien.
+  async function marquerEmailsNonConfirmes(ids){
+    if(!ids.length) return;
+    const { data, error } = await sb.rpc('admin_etat_confirmation', { ids });
+    if(error || !data) return;
+    data.forEach(u => {
+      if(u.email_confirme_le) return;
+      const badge = document.getElementById('conf-badge-' + u.id);
+      if(badge){
+        badge.innerHTML = ' · <b style="color:#B4472A;">✉ E-mail non confirmé</b>'
+          + (u.relances ? ' (' + u.relances + ' relance' + (u.relances > 1 ? 's' : '') + ')' : '')
+          + ' · <a href="#" data-email="' + escapeHtml(u.email) + '" onclick="renvoyerLienAdmin(this);return false;">Renvoyer le lien</a>';
+      }
+      const btn = document.getElementById('btn-publier-' + u.id);
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = '0.45';
+        btn.style.cursor = 'not-allowed';
+        btn.title = "Publication impossible : le membre n'a pas encore confirmé son adresse e-mail.";
+      }
+    });
+  }
+  async function renvoyerLienAdmin(a){
+    const { error } = await sb.auth.resend({ type: 'signup', email: a.dataset.email });
+    a.outerHTML = error
+      ? '<span style="color:#8a2f2f;">Échec : ' + escapeHtml(error.message) + '</span>'
+      : '<span style="color:#0B6E4F;">Lien renvoyé ✓</span>';
   }
 
   async function moderateProfil(profilId, nouveauStatut){
@@ -4661,8 +4821,9 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     status.innerHTML = '<span class="spinner"></span> Connexion…';
     const { error } = await sb.auth.signInWithPassword({ email, password });
     if(error){
+      if(estEmailNonConfirme(error)){ afficherNonConfirmeConnexion(status, email); return; }
       status.style.color='var(--clay)';
-      status.innerHTML = 'Connexion impossible : ' + error.message;
+      status.textContent = 'Connexion impossible : ' + error.message;
       return;
     }
     status.style.display='none';
