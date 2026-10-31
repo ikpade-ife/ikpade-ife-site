@@ -57,6 +57,8 @@
   Object.assign(I18N.en, {"inviter_eyebrow": "Referral", "inviter_h": "Invite someone close to you", "inviter_p": "A son, a daughter, a brother, a friend looking to get married? Send them Ikpadé Ifê in one click.", "inviter_btn": "Invite someone", "inviter_apercu": "Here is the message that will be sent. You can edit it before sending.", "inviter_message": "Assalamu alaykum! I recommend Ikpadé Ifê, a serious platform for Beninese Muslims to get married, with the guardian involved and verified profiles. Sign-up is free:", "inviter_wa": "Send on WhatsApp", "inviter_autre": "Share another way…", "inviter_copier": "Copy the message", "inviter_copie_ok": "Message copied ✓", "inviter_fermer": "Close"});
   Object.assign(I18N.fr, {"conf_titre": "Plus qu'une étape", "conf_texte": "Nous venons d'envoyer un e-mail à {email}. Ouvrez-le et cliquez sur le bouton « Confirmer mon adresse » pour activer votre compte.", "conf_spam": "Vous ne le voyez pas d'ici quelques minutes ? Regardez dans vos spams ou courriers indésirables, et marquez-le comme « non spam ».", "btn_renvoyer": "Renvoyer l'e-mail de confirmation", "conf_renvoye": "C'est envoyé ! Un nouvel e-mail vient de partir. Utilisez le lien du message le plus récent.", "conf_attendre": "Nouvel envoi possible dans {s} s", "conf_patienter": "merci de patienter une minute avant de redemander un e-mail.", "conf_erreur": "Envoi impossible pour le moment :", "conf_fermer": "Fermer", "conf_ok_titre": "Adresse confirmée", "conf_ok_texte": "Merci, votre compte est activé ! Prochaine étape : envoyez votre pièce d'identité pour que notre équipe vérifie votre profil avant sa publication.", "conf_ok_btn": "Envoyer ma pièce d'identité", "conf_ok_tuteur": "Merci, votre compte est activé. Vous pouvez maintenant suivre les personnes dont vous avez la charge depuis l'Espace tuteur.", "conf_ko_titre": "Ce lien n'est plus valable", "conf_ko_texte": "Le lien a expiré ou a déjà été utilisé. Si votre adresse est déjà confirmée, connectez-vous simplement. Sinon, indiquez votre e-mail pour recevoir un nouveau lien :", "login_non_confirme": "Votre adresse e-mail n'est pas encore confirmée. Ouvrez l'e-mail « Confirmez votre inscription sur Ikpadé Ifê » (pensez à regarder dans vos spams), ou demandez un nouveau lien :"});
   Object.assign(I18N.en, {"conf_titre": "One last step", "conf_texte": "We have just sent an email to {email}. Open it and click the “Confirm my address” button to activate your account.", "conf_spam": "Not there within a few minutes? Check your spam or junk folder and mark it as “not spam”.", "btn_renvoyer": "Resend the confirmation email", "conf_renvoye": "Sent! A new email is on its way. Please use the link in the most recent message.", "conf_attendre": "You can resend in {s} s", "conf_patienter": "please wait a minute before requesting another email.", "conf_erreur": "Unable to send right now:", "conf_fermer": "Close", "conf_ok_titre": "Address confirmed", "conf_ok_texte": "Thank you, your account is now active! Next step: send your ID document so our team can verify your profile before it is published.", "conf_ok_btn": "Send my ID document", "conf_ok_tuteur": "Thank you, your account is now active. You can now follow the people in your care from the Guardian area.", "conf_ko_titre": "This link is no longer valid", "conf_ko_texte": "The link has expired or has already been used. If your address is already confirmed, simply log in. Otherwise, enter your email to receive a new link:", "login_non_confirme": "Your email address is not confirmed yet. Open the email “Confirmez votre inscription sur Ikpadé Ifê” (check your spam folder too), or request a new link:"});
+  Object.assign(I18N.fr, {"rdv_alerte": "Ce message semble organiser une rencontre. Dans le cadre d'Ikpadé Ifê, et pour votre sécurité, la rencontre se fait après l'introduction formelle, avec le tuteur. Si vous l'envoyez tel quel, il sera transmis à notre équipe de modération.", "rdv_modifier": "Modifier mon message", "rdv_envoyer": "Envoyer quand même"});
+  Object.assign(I18N.en, {"rdv_alerte": "This message looks like it is arranging a meeting. Within the Ikpadé Ifê framework, and for your safety, meetings take place after the formal introduction, with the guardian. If you send it as it is, it will be passed on to our moderation team.", "rdv_modifier": "Edit my message", "rdv_envoyer": "Send anyway"});
   let currentLang = localStorage.getItem('ikpadeLang') || 'fr';
 
   function t(key){
@@ -2157,6 +2159,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
   // Motifs de signalement proposés au membre (libellés FR enregistrés avec le signalement)
   const SIG_CATS = {
     faux_profil: ['Faux profil ou informations trompeuses', 'Fake profile or misleading information'],
+    rdv:         ['Rencontre proposée hors du cadre (avant l\'introduction formelle)', 'Meeting proposed outside the framework (before the formal introduction)'],
     irrespect:   ['Comportement irrespectueux ou harcèlement', 'Disrespectful behaviour or harassment'],
     inapproprie: ['Propos ou photos inappropriés', 'Inappropriate words or photos'],
     argent:      ["Demande d'argent ou arnaque", 'Request for money or scam'],
@@ -4038,7 +4041,7 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
         <div class="request-avatar" style="background:var(--clay);">⚑</div>
         <div class="request-info">
           <h4>${escapeHtml(nomDe(s.profil_signale_id))}</h4>
-          <div class="meta">Signalé par ${escapeHtml(nomDe(s.signale_par))}${s.demande_id ? ' · dans un échange modéré' : ''}</div>
+          <div class="meta">${s.signale_par ? 'Signalé par ' + escapeHtml(nomDe(s.signale_par)) : '<b style="color:#8A6508;">⚙ Détection automatique</b>'}${s.demande_id ? ' · dans un échange modéré' : ''}</div>
           <div class="meta-sub">${escapeHtml(tempsEcoule(s.created_at))}</div>
           <details class="dossier">
             <summary data-i18n="examiner_signalement">Examiner le signalement</summary>
@@ -4601,10 +4604,31 @@ body.nav-force-burger .nav-nom{max-width:none; white-space:normal;}body.nav-forc
     win.scrollTop = win.scrollHeight;
   }
 
-  async function sendChatMessage(){
+  // Repère un message qui organise une rencontre (même liste que la détection en base)
+  const RDV_REGEX = /(rendez[ -]?vous|\brdv\b|on se (voit|verra|retrouve|rencontre)|se (voir|rencontrer|retrouver) (a|au|aux|devant|pres|chez|vers|demain|samedi|dimanche|ce|cette)\b|(retrouvons|rencontrons|voyons)[ -]nous|vien[st] me (voir|chercher|rejoindre)|venez me (voir|chercher|rejoindre)|rejoin[st][ -]moi|rejoignez[ -]moi|passe[sz]? me voir|je (t.|vous )attendrai|je (t.|vous )attends (a|au|devant|pres|chez|vers)\b|je porterai|je vais porter|je serai habille|tu me reconnaitras|vous me reconnaitrez|pour me reconnaitre|let.?s meet|meet me|see you at)/;
+  function ressembleRendezVous(texte){
+    const s = texte.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/œ/g, 'o').replace(/’/g, "'");
+    return RDV_REGEX.test(s);
+  }
+  function afficherAlerteRdv(){
+    const win = document.getElementById('chat-window');
+    win.querySelectorAll('.rdv-alerte').forEach(x => x.remove());
+    const row = document.createElement('div');
+    row.className = 'msg-row from-b rdv-alerte';
+    row.innerHTML = '<div><div class="msg-blocked" style="background:#FFF8E6; border-color:#B8860B; color:#6B4E07; font-style:normal;">⚠ ' + escapeHtml(t('rdv_alerte'))
+      + '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">'
+      + '<button type="button" class="req-btn decline" onclick="this.closest(\'.rdv-alerte\').remove(); document.getElementById(\'chat-input\').focus();">' + escapeHtml(t('rdv_modifier')) + '</button>'
+      + '<button type="button" class="req-btn approve" onclick="this.closest(\'.rdv-alerte\').remove(); sendChatMessage(true);">' + escapeHtml(t('rdv_envoyer')) + '</button>'
+      + '</div></div></div>';
+    win.appendChild(row);
+    win.scrollTop = win.scrollHeight;
+  }
+
+  async function sendChatMessage(forcer){
     const input = document.getElementById('chat-input');
     const text = input.value.trim();
     if(!text || !currentDemandeId) return;
+    if(forcer !== true && ressembleRendezVous(text)){ afficherAlerteRdv(); return; }
     const { data: { session } } = await sb.auth.getSession();
 
     input.value = '';
